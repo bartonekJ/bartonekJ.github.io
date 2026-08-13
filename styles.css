@@ -578,6 +578,27 @@ a {
   grid-template-columns: 1fr;
 }
 
+.models-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  margin-top: 13px;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration-color: var(--orange);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.models-link:hover,
+.models-link:focus-visible {
+  color: var(--orange-deep);
+}
+
 .contact-band {
   display: flex;
   align-items: center;
