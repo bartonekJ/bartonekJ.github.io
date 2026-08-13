@@ -83,8 +83,8 @@ a {
 
 .brand-logo {
   display: block;
-  width: 42px;
-  height: 36px;
+  width: 46px;
+  height: 40px;
   flex: 0 0 auto;
   background: url("assets/jb-logo.svg") center / contain no-repeat;
   transform: translateY(-1px);
