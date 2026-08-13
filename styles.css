@@ -551,28 +551,16 @@ a {
   margin: 0 42px 35px;
   overflow: hidden;
   border-radius: 13px;
-  background:
-    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
-    #292927;
-  background-size: 24px 24px;
+  background: #e9edef;
 }
 
-.print-layer {
-  position: absolute;
-  left: 50%;
-  width: 45%;
-  height: 34px;
-  border: 3px solid var(--cyan);
-  border-radius: 50%;
-  transform: translateX(-50%) skewX(-9deg);
-  box-shadow: 0 0 14px rgba(99, 189, 223, 0.18);
+.print-feature img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 53%;
 }
-
-.layer-1 { bottom: 34px; width: 56%; }
-.layer-2 { bottom: 67px; width: 48%; border-color: #70c5df; }
-.layer-3 { bottom: 100px; width: 38%; border-color: #7fb9df; }
-.layer-4 { bottom: 133px; width: 26%; border-color: var(--violet); }
 
 .compact-groups {
   grid-template-columns: 1fr;
@@ -682,7 +670,13 @@ a {
 
   .discipline-print .print-feature {
     align-self: center;
+    height: auto;
+    aspect-ratio: 4322 / 2055;
     margin-top: 25px;
+  }
+
+  .discipline-print .print-feature img {
+    object-fit: contain;
   }
 }
 
@@ -744,7 +738,8 @@ a {
   }
 
   .print-feature {
-    height: 210px;
+    height: auto;
+    aspect-ratio: 4322 / 2055;
     margin: 0 25px 30px;
   }
 
