@@ -78,6 +78,7 @@ a {
 .brand-name {
   font: 800 22px/1 var(--font-ui);
   letter-spacing: -0.025em;
+  transform: translateY(3px);
 }
 
 .brand-name small {
@@ -592,6 +593,7 @@ a {
 .brand-footer .brand-logo {
   width: 35px;
   height: 30px;
+  transform: translateY(-1px);
 }
 
 .brand-footer .brand-name {
