@@ -99,7 +99,7 @@ a {
   line-height: 1;
   letter-spacing: 0.045em;
   text-transform: uppercase;
-  transform: translateY(8px) scaleY(0.8);
+  transform: translateY(6px) scale(1.5, 0.96);
   transform-origin: left center;
 }
 
