@@ -94,12 +94,12 @@ a {
   display: inline-flex;
   align-items: baseline;
   font-family: var(--font-brand);
-  font-size: 25px;
+  font-size: 28px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0.045em;
   text-transform: uppercase;
-  transform: translateY(3px) scaleY(0.8);
+  transform: translateY(8px) scaleY(0.8);
   transform-origin: left center;
 }
 
