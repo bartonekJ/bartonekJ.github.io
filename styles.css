@@ -68,7 +68,10 @@ a {
   display: block;
   width: 42px;
   height: 36px;
-  object-fit: contain;
+  flex: 0 0 auto;
+  background-color: var(--brand-logo-color, var(--orange));
+  -webkit-mask: url("assets/jb-logo.svg") center / contain no-repeat;
+  mask: url("assets/jb-logo.svg") center / contain no-repeat;
 }
 
 .brand-name {
