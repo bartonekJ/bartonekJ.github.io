@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="JB_Drill user guide: drawing hockey drills, gestures, animation, tactics, files, library, notes and exports.">
+  <meta name="theme-color" content="#1d1d1c">
+  <title>JB_Drill Help &amp; User Guide</title>
+  <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
+  <link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs-body">
+  <header class="site-header docs-header">
+    <a class="brand" href="../../" aria-label="byBartonek home">
+      <span class="brand-logo" aria-hidden="true"></span>
+      <span class="brand-name" aria-hidden="true"><span class="brand-prefix">BY</span><span class="brand-major">B</span><span class="brand-minor">ARTONEK</span></span>
+    </a>
+    <nav class="site-nav" aria-label="JB Drill navigation">
+      <a href="../">JB_Drill</a>
+      <a href="./" aria-current="page">Help</a>
+      <a href="../../support/">Support</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="docs-hero">
+      <div class="docs-hero-inner">
+        <p class="eyebrow">JB_DRILL USER GUIDE</p>
+        <h1>Draw first.<br><span>Refine when needed.</span></h1>
+        <p>A practical guide to the touch-first workflow, smart event logic, animation, tactics and session exports.</p>
+        <div class="docs-hero-actions">
+          <a class="button button-primary" href="#quick-start">Start here</a>
+          <a class="button button-quiet" href="mailto:support@bybartonek.com">Ask for help</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="docs-shell">
+      <aside class="docs-toc" aria-label="Guide contents">
+        <strong>Contents</strong>
+        <a href="#quick-start">Quick start</a>
+        <a href="#interface">Interface</a>
+        <a href="#placing">Players &amp; items</a>
+        <a href="#drawing">Drawing actions</a>
+        <a href="#editing">Editing</a>
+        <a href="#gestures">Gestures &amp; mouse</a>
+        <a href="#animate">Animate</a>
+        <a href="#tactics">Tactics</a>
+        <a href="#sessions">Sessions &amp; files</a>
+        <a href="#library">Drill Library</a>
+        <a href="#notes">Notes &amp; tags</a>
+        <a href="#export">PDF &amp; video</a>
+        <a href="#storage">Storage</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+      </aside>
+
+      <article class="docs-content">
+        <section class="docs-section" id="quick-start">
+          <p class="eyebrow">FIRST FIVE MINUTES</p>
+          <h2>Three rules explain most of JB_Drill.</h2>
+          <div class="step-grid">
+            <div class="step-card"><b>1</b><h3>Drag = use once</h3><p>Drag a player, item, curve, ending or technique from the shelf. After the action, JB_Drill returns to Edit.</p></div>
+            <div class="step-card"><b>2</b><h3>Tap = keep active</h3><p>Tap a shelf tool to keep stamping or drawing with it until you choose another mode.</p></div>
+            <div class="step-card"><b>3</b><h3>Edit directly</h3><p>In Edit, tap a route to reveal its useful control points. Drag the thing you want to change.</p></div>
+            <div class="step-card"><b>4</b><h3>Let context help</h3><p>Start from a player, end on a route or cross an obstacle. The editor links and adapts the action automatically.</p></div>
+          </div>
+          <h3>A minimal drill</h3>
+          <ol>
+            <li>Drag an Offense player onto the rink.</li>
+            <li>Drag a puck onto the player. The small stick-and-puck marker confirms possession.</li>
+            <li>Drag Forward + puck onto the rink and draw from the player.</li>
+            <li>Draw a Shot from the end of the route.</li>
+            <li>Open <strong>Edit → Animate</strong> and press Play.</li>
+          </ol>
+        </section>
+
+        <section class="docs-section" id="interface">
+          <p class="eyebrow">LAYOUT</p>
+          <h2>Everything important stays near the rink.</h2>
+          <table class="docs-table">
+            <tr><th>Tool shelf</th><td>Players, Items, Curves, Endings and Techniques. Sections can be collapsed; a collapsed section remembers its last-used tool.</td></tr>
+            <tr><th>Colors &amp; Edit</th><td>Persistent color slots and the Edit mode dropdown: Edit, Clone, Link Players, Animate, Tactics and Paint.</td></tr>
+            <tr><th>Drill bar</th><td>Current file and drill, sheet tabs, Add drill, Notes, Tags and Drill Library.</td></tr>
+            <tr><th>Rink</th><td>The working canvas. A file may contain full-rink, half-rink and zone drills as separate sheets.</td></tr>
+            <tr><th>Timeline</th><td>Shown only in Animate or Tactics. Collapse it when you want maximum rink area.</td></tr>
+            <tr><th>File menu</th><td>New File, Library, .jbdrill import/export, PDF, video and Settings.</td></tr>
+          </table>
+        </section>
+
+        <section class="docs-section" id="placing">
+          <p class="eyebrow">SETUP</p>
+          <h2>Place players and equipment.</h2>
+          <p>
+            Players include Offense, Defense, Goalie and Coach. Items include Puck, Pylon, Tire, Stick on pylons,
+            Stick, Border, Net and a pile of Pucks. Tap a player or item for repeated placement, or drag it for one placement.
+            The currently selected color is used for new color-aware objects.
+          </p>
+          <ul>
+            <li>Drag a color onto a color-aware object or action to recolor it.</li>
+            <li>With an object selected, tap a color to apply it.</li>
+            <li>Nets align naturally near the boards. Long equipment can follow the boards while preserving your manual rotation offset.</li>
+            <li>Use <strong>Clone</strong> to repeat a prepared object with its current orientation.</li>
+            <li>Drag additional pucks onto a player to give the player more pass “charges.” Each pass consumes one.</li>
+            <li>Assign Slots to describe queue order. Use <strong>Link Players</strong> to group players who act together.</li>
+          </ul>
+        </section>
+
+        <section class="docs-section" id="drawing">
+          <p class="eyebrow">CURVES &amp; EVENTS</p>
+          <h2>Draw the action, not its settings.</h2>
+          <p>
+            Available curves include forward and backward skating with or without the puck, lateral movement,
+            pass, shot and saucer pass. Routes keep hockey notation at a readable size as you change the rink view.
+          </p>
+          <h3>Possession and linking</h3>
+          <ul>
+            <li>A route started from a player inherits that player's color and puck state.</li>
+            <li>A pass ending on a no-puck route creates a receiving event and changes the following section to puck possession.</li>
+            <li>A pass or shot started from a puck-carrying route branches from that point and updates the following possession state.</li>
+            <li>Players snapped to starts and linked endpoints stay attached while the route is edited.</li>
+            <li>A free pass into space creates a free puck. A later route can collect it.</li>
+          </ul>
+          <h3>Endings and techniques</h3>
+          <p>
+            Endings include Arrow, Stop, Screen, Forecheck and Backcheck. Techniques include Drop pass, Mohawk,
+            Transition, Pivot, Inside edge, Outside edge, Forehand, Backhand and finesse shapes such as Deke Left,
+            Deke Right, Toe Drag and Toe Drag Release. Drag an ending anywhere onto a route to change the ending of
+            the relevant section. A technique placed on an endpoint temporarily replaces the visible ending; deleting it reveals the ending again.
+          </p>
+          <h3>Automatic helpers</h3>
+          <ul>
+            <li>A pass near the boards can become a board pass and target a player or receiving route.</li>
+            <li>A pass over a Border, Stick or Stick on pylons becomes a saucer pass over the obstacle.</li>
+            <li>A skating route over a Stick receives a jump marker.</li>
+            <li>Pylons, tires and stick-on-pylons obstacles can create an editable finesse technique.</li>
+            <li>Sharp qualifying turns can create a removable Punch Turn marker.</li>
+          </ul>
+        </section>
+
+        <section class="docs-section" id="editing">
+          <p class="eyebrow">EDIT MODE</p>
+          <h2>Only the useful controls are visible.</h2>
+          <ul>
+            <li>Tap a route to reveal its start, end, techniques and curvature-based control points.</li>
+            <li>Drag a control point to refine the route. Tangents remain automatic unless you deliberately use the hidden tangent gesture.</li>
+            <li>Double-tap a normal control point to remove it.</li>
+            <li>Double-tap and immediately drag between existing points to insert a new point and position it in one motion.</li>
+            <li>Double-tap players, items, techniques, passes, shots or Paint strokes to remove them.</li>
+            <li>Scratch across a route to delete it. A choice appears only when deleting one segment could leave an ambiguous action.</li>
+            <li>Undo and Redo include drawing, object and timing edits.</li>
+          </ul>
+          <div class="notice-card"><p>Deleting a player does not delete the route. The start remains available for a replacement player.</p></div>
+        </section>
+
+        <section class="docs-section" id="gestures">
+          <p class="eyebrow">TOUCH, PEN &amp; MOUSE</p>
+          <h2>Gesture reference.</h2>
+          <div class="gesture-grid">
+            <div class="gesture-card"><code>Two-finger tap</code><h3>Undo</h3><p>Instantly undo the last change on the canvas or timeline.</p></div>
+            <div class="gesture-card"><code>Two-finger double tap</code><h3>Redo</h3><p>Restore the most recently undone change.</p></div>
+            <div class="gesture-card"><code>Second finger · vertical</code><h3>Rotate</h3><p>While dragging an object, adjust its rotation offset. Near 45° intervals it snaps precisely.</p></div>
+            <div class="gesture-card"><code>Second finger · horizontal</code><h3>Tangent length</h3><p>While editing a route point, lengthen or shorten its hidden tangent handles.</p></div>
+            <div class="gesture-card"><code>Second finger · Paint</code><h3>Brush controls</h3><p>Horizontal changes brush size; vertical changes opacity. Pen pressure and stroke speed also affect the result.</p></div>
+            <div class="gesture-card"><code>Middle mouse drag</code><h3>Second-finger equivalent</h3><p>Rotate objects, adjust tangents, brush settings or Animate section values on Windows.</p></div>
+            <div class="gesture-card"><code>Mouse wheel</code><h3>Scroll shelf</h3><p>Move horizontally through the tool shelf on Windows.</p></div>
+            <div class="gesture-card"><code>Ctrl+Z / Ctrl+Shift+Z</code><h3>Undo / Redo</h3><p>Keyboard equivalents for desktop work.</p></div>
+          </div>
+        </section>
+
+        <section class="docs-section" id="animate">
+          <p class="eyebrow">ANIMATE MODE</p>
+          <h2>Build and correct timing visually.</h2>
+          <p>
+            Animate schedules route sections, passes and shots from their event relationships. Press Play or scrub the
+            time slider. Active action sections flash and leave a short fading trail so players can read the current action without the full drawing taking over.
+          </p>
+          <ul>
+            <li>Tap a route section on the rink to select the same block on the expanded timeline.</li>
+            <li>Move a player along the existing path to retime that player at the current time.</li>
+            <li>Use the second finger or middle mouse: horizontal changes section speed, vertical changes Wait.</li>
+            <li>On the expanded timeline, drag a block to move it or drag an edge to change its duration.</li>
+            <li>Collapsed timeline is for playback and scrubbing only; section editing is disabled.</li>
+            <li>Use Global Speed to preview or export the drill from 1–500%.</li>
+            <li>Symmetry creates a mirrored second phase; its start can be retimed like other events.</li>
+            <li>Double-tap an animated player to lock or unlock its timing during recalculation.</li>
+          </ul>
+        </section>
+
+        <section class="docs-section" id="tactics">
+          <p class="eyebrow">TACTICS MODE</p>
+          <h2>Keyframe players, puck and formations.</h2>
+          <ol>
+            <li>Place and, if useful, Link Players in Edit.</li>
+            <li>Open <strong>Edit → Tactics</strong>.</li>
+            <li>Move one player or the whole linked formation. A keyframe is created at the current time.</li>
+            <li>Move the timeline, then set the next position.</li>
+            <li>Use Previous/Next keyframe buttons to edit without accidentally creating another key.</li>
+          </ol>
+          <ul>
+            <li>Keyframes belong to the whole active formation and can be dragged on the timeline.</li>
+            <li>Double-tap a keyframe to delete it.</li>
+            <li>Double-tap a player to add, edit or clear a label.</li>
+            <li>The puck is animated directly and is not assigned to players in Tactics mode.</li>
+            <li>Drawn routes act as temporary cues: they appear briefly and fade instead of driving the players.</li>
+            <li>Edit the duration at the end of the Tactics timeline.</li>
+          </ul>
+        </section>
+
+        <section class="docs-section" id="sessions">
+          <p class="eyebrow">FILES &amp; DRILLS</p>
+          <h2>One file can hold a complete session.</h2>
+          <p>
+            A <code>.jbdrill</code> file contains multiple named drills. Each drill keeps its own rink background,
+            drawing, notes, tags, Animate timing, Tactics keyframes and global speed.
+          </p>
+          <ul>
+            <li>Use <strong>+</strong> to create a drill and choose Full rink, Half rink or Zone.</li>
+            <li>Drag drill tabs to reorder the session.</li>
+            <li>Use Copy drill and Paste drill to move a complete drill between open files.</li>
+            <li>Use New File for an empty training session.</li>
+            <li>The selected Edit, Animate or Tactics mode and timeline state remain consistent while moving between drills where applicable.</li>
+          </ul>
+        </section>
+
+        <section class="docs-section" id="library">
+          <p class="eyebrow">DRILL LIBRARY</p>
+          <h2>Find drills without remembering the file.</h2>
+          <p>
+            The Library indexes drills in the selected storage folder plus the examples bundled with JB_Drill.
+            Filter by age level and category, preview the drawing, notes and tags, select one or several results and choose <strong>Add to Session</strong>.
+          </p>
+          <ul>
+            <li>Age levels: U6 through U18, Junior and Pro.</li>
+            <li>Categories cover warm-up, skills, game, tactics, skating, passing, shooting, special teams, zones, game situations and more.</li>
+            <li>Arrow keys move through results when a keyboard is available.</li>
+          </ul>
+        </section>
+
+        <section class="docs-section" id="notes">
+          <p class="eyebrow">NOTES &amp; TAGS</p>
+          <h2>Add the information the drawing cannot show.</h2>
+          <p>
+            Notes support selected bold text and adjustable text size. JB_Drill also counts placed training equipment
+            automatically (individual pucks are intentionally excluded). Notes and the equipment summary are included in PDF output.
+          </p>
+        </section>
+
+        <section class="docs-section" id="export">
+          <p class="eyebrow">SHARE</p>
+          <h2>Export a coach-ready session.</h2>
+          <table class="docs-table">
+            <tr><th>Export PDF</th><td>Select any drills in the file. Each drill becomes one branded page with its name, rink, notes and equipment summary.</td></tr>
+            <tr><th>Export Video</th><td>Select any animated drills. They are rendered in session order as one video with drill titles and each drill's Global Speed.</td></tr>
+            <tr><th>Export .jbdrill</th><td>Saves the editable source session, including drawings, logic, notes, tags, animation and tactics.</td></tr>
+          </table>
+        </section>
+
+        <section class="docs-section" id="storage">
+          <p class="eyebrow">STORAGE &amp; SYNC</p>
+          <h2>You choose where the files live.</h2>
+          <p>
+            Open <strong>File → Settings → Storage</strong> and choose the folder that should directly contain your
+            <code>.jbdrill</code> files. On Android this can be a local folder or a folder exposed by Google Drive.
+            On Windows it can be any accessible folder, including a folder synchronized by Google Drive for desktop.
+          </p>
+          <div class="notice-card"><p>Choose the same cloud folder on both devices to work with the same files. Sync speed is controlled by the storage provider, not JB_Drill.</p></div>
+        </section>
+
+        <section class="docs-section" id="troubleshooting">
+          <p class="eyebrow">TROUBLESHOOTING</p>
+          <h2>When something does not look right.</h2>
+          <table class="docs-table">
+            <tr><th>A file is missing</th><td>Open Settings and confirm the selected folder. If it is cloud-backed, verify that the provider has finished syncing.</td></tr>
+            <tr><th>Library opens slowly once</th><td>The first scan reads drill metadata and builds previews. Keep the Library open while “Loading data” is shown; later openings use the cache.</td></tr>
+            <tr><th>I cannot edit timeline blocks</th><td>Expand the Animate timeline. Editing is intentionally disabled in collapsed mode.</td></tr>
+            <tr><th>A route draws with the puck</th><td>Check the player's puck markers and incoming events. Each available puck allows another puck-carrying action or pass.</td></tr>
+            <tr><th>Gesture is not recognized</th><td>Keep the first pointer down before adding the second finger. Some tablet stylus settings block touch while the pen is hovering.</td></tr>
+            <tr><th>I found a repeatable bug</th><td>Save the smallest useful <code>.jbdrill</code> example and send it with the app version and device model to <a href="mailto:support@bybartonek.com">support@bybartonek.com</a>.</td></tr>
+          </table>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="brand brand-footer"><span class="brand-logo" aria-hidden="true"></span><span class="brand-name" aria-label="byBartonek"><span class="brand-prefix" aria-hidden="true">BY</span><span class="brand-major" aria-hidden="true">B</span><span class="brand-minor" aria-hidden="true">ARTONEK</span></span></div>
+    <p>JB_Drill Help · Active test documentation.</p>
+    <div class="footer-links"><a href="../../support/">Support</a><a href="../../privacy/">Privacy</a><span>© <span id="year">2026</span></span></div>
+  </footer>
+  <script src="../../script.js"></script>
+</body>
+</html>
