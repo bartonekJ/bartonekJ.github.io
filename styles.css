@@ -486,18 +486,16 @@ a {
 }
 
 .icon-drill::before {
-  inset: 9px;
-  border: 2px solid var(--orange);
-  border-radius: 50%;
+  display: none;
 }
 
 .icon-drill::after {
-  width: 13px;
-  height: 2px;
-  right: 3px;
-  bottom: 7px;
-  background: var(--orange);
-  transform: rotate(43deg);
+  display: none;
+}
+
+.icon-drill {
+  border: 0;
+  background: url("assets/icon-jb-drill.webp") center / cover no-repeat;
 }
 
 .icon-hub::before {
@@ -537,6 +535,8 @@ a {
   border: 0;
   border-radius: 0;
   background: currentColor;
+  color: var(--panel-soft);
+  transform: rotate(180deg);
   -webkit-mask-position: center;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: contain;
@@ -546,13 +546,11 @@ a {
 }
 
 .icon-gates {
-  color: var(--orange);
   -webkit-mask-image: url("assets/icon-timing-gates.svg");
   mask-image: url("assets/icon-timing-gates.svg");
 }
 
 .icon-force {
-  color: var(--lime);
   -webkit-mask-image: url("assets/icon-force-plate.svg");
   mask-image: url("assets/icon-force-plate.svg");
 }
