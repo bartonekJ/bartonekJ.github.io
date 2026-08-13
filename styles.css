@@ -69,13 +69,15 @@ a {
   width: 42px;
   height: 36px;
   flex: 0 0 auto;
-  background-color: var(--brand-logo-color, var(--orange));
+  background-color: var(--brand-logo-color, var(--warm-white));
   -webkit-mask: url("assets/jb-logo.svg") center / contain no-repeat;
   mask: url("assets/jb-logo.svg") center / contain no-repeat;
+  transform: translateY(-1px);
 }
 
 .brand-name {
-  font: 800 22px/1 var(--font-display);
+  font: 800 22px/1 var(--font-ui);
+  letter-spacing: -0.025em;
 }
 
 .brand-name small {
