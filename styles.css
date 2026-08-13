@@ -64,16 +64,11 @@ a {
   letter-spacing: 0.04em;
 }
 
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  aspect-ratio: 1;
-  border: 2px solid var(--orange);
-  border-radius: 9px 3px 9px 3px;
-  color: var(--orange);
-  font: 900 22px/1 var(--font-display);
-  transform: rotate(-4deg);
+.brand-logo {
+  display: block;
+  width: 42px;
+  height: 36px;
+  object-fit: contain;
 }
 
 .brand-name {
@@ -589,9 +584,9 @@ a {
   color: var(--warm-white);
 }
 
-.brand-footer .brand-mark {
-  width: 30px;
-  font-size: 18px;
+.brand-footer .brand-logo {
+  width: 35px;
+  height: 30px;
 }
 
 .brand-footer .brand-name {
