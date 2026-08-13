@@ -517,37 +517,44 @@ a {
 }
 
 .icon-gates::before {
-  left: 8px;
-  right: 8px;
-  top: 11px;
-  height: 16px;
-  border-left: 3px solid var(--orange);
-  border-right: 3px solid var(--orange);
-  border-top: 2px solid var(--orange);
+  display: none;
 }
 
 .icon-gates::after {
-  left: 13px;
-  right: 13px;
-  bottom: 8px;
-  height: 2px;
-  background: var(--orange);
+  display: none;
 }
 
 .icon-force::before {
-  inset: 11px 7px 8px;
-  border: 2px solid var(--lime);
-  border-radius: 3px;
+  display: none;
 }
 
 .icon-force::after {
-  width: 12px;
-  height: 12px;
-  top: 5px;
-  left: 50%;
-  border-left: 2px solid var(--lime);
-  border-bottom: 2px solid var(--lime);
-  transform: translateX(-50%) rotate(-45deg);
+  display: none;
+}
+
+.icon-gates,
+.icon-force {
+  border: 0;
+  border-radius: 0;
+  background: currentColor;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.icon-gates {
+  color: var(--orange);
+  -webkit-mask-image: url("assets/icon-timing-gates.svg");
+  mask-image: url("assets/icon-timing-gates.svg");
+}
+
+.icon-force {
+  color: var(--lime);
+  -webkit-mask-image: url("assets/icon-force-plate.svg");
+  mask-image: url("assets/icon-force-plate.svg");
 }
 
 .print-feature {
