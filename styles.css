@@ -500,19 +500,15 @@ a {
 }
 
 .icon-hub::before {
-  inset: 10px;
-  border: 2px solid var(--lime);
-  transform: rotate(45deg);
+  display: block;
+  inset: 7px;
+  background: var(--orange);
+  -webkit-mask: url("assets/jb-logo.svg") center / contain no-repeat;
+  mask: url("assets/jb-logo.svg") center / contain no-repeat;
 }
 
 .icon-hub::after {
-  width: 9px;
-  aspect-ratio: 1;
-  top: 50%;
-  left: 50%;
-  border-radius: 50%;
-  background: var(--lime);
-  transform: translate(-50%, -50%);
+  display: none;
 }
 
 .icon-gates::before {
@@ -542,7 +538,8 @@ a {
 }
 
 .icon-gates,
-.icon-force {
+.icon-force,
+.icon-hub {
   border: 0;
   border-radius: 12px;
   background: var(--panel-soft);
