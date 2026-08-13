@@ -453,7 +453,7 @@ a {
 
 .product {
   display: grid;
-  grid-template-columns: 44px 1fr;
+  grid-template-columns: 52.5px 1fr;
   gap: 15px;
   align-items: start;
 }
@@ -473,10 +473,11 @@ a {
 
 .product-icon {
   position: relative;
-  width: 42px;
+  width: 52.5px;
+  flex: 0 0 52.5px;
   aspect-ratio: 1;
   border: 2px solid #b8c4cb;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .product-icon::before,
@@ -499,13 +500,13 @@ a {
 }
 
 .icon-hub::before {
-  inset: 8px;
+  inset: 10px;
   border: 2px solid var(--lime);
   transform: rotate(45deg);
 }
 
 .icon-hub::after {
-  width: 7px;
+  width: 9px;
   aspect-ratio: 1;
   top: 50%;
   left: 50%;
@@ -515,7 +516,12 @@ a {
 }
 
 .icon-gates::before {
-  display: none;
+  display: block;
+  inset: 7px;
+  background: var(--orange);
+  transform: rotate(180deg);
+  -webkit-mask: url("assets/icon-timing-gates.svg") center / contain no-repeat;
+  mask: url("assets/icon-timing-gates.svg") center / contain no-repeat;
 }
 
 .icon-gates::after {
@@ -523,7 +529,12 @@ a {
 }
 
 .icon-force::before {
-  display: none;
+  display: block;
+  inset: 7px;
+  background: var(--orange);
+  transform: rotate(180deg);
+  -webkit-mask: url("assets/icon-force-plate.svg") center / contain no-repeat;
+  mask: url("assets/icon-force-plate.svg") center / contain no-repeat;
 }
 
 .icon-force::after {
@@ -533,26 +544,8 @@ a {
 .icon-gates,
 .icon-force {
   border: 0;
-  border-radius: 0;
-  background: currentColor;
-  color: var(--panel-soft);
-  transform: rotate(180deg);
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
-}
-
-.icon-gates {
-  -webkit-mask-image: url("assets/icon-timing-gates.svg");
-  mask-image: url("assets/icon-timing-gates.svg");
-}
-
-.icon-force {
-  -webkit-mask-image: url("assets/icon-force-plate.svg");
-  mask-image: url("assets/icon-force-plate.svg");
+  border-radius: 12px;
+  background: var(--panel-soft);
 }
 
 .print-feature {
