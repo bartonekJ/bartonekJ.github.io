@@ -88,24 +88,24 @@ a {
   position: relative;
   top: 4px;
   font-family: var(--font-brand);
-  font-size: 31px;
-  font-weight: 650;
+  font-size: 34px;
+  font-weight: 400;
   line-height: 0.8;
-  letter-spacing: 0.065em;
+  letter-spacing: 0;
 }
 
 .brand-prefix {
-  margin-right: 0.3em;
+  margin-right: 0;
   color: var(--orange);
-  font-weight: 650;
+  font-weight: inherit;
 }
 
 .brand-major {
-  font-weight: 650;
+  font-weight: inherit;
 }
 
 .brand-minor {
-  font-weight: 650;
+  font-weight: inherit;
 }
 
 .site-nav {
@@ -113,10 +113,10 @@ a {
   gap: clamp(18px, 3vw, 42px);
   color: #c9c6bd;
   font-family: var(--font-brand);
-  font-size: 17px;
-  font-weight: 650;
+  font-size: 19px;
+  font-weight: 400;
   line-height: 0.8;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
@@ -714,7 +714,7 @@ a {
   }
 
   .brand-name {
-    font-size: 29px;
+    font-size: 32px;
   }
 
   .site-nav a:not(:last-child) {
