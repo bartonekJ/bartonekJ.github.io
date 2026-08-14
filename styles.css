@@ -334,6 +334,24 @@ a {
   font-size: 21px;
 }
 
+.hero-core-problem,
+.hero-core-practice {
+  padding: 15px 18px;
+  border-color: #5d5951;
+  background: rgba(34, 34, 32, 0.92);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
+}
+
+.hero-core-problem {
+  top: 27%;
+  left: 23%;
+}
+
+.hero-core-practice {
+  top: 73%;
+  left: 70%;
+}
+
 .signal {
   position: absolute;
   height: 2px;
@@ -735,6 +753,26 @@ a {
 
   .orbit-small {
     width: 54vw;
+  }
+
+  .hero-core {
+    gap: 9px;
+    padding: 14px 16px;
+    font-size: 9px;
+  }
+
+  .hero-core strong {
+    font-size: 17px;
+  }
+
+  .hero-core-problem {
+    top: 24%;
+    left: 28%;
+  }
+
+  .hero-core-practice {
+    top: 76%;
+    left: 67%;
   }
 
   .work {
