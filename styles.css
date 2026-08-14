@@ -3,7 +3,7 @@
   src: url("assets/fonts/BarlowCondensed-Medium.ttf") format("truetype");
   font-style: normal;
   font-weight: 500;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   src: url("assets/fonts/BarlowCondensed-SemiBold.ttf") format("truetype");
   font-style: normal;
   font-weight: 600;
-  font-display: swap;
+  font-display: block;
 }
 
 :root {
@@ -99,7 +99,7 @@ a {
   line-height: 1;
   letter-spacing: 0.045em;
   text-transform: uppercase;
-  transform: translateY(6px) scale(1.5, 0.96);
+  transform: translateY(8px) scale(2.16, 0.8);
   transform-origin: left center;
 }
 
@@ -128,7 +128,7 @@ a {
   font-weight: 500;
   letter-spacing: 0.065em;
   text-transform: uppercase;
-  transform: scaleY(0.8);
+  transform: scale(1.35, 0.66);
   transform-origin: right center;
 }
 
@@ -723,6 +723,11 @@ a {
 @media (max-width: 760px) {
   .site-header {
     min-height: 68px;
+  }
+
+  .brand-name {
+    font-size: 26px;
+    transform: translateY(8px) scale(1.9, 0.8);
   }
 
   .site-nav a:not(:last-child) {
