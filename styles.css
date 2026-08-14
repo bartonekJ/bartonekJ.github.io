@@ -535,7 +535,7 @@ a {
 
 .icon-drill {
   border: 0;
-  background: url("assets/icon-jb-drill.webp") center / cover no-repeat;
+  background: url("assets/icon-jb-drill.webp?v=3") center / cover no-repeat;
 }
 
 .icon-hub::before {
