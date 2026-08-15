@@ -68,7 +68,7 @@
   right: 0;
   height: 100%;
   aspect-ratio: 1774 / 887;
-  background: url("assets/JB_DrillHeader.png") center / 100% 100% no-repeat;
+  background: url("assets/JB_DrillHeader.webp") center / 100% 100% no-repeat;
   pointer-events: none;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 80%);
   mask-image: linear-gradient(90deg, transparent 0%, #000 80%);
