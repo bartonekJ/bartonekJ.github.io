@@ -6,27 +6,86 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: "Smooch Sans Local";
+  src: url("assets/fonts/SmoochSans-Variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oxanium Local";
+  src: url("assets/fonts/Oxanium-Variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poiret One Local";
+  src: url("assets/fonts/PoiretOne-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Saira Extra Condensed Local";
+  src: url("assets/fonts/SairaExtraCondensed-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Saira Extra Condensed Local";
+  src: url("assets/fonts/SairaExtraCondensed-Medium.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Goldman Documentation";
+  src: url("assets/fonts/Goldman-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --ink: #1d1d1c;
   --panel: #292927;
   --panel-soft: #343431;
-  --paper: #edf2f5;
-  --paper-bright: #f8fafb;
-  --line: #cbd5dc;
+  --paper: #d6d8d6;
+  --paper-bright: #e9ebe9;
+  --surface: #f0f1ef;
+  --surface-hover: #e2e5e2;
+  --line: #b9bfbb;
   --text: #1d2732;
   --muted: #687686;
   --warm-white: #fff6e4;
   --orange: #ff9309;
   --orange-soft: #ffb24e;
+  --orange-on-light: #f28800;
+  --orange-deep: #e27600;
   --lime: #8fdb00;
   --cyan: #63bddf;
   --violet: #8d7bd3;
   --radius: 18px;
   --shadow: 0 18px 50px rgba(21, 30, 38, 0.11);
-  --font-ui: Verdana, Geneva, Arial, sans-serif;
-  --font-display: "Arial Narrow", "Roboto Condensed", "Segoe UI", sans-serif;
+  --font-ui: "Smooch Sans Local", "Arial Narrow", "Segoe UI", sans-serif;
+  --font-display: "Alumni Sans SC Local", "Arial Narrow", "Roboto Condensed", sans-serif;
   --font-brand: "Alumni Sans SC Local", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-product: "Oxanium Local", "Segoe UI", sans-serif;
+  --font-light-accent: "Goldman Documentation", sans-serif;
+  --light-accent-size: 20px;
+  --light-accent-line-height: 1;
+  --light-accent-tracking: 0.11em;
+  --font-quote: "Poiret One Local", "Segoe UI", sans-serif;
+  --font-reading: Verdana, Geneva, Arial, sans-serif;
 }
 
 * {
@@ -42,6 +101,8 @@ body {
   background: var(--paper);
   color: var(--text);
   font-family: var(--font-ui);
+  font-size: 17px;
+  font-weight: 450;
   line-height: 1.55;
 }
 
@@ -73,6 +134,14 @@ a {
   letter-spacing: 0.04em;
 }
 
+.brand-lockup {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+}
+
 .brand-logo {
   display: block;
   width: 46px;
@@ -86,12 +155,31 @@ a {
   display: inline-flex;
   align-items: baseline;
   position: relative;
-  top: 4px;
+  top: 1px;
   font-family: var(--font-brand);
   font-size: 34px;
   font-weight: 400;
   line-height: 0.8;
   letter-spacing: 0;
+}
+
+.brand-tagline {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  color: #a9aaa4;
+  font-family: var(--font-product);
+  font-size: 8px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brand-tagline > span {
+  display: block;
 }
 
 .brand-prefix {
@@ -157,8 +245,9 @@ a {
 .eyebrow {
   margin: 0 0 18px;
   color: var(--orange);
-  font-size: 12px;
-  font-weight: 800;
+  font-family: var(--font-product);
+  font-size: 11px;
+  font-weight: 650;
   letter-spacing: 0.16em;
 }
 
@@ -170,17 +259,42 @@ a {
   font-family: var(--font-display);
   font-weight: 900;
   line-height: 0.95;
-  letter-spacing: -0.045em;
+  letter-spacing: 0.015em;
   text-transform: uppercase;
 }
 
 .hero h1 {
   max-width: 800px;
   font-size: clamp(54px, 7.2vw, 114px);
+  font-weight: 200;
 }
 
-.hero h1 span {
+.hero h1 .heading-accent {
   color: var(--orange);
+  font-weight: 900;
+}
+
+.section-heading .heading-accent {
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.heading-light {
+  font-weight: 200;
+}
+
+.section-heading h2 {
+  font-weight: 200;
+}
+
+.discipline h3,
+.contact-band h2 {
+  font-weight: 200;
+}
+
+.discipline h3 strong,
+.contact-band h2 strong {
+  font-weight: 900;
 }
 
 .hero-lead {
@@ -205,7 +319,8 @@ a {
   padding: 0 25px;
   border: 1px solid transparent;
   border-radius: 7px;
-  font-size: 13px;
+  font-family: var(--font-display);
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.03em;
   transition: transform 160ms ease, background 160ms ease, color 160ms ease;
@@ -365,6 +480,16 @@ a {
   padding: clamp(72px, 9vw, 132px) clamp(24px, 5vw, 84px);
 }
 
+.work .eyebrow {
+  color: var(--orange-on-light);
+  font-family: var(--font-light-accent);
+  font-size: var(--light-accent-size);
+  font-weight: 400;
+  line-height: var(--light-accent-line-height);
+  letter-spacing: var(--light-accent-tracking);
+  text-transform: uppercase;
+}
+
 .section-heading {
   max-width: 900px;
   margin-bottom: 52px;
@@ -422,9 +547,9 @@ a {
 .group-label {
   margin: 0 0 11px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 }
 
 .discipline h3 {
@@ -436,7 +561,9 @@ a {
   max-width: 680px;
   margin: 25px 0 0;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.42;
 }
 
 .product-groups {
@@ -449,7 +576,7 @@ a {
 
 .product-group {
   padding: 31px 32px 35px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .product-list {
@@ -466,15 +593,19 @@ a {
 
 .product h4 {
   margin: 0 0 5px;
-  font-size: 15px;
+  font-family: var(--font-product);
+  font-size: 22px;
+  font-weight: 550;
+  letter-spacing: -0.025em;
 }
 
 .product p,
 .compact-groups p {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 .product-link {
@@ -484,15 +615,15 @@ a {
 
 .product-link:hover,
 .product-link:focus-visible {
-  background: #f4f7f8;
+  background: var(--surface-hover);
   transform: translateX(3px);
 }
 
 .product-more {
   display: inline-block;
   margin-top: 7px;
-  color: #9a5708;
-  font-size: 10px;
+  color: var(--orange-on-light);
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -578,7 +709,7 @@ a {
   margin: 0 42px 35px;
   overflow: hidden;
   border-radius: 13px;
-  background: #e9edef;
+  background: #dcdedc;
 }
 
 .print-feature img {
@@ -600,7 +731,7 @@ a {
   width: fit-content;
   margin-top: 13px;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -622,6 +753,45 @@ a {
   padding: 62px clamp(24px, 6vw, 102px);
   background: var(--orange);
   color: #211407;
+}
+
+.pull-quote {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 48px clamp(28px, 8vw, 150px);
+  overflow: hidden;
+  background: var(--panel);
+  color: var(--warm-white);
+  text-align: center;
+}
+
+.pull-quote blockquote {
+  position: relative;
+  max-width: 1060px;
+  margin: 0;
+  font-family: var(--font-quote);
+  font-size: clamp(24px, 3vw, 44px);
+  font-weight: 400;
+  line-height: 1.24;
+}
+
+.pull-quote blockquote::before,
+.pull-quote blockquote::after {
+  color: var(--orange);
+  font-family: var(--font-display);
+  font-size: 0.72em;
+  font-weight: 700;
+}
+
+.pull-quote blockquote::before {
+  content: "\201C";
+  margin-right: 0.13em;
+}
+
+.pull-quote blockquote::after {
+  content: "\201D";
+  margin-left: 0.13em;
 }
 
 .contact-band .eyebrow {
@@ -664,6 +834,11 @@ a {
 
 .brand-footer .brand-name {
   font-size: 18px;
+}
+
+.brand-footer .brand-tagline {
+  margin-top: 3px;
+  font-size: 5px;
 }
 
 .footer-links {
@@ -731,7 +906,7 @@ a {
   }
 
   .hero h1 {
-    font-size: clamp(49px, 15vw, 78px);
+    font-size: clamp(44px, 12.7vw, 64px);
   }
 
   .hero-visual {
