@@ -26,7 +26,11 @@
   </header>
 
   <main>
-    <section class="docs-hero docs-hero--jb-drill">
+    <section class="docs-hero docs-hero--jb-drill docs-hero--video" data-hero-carousel>
+      <div class="jb-hero-media" aria-hidden="true">
+        <video class="jb-hero-video is-active" muted playsinline preload="auto" tabindex="-1"></video>
+        <video class="jb-hero-video" muted playsinline preload="metadata" tabindex="-1"></video>
+      </div>
       <div class="docs-hero-inner">
         <div class="page-context" aria-label="Current page">
           <span>JB_Drill</span><b aria-hidden="true">/</b><strong>PRODUCT OVERVIEW</strong>
@@ -40,6 +44,20 @@
         <div class="docs-hero-actions">
           <a class="button button-primary" href="help/">Open user guide</a>
           <a class="button button-quiet" href="mailto:support@bybartonek.com">Contact support</a>
+        </div>
+      </div>
+      <div class="jb-hero-slide-ui">
+        <div class="jb-hero-slide-label" aria-live="polite">EasyCurveEdit</div>
+        <div class="jb-hero-navigation">
+          <button class="jb-hero-arrow" type="button" data-hero-previous aria-label="Previous video shot">&#8592;</button>
+          <div class="jb-hero-segments" role="group" aria-label="JB Drill video shots">
+            <button class="jb-hero-segment is-active" type="button" data-shot="0" data-webm="../assets/jb-drill-hero/shot-01.webm" data-mp4="../assets/jb-drill-hero/shot-01.mp4" data-label="EasyCurveEdit" aria-label="Show EasyCurveEdit" aria-current="true"><span></span></button>
+            <button class="jb-hero-segment" type="button" data-shot="1" data-webm="../assets/jb-drill-hero/shot-02.webm" data-mp4="../assets/jb-drill-hero/shot-02.mp4" data-label="EasyPlacement" aria-label="Show EasyPlacement"><span></span></button>
+            <button class="jb-hero-segment" type="button" data-shot="2" data-webm="../assets/jb-drill-hero/shot-03.webm" data-mp4="../assets/jb-drill-hero/shot-03.mp4" data-label="FastDrillDrawing" aria-label="Show FastDrillDrawing"><span></span></button>
+            <button class="jb-hero-segment" type="button" data-shot="3" data-webm="../assets/jb-drill-hero/shot-04.webm" data-mp4="../assets/jb-drill-hero/shot-04.mp4" data-label="FastSessionFromLibrary" aria-label="Show FastSessionFromLibrary"><span></span></button>
+            <button class="jb-hero-segment" type="button" data-shot="4" data-webm="../assets/jb-drill-hero/shot-05.webm" data-mp4="../assets/jb-drill-hero/shot-05.mp4" data-label="Tactics" aria-label="Show Tactics"><span></span></button>
+          </div>
+          <button class="jb-hero-arrow" type="button" data-hero-next aria-label="Next video shot">&#8594;</button>
         </div>
       </div>
     </section>
@@ -138,5 +156,6 @@
     <div class="footer-links"><a href="help/">Help</a><a href="../support/">Support</a><a href="../privacy/">Privacy</a><span>© <span id="year">2026</span></span></div>
   </footer>
   <script src="../script.js"></script>
+  <script src="hero.js"></script>
 </body>
 </html>
