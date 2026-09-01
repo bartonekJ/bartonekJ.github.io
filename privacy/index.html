@@ -19,7 +19,7 @@
     <article class="legal-card">
       <p class="eyebrow">JB_DRILL</p>
       <h1>Privacy Policy</h1>
-      <p class="legal-meta">Effective date: 14 August 2026 · Last updated: 14 August 2026</p>
+      <p class="legal-meta">Effective date: 14 August 2026 · Last updated: 1 September 2026</p>
 
       <p>
         JB_Drill is designed as a local-first application. It does not require a byBartonek account and the current
@@ -41,7 +41,11 @@
         <li>file names and metadata needed to display the Drill Library;</li>
         <li>PDF and video files you choose to export.</li>
       </ul>
-      <p>This content remains on your device or in a storage folder you explicitly choose. It is not uploaded to a byBartonek server.</p>
+      <p>
+        This content normally remains on your device or in a storage folder you explicitly choose. The only current
+        byBartonek-hosted content transfer occurs when you deliberately create a temporary JB_Play sharing link, as
+        described below.
+      </p>
 
       <h2>3. Storage folder access</h2>
       <p>
@@ -61,21 +65,47 @@
         They can be removed by clearing the application's local data or uninstalling the application.
       </p>
 
-      <h2>5. Network use and third parties</h2>
+      <h2>5. JB_Play sharing and network use</h2>
       <p>
-        The current JB_Drill application does not send drill content, device identifiers or usage statistics to byBartonek.
-        Sharing, cloud synchronization and opening exported files are handled by services or applications selected by you.
-        Their privacy practices are governed by their own policies.
+        Creating a JB_Play link is optional and begins only when you choose the Share (JB_Play Link) action. JB_Drill then
+        creates a playback copy of the drills you selected and uploads it over HTTPS to the JB_Drill share service at
+        <a href="https://play.bybartonek.com/" rel="external">play.bybartonek.com</a>. The playback copy can contain the
+        session and drill names, rink layout, players and labels, drawn routes, notes, animation timing and tactical
+        keyframes needed to reproduce the shared playback.
+      </p>
+      <p>
+        The service is hosted using Cloudflare Workers and Workers KV. It creates a random, unlisted link and stores the
+        playback copy for 14 days, after which it expires automatically. The link is not protected by a password or user
+        account: anyone who receives it can open it and forward it to someone else. Do not include confidential information
+        or unnecessary identifying information about athletes in content you share.
+      </p>
+      <p>
+        The share service uses network information such as the requesting IP address for rate limiting and abuse prevention.
+        Cloudflare may also process ordinary request and security metadata while providing its hosting and network services.
+        JB_Drill does not use the share service for advertising, behavioral tracking or usage analytics.
+      </p>
+      <p>
+        If you do not want to upload a playback copy, do not create a JB_Play link. You can keep working locally or export a
+        PDF, video or `.jbplay` file and share it through a service of your choice instead. Third-party storage, messaging and
+        sharing services process data under their own terms and privacy policies.
       </p>
 
-      <h2>6. Support communication</h2>
+      <h2>6. Store distribution and subscriptions</h2>
+      <p>
+        When JB_Drill is obtained through an application store, that store provider processes acquisition, payment,
+        subscription and account information under its own privacy policy. JB_Drill may request the resulting product and
+        entitlement status from the store so that it can enable the features included with an active subscription.
+        byBartonek does not receive or store your full payment-card details.
+      </p>
+
+      <h2>7. Support communication</h2>
       <p>
         If you contact support, byBartonek processes the information you voluntarily provide — such as your email address,
         message, device details and attached example files — in order to respond and diagnose the issue. Support correspondence
         is kept only as long as reasonably needed for support, security, legal or product-improvement records.
       </p>
 
-      <h2>7. Why support data is processed</h2>
+      <h2>8. Why support data is processed</h2>
       <p>
         When you contact byBartonek, personal data in the message is processed to answer your request, provide support,
         take steps connected with a requested product or service, protect the application and users, and improve JB_Drill.
@@ -85,46 +115,55 @@
         may be necessary to provide a useful response.
       </p>
 
-      <h2>8. Recipients and service providers</h2>
+      <h2>9. Recipients and service providers</h2>
       <p>
         Support correspondence may be processed by email, hosting or technical service providers acting for byBartonek,
-        only as needed to deliver those services. Application files placed in a user-selected third-party folder are processed
-        by that storage provider under the user's relationship with the provider. byBartonek does not sell personal data.
+        only as needed to deliver those services. Temporary JB_Play playback copies and associated network requests are
+        processed by Cloudflare as the share-service hosting and network provider. Application files placed in a
+        user-selected third-party folder are processed by that storage provider under the user's relationship with the
+        provider. These providers may process data in countries where they operate, subject to their applicable data
+        protection arrangements. byBartonek does not sell personal data.
       </p>
 
-      <h2>9. Retention</h2>
+      <h2>10. Retention</h2>
       <ul>
         <li>drill files and exports remain in the user-selected location until the user changes or deletes them;</li>
         <li>local settings remain until they are cleared or the application is uninstalled;</li>
+        <li>JB_Play playback copies expire automatically 14 days after the sharing link is created;</li>
+        <li>temporary rate-limiting and security data is retained only as needed to operate and protect the share service;</li>
         <li>support correspondence is retained only as long as reasonably needed for the request, security, legal obligations or defensible product records.</li>
       </ul>
 
-      <h2>10. Children</h2>
+      <h2>11. Children</h2>
       <p>
         JB_Drill is a tool for coaches and other adult users. It is not designed to collect personal information from children.
         Users should avoid entering unnecessary identifying information about athletes, especially minors, into labels or notes.
       </p>
 
-      <h2>11. Your choices and rights</h2>
+      <h2>12. Your choices and rights</h2>
       <p>
-        Because application content is stored in locations you control, you can access, copy, edit or delete it directly.
-        For personal data contained in support correspondence, or for any other privacy request, contact
+        Because local application content is stored in locations you control, you can access, copy, edit or delete it directly.
+        A JB_Play link expires automatically after 14 days. If an earlier removal is necessary, send the complete sharing link
+        with your request. For personal data contained in support correspondence, or for any other privacy request, contact
         <a href="mailto:privacy@bybartonek.com">privacy@bybartonek.com</a>. Applicable legal rights may include access,
         correction, deletion, restriction, objection and data portability. You may also lodge a complaint with the Czech
         supervisory authority, the <a href="https://uoou.gov.cz/" rel="external">Office for Personal Data Protection</a>,
         or with another competent supervisory authority.
       </p>
 
-      <h2>12. Automated decisions</h2>
+      <h2>13. Automated decisions</h2>
       <p>byBartonek does not use personal data processed through JB_Drill support for automated decision-making or profiling.</p>
 
-      <h2>13. Security</h2>
+      <h2>14. Security</h2>
       <p>
-        JB_Drill limits access to the storage location selected by the user. No method of electronic storage is completely secure;
-        users remain responsible for device security, backups and access controls for their chosen storage provider.
+        JB_Drill limits local access to the storage location selected by the user. JB_Play transfers use HTTPS and randomly
+        generated link identifiers, but a sharing link is a bearer link rather than an authenticated private space. Anyone
+        with the link can view the shared playback. No method of electronic transmission or storage is completely secure;
+        users remain responsible for device security, backups, their chosen storage provider and the recipients with whom
+        they share a link.
       </p>
 
-      <h2>14. Changes to this policy</h2>
+      <h2>15. Changes to this policy</h2>
       <p>
         This policy may be updated when JB_Drill features or distribution methods change. The current version and effective date
         will always be published on this page.
