@@ -843,7 +843,37 @@ a {
 
 .footer-links {
   display: flex;
+  align-items: center;
   gap: 22px;
+}
+
+.footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 2px;
+}
+
+.footer-socials a {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: inherit;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.footer-socials svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.footer-socials a:hover,
+.footer-socials a:focus-visible {
+  color: var(--orange);
+  transform: translateY(-1px);
 }
 
 .footer-links a:hover,
@@ -983,6 +1013,10 @@ a {
 
   .brand-footer {
     margin-right: 0;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
   }
 }
 
