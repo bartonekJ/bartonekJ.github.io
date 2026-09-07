@@ -1,5 +1,30 @@
 @import url("styles.css");
 
+.privacy-callout {
+  margin: 28px 0;
+  padding: 22px;
+  border: 1px solid rgba(255, 147, 9, 0.4);
+  border-left: 4px solid var(--orange);
+  border-radius: 6px;
+  background: rgba(255, 147, 9, 0.06);
+  scroll-margin-top: 120px;
+}
+
+.privacy-callout h2:first-child {
+  margin-top: 0;
+}
+
+.legal-card code,
+.legal-card a {
+  overflow-wrap: anywhere;
+}
+
+.legal-card .button-primary {
+  color: var(--ink);
+  white-space: normal;
+  text-align: center;
+}
+
 .docs-body {
   background: var(--paper);
 }

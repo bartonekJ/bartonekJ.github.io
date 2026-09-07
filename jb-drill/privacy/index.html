@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="JB_Drill Privacy Policy for Android and Windows: local files, subscription verification, linked devices, JB_Play sharing and data deletion requests.">
+  <meta name="theme-color" content="#1d1d1c">
+  <title>JB_Drill Privacy Policy — byBartonek</title>
+  <link rel="canonical" href="https://bybartonek.com/jb-drill/privacy/">
+  <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
+  <link rel="stylesheet" href="../../docs.css">
+</head>
+<body class="docs-body">
+  <header class="site-header docs-header">
+    <a class="brand" href="../../" aria-label="byBartonek home"><span class="brand-logo" aria-hidden="true"></span><span class="brand-lockup" aria-hidden="true"><span class="brand-name"><span class="brand-prefix">by</span><span class="brand-major">B</span><span class="brand-minor">artonek</span></span><span class="brand-tagline"><span>Built</span><span>from</span><span>practice</span></span></span></a>
+    <nav class="site-nav" aria-label="JB_Drill privacy navigation"><a href="../">JB_Drill</a><a href="../help/">Help</a><a href="../../support/">Support</a></nav>
+  </header>
+  <main class="legal-wrap">
+    <article class="legal-card">
+      <p class="eyebrow">JB_DRILL · ANDROID &amp; WINDOWS</p>
+      <h1>Privacy Policy</h1>
+      <p class="legal-meta">Effective date: 14 August 2026 · Last updated: 7 September 2026</p>
+      <p>JB_Drill is a local-first tool for creating and presenting training drills. It does not require a byBartonek user account. The current Android and Windows applications do not include advertising, behavioral tracking or analytics SDKs.</p>
+      <p class="privacy-callout"><strong>Want to delete your data?</strong> Follow the <a href="#data-deletion">Data deletion instructions</a> below to request removal by email. No new account or purchase is required to submit a request.</p>
+
+      <h2>1. Who operates JB_Drill</h2>
+      <p>JB_Drill is provided by Jiří Bartoněk under the byBartonek name, Czech business identification number (IČO) 07924381. Privacy questions: <a href="mailto:privacy@bybartonek.com">privacy@bybartonek.com</a>. Support and data deletion requests: <a href="mailto:support@bybartonek.com">support@bybartonek.com</a>.</p>
+
+      <h2>2. Drills, files and local settings</h2>
+      <p>The application processes drill drawings, player labels, notes, tags, equipment layouts, animation timing, tactical keyframes, file names and library metadata to provide editing, playback and export. It also stores local preferences, selected-folder references and cached license information.</p>
+      <p>Drills and exports normally remain on your device or in a storage folder you choose. Ordinary editing does not upload your drill library to our license server. A playback copy is uploaded to byBartonek only when you deliberately create a JB_Play sharing link.</p>
+      <p>You can select a local folder or a folder exposed by a provider such as Google Drive. Your operating system and chosen provider control any cloud synchronization under their own terms. We do not operate that synchronization. You can change or revoke folder access using the application or operating-system settings.</p>
+      <p>You control deletion of local files and files in your chosen storage. Clearing app data or uninstalling can remove local settings, but does not necessarily delete exported files, files in a selected folder or cloud copies. Back up anything you want to keep first.</p>
+
+      <h2>3. Subscriptions and linked devices</h2>
+      <p>Google Play and Microsoft Store process purchases, payments and store accounts under their own policies. We do not receive or store your full payment-card details or store password.</p>
+      <p>To verify paid access and support device linking, JB_Drill communicates over HTTPS with <code>license.bybartonek.com</code>, hosted using Cloudflare Workers and D1. The service processes license references, product/plan and subscription status, verified expiry dates, and verification timestamps. For Google Play it stores the purchase token and package name server-side so it can re-check the subscription with Google. Microsoft purchase evidence is submitted for verification with Microsoft.</p>
+      <p>Each installation creates an identifier and cryptographic key pair. The server stores the installation identifier, public key, platform, device label and activation, last-contact and deactivation timestamps. The private device key remains on the device. These are installation identifiers, not a requirement to provide your real name or email address.</p>
+      <p>Linking uses short-lived, single-use pairing codes, stored as hashes, and signed requests. A license can connect several devices; authorized linked installations can view the linked-device list and manage links. Use a device label that does not reveal unnecessary personal information. Removing a linked device disables its access but is not deletion of its database record.</p>
+      <p>Verification and refresh requests protect paid access, enforce device limits and recover subscription status. The app can use a signed cached license while offline within its validity period. This does not mean server-side license records expire or are deleted at the same time.</p>
+
+      <h2>4. Optional JB_Play sharing</h2>
+      <p>Choosing Share (JB_Play Link) uploads a playback copy of selected drills over HTTPS to <code>play.bybartonek.com</code>. It may contain session and drill names, rink layouts, player labels, routes, notes, timing and tactical keyframes. Cloudflare Workers and Workers KV host the sharing service.</p>
+      <p>Playback copies have an automatic 14-day expiry. The random link is unlisted but is not password-protected: anyone with it can view the content and forward the link. Do not include confidential material or unnecessary information about athletes, especially minors.</p>
+      <p>The service uses requesting IP addresses for rate limiting and abuse prevention. Cloudflare may process network, request and security metadata to provide and protect its services. These are not used by JB_Drill for advertising or behavioral analytics.</p>
+      <p>You can instead export a PDF, video or <code>.jbplay</code> file and share it through a service of your choice. Other storage or messaging services, and copies saved by recipients, are outside our control.</p>
+
+      <h2>5. Support, purposes and service providers</h2>
+      <p>Support messages contain the email address, text, device details and attachments you choose to provide. We use them to answer requests and diagnose issues. Only send example files if needed, and remove unnecessary personal information first.</p>
+      <p>Processing supports requested application features and subscriptions, optional sharing, support, fraud and abuse prevention, and applicable legal obligations. Depending on the purpose, the legal basis is performance of a contract or requested service, legitimate interests in secure operation and support, or compliance with a legal obligation.</p>
+      <p>Cloudflare processes hosted license and sharing data for us. Email and technical service providers may process correspondence. Store providers and your chosen storage providers process data under their own relationships with you. Providers may process data internationally subject to their applicable data-protection arrangements. We do not sell personal data.</p>
+
+      <h2>6. Retention</h2>
+      <ul>
+        <li><strong>Local files and settings:</strong> remain until you delete them or clear the relevant storage.</li>
+        <li><strong>JB_Play playback copies:</strong> expire 14 days after upload; earlier removal may be requested below.</li>
+        <li><strong>License, purchase-verification and device records:</strong> there is currently no automatic deletion deadline. They remain in the service to support verification, linking and restoration, including after a subscription expires or a device is unlinked. You can request deletion of your records.</li>
+        <li><strong>Pairing and replay-protection records:</strong> expired/used pairing codes and old request nonces are cleaned during subsequent service activity; this is not an instant scheduled deletion guarantee.</li>
+        <li><strong>Managed Workers Logs:</strong> Cloudflare's standard retention is 3 days on Free and 7 days on Paid plans. These operational logs therefore have a standard retention window of up to 7 days, separate from the license database.</li>
+        <li><strong>D1 recovery history:</strong> Cloudflare Time Travel retains database history for 7 days on Free and 30 days on Paid plans. A deleted database record can therefore remain in recovery history for up to 30 additional days, rather than disappearing immediately from all copies.</li>
+        <li><strong>Support and request correspondence:</strong> retained according to the ongoing request and any specific security, dispute or legal need, rather than a single fixed period for every conversation. If records must remain after a deletion request, we explain what, why and the applicable period.</li>
+      </ul>
+      <p>These managed log and database-history windows are documented by <a href="https://developers.cloudflare.com/workers/observability/logs/workers-logs/" rel="external">Cloudflare Workers Logs</a> and <a href="https://developers.cloudflare.com/d1/reference/time-travel/" rel="external">D1 Time Travel</a>. They do not describe copies independently held by stores, email providers, recipients or your chosen storage provider, which follow their own retention rules.</p>
+
+      <section id="data-deletion" class="privacy-callout" aria-labelledby="data-deletion-title">
+        <h2 id="data-deletion-title">7. Request data deletion</h2>
+        <p>To request deletion of your JB_Drill data held by byBartonek, email <a href="mailto:support@bybartonek.com">support@bybartonek.com</a> with the subject <strong>JB_Drill — Data deletion request</strong>. Requests are reviewed and handled manually, not by an automatic erase button.</p>
+        <p><a class="button button-primary" href="mailto:support@bybartonek.com?subject=JB_Drill%20%E2%80%94%20Data%20deletion%20request">Email a deletion request</a></p>
+        <h3>What to include</h3>
+        <ul>
+          <li>Say which data you want removed: a JB_Play share, records for your installation, an entire license you own, or support correspondence.</li>
+          <li>For a shared drill, provide the complete JB_Play link and explain your relationship to the content.</li>
+          <li>For licensing, include the device label/platform and any available license or store order reference. These help locate records; they do not by themselves prove ownership.</li>
+          <li>For correspondence, identify the message or conversation. If you no longer have the app or the references, explain that and we will discuss another way to identify the data.</li>
+        </ul>
+        <p><strong>Do not send passwords, full payment-card details, purchase tokens, private keys or unnecessary identity documents.</strong> We will request only additional information reasonably needed to identify the records and verify your authority.</p>
+        <h3>What happens next</h3>
+        <p>We confirm the scope and verify your authority before acting. Possession of a share link, device label or license identifier alone is not sufficient authorization to delete another person's data. A team member's request does not automatically authorize deletion of the team's license or other members' records.</p>
+        <p>Depending on the verified request, removal from our active service can cover the hosted playback copy, your device-link records and associated pairing/request records, license and purchase-verification records for a license you own, or relevant support correspondence. We explain any consequences for paid access before removing license records, and confirm the outcome or any limitation.</p>
+        <p>Necessary records may be retained where a specific legal, security or dispute-related reason applies. We explain the retained data and the reason and period for retention. Operational logs and recovery history can remain until the windows in section 6 expire; we do not promise immediate erasure from every backup or provider system.</p>
+        <p><strong>Deletion is not subscription cancellation.</strong> Manage recurring payments separately in Google Play or Microsoft Store. We cannot erase the stores' own transaction records, remotely erase your local drill files, or recall copies saved by recipients. Continued use, a new upload, purchase restoration or re-linking may create new service records.</p>
+      </section>
+
+      <h2>8. Your rights and security</h2>
+      <p>Depending on applicable law, you may request access, correction, deletion, restriction, objection or data portability. Contact <a href="mailto:privacy@bybartonek.com">privacy@bybartonek.com</a> or use the deletion process above. You may lodge a complaint with the Czech <a href="https://uoou.gov.cz/" rel="external">Office for Personal Data Protection</a> or another competent supervisory authority.</p>
+      <p>JB_Drill is intended for coaches and other adult users, not for collecting personal information from children. Avoid unnecessary athlete names or other identifying details in files and shares. We do not use support data for automated decision-making or profiling.</p>
+      <p>License and JB_Play transfers use HTTPS. Access verification and random share links serve different purposes: a share link is not authenticated private storage. No electronic storage or transmission is completely secure; protect your devices, backups and shared links.</p>
+      <h2>9. Changes and website privacy</h2>
+      <p>This policy will be updated as JB_Drill changes. The current revision date appears above. For the public website and general correspondence, see <a href="../../privacy/">byBartonek Website Privacy</a>.</p>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <p>JB_Drill · byBartonek · Jiří Bartoněk · IČO 07924381</p>
+    <div class="footer-links"><a href="../">JB_Drill</a><a href="../../support/">Support</a><a href="#data-deletion">Data deletion</a><a href="../../privacy/">Website Privacy</a><span>© <span id="year">2026</span></span></div>
+  </footer>
+  <script src="../../script.js"></script>
+</body>
+</html>
