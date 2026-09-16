@@ -363,7 +363,7 @@ a {
   overflow: hidden;
   isolation: isolate;
   background: var(--ink);
-  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
   --atom-tint: var(--orange);
 }
 
@@ -375,6 +375,18 @@ a {
 .hero-atom #atom-cards {
   position: absolute;
   inset: 0;
+}
+
+.hero-atom .atom-core-hit {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: transparent;
+  touch-action: none;
 }
 
 .hero-atom canvas {

@@ -67,7 +67,7 @@ const projectedExtent=state=>{
     assert.notDeepEqual((await page.evaluate(()=>heroAtom.snapshot())).orientation,orientation,'core drag works in production');
     assert.deepEqual(errors,[]);await page.close();
 
-    const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+    const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
     await mobile.goto(url);await mobile.waitForFunction(()=>window.heroAtom);
     const mobileLayout=await mobile.evaluate(()=>{
       const hero=document.querySelector('.hero').getBoundingClientRect(),copy=document.querySelector('.hero-copy').getBoundingClientRect(),visual=document.querySelector('#hero-atom').getBoundingClientRect();
@@ -76,9 +76,48 @@ const projectedExtent=state=>{
     });
     assert.ok(Math.abs(mobileLayout.heroHeight-mobileLayout.copyHeight-380)<0.01,'existing mobile hero height is copy plus the original 380px visual region');
     assert.equal(mobileLayout.visualHeight,mobileLayout.heroHeight,'background scene covers the full mobile hero');
-    assert.equal(mobileLayout.visualWidth,390);assert.equal(mobileLayout.overflow,0);await mobile.close();
+    assert.equal(mobileLayout.visualWidth,390);assert.equal(mobileLayout.overflow,0);
     assert.ok(Math.abs(mobileLayout.center.x-195)<0.01);
     assert.ok(Math.abs(mobileLayout.center.y-(Math.round(mobileLayout.heroHeight)-190))<0.01,'atom stays in its former 380px mobile region');
+    assert.equal((await mobile.evaluate(()=>heroAtom.snapshot().performance.pixelRatio)),1.25,'phone keeps the existing sharpness cap');
+    const touchClient=await mobile.context().newCDPSession(mobile);
+    const scrollStart=Math.min(760,68+mobileLayout.center.y);
+    const scrollBefore=await mobile.evaluate(()=>scrollY);
+    await touchClient.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:20,y:scrollStart}]});
+    await touchClient.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:22,y:scrollStart-260}]});
+    await touchClient.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await mobile.waitForTimeout(150);
+    assert.ok((await mobile.evaluate(()=>scrollY))>scrollBefore,'vertical touch outside the core scrolls the page');
+    assert.ok(await mobile.evaluate(()=>heroAtom.snapshot().layers.flatMap(layer=>layer.boosts).every(value=>value<0.001)),
+      'vertical scroll does not add impulse');
+    await mobile.evaluate(()=>scrollTo(0,0));await mobile.waitForFunction(()=>heroAtom.snapshot().running);
+    const mobileOrientation=await mobile.evaluate(()=>heroAtom.snapshot().orientation);
+    await mobile.evaluate(()=>{
+      const stage=document.querySelector('#hero-atom'),r=stage.getBoundingClientRect(),point=heroAtom.snapshot().layers[1].positions[0],id=31;
+      const fire=(type,x,y)=>stage.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,clientX:r.left+x,clientY:r.top+y,
+        pointerId:id,pointerType:'touch',isPrimary:true,button:0,buttons:type==='pointerup' ? 0 : 1}));
+      fire('pointerdown',point.x,point.y);fire('pointerup',point.x,point.y);
+    });
+    await mobile.waitForTimeout(80);
+    assert.ok(await mobile.evaluate(()=>Math.max(...heroAtom.snapshot().layers[1].boosts)>0),'production touch tap adds physical impulse');
+    await mobile.evaluate(()=>{
+      const stage=document.querySelector('#hero-atom'),r=stage.getBoundingClientRect(),s=heroAtom.snapshot(),id=32;
+      const x=r.left+s.center.x+s.shake.x,y=r.top+s.center.y+s.shake.y;
+      const fire=(type,cx,cy)=>stage.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,clientX:cx,clientY:cy,
+        pointerId:id,pointerType:'touch',isPrimary:true,button:0,buttons:type==='pointerup' ? 0 : 1}));
+      fire('pointerdown',x,y);fire('pointermove',x+42,y+24);fire('pointerup',x+42,y+24);
+    });
+    assert.notDeepEqual((await mobile.evaluate(()=>heroAtom.snapshot().orientation)),mobileOrientation,'production touch core drag rotates');
+    await mobile.close();
+
+    const tablet=await browser.newPage({viewport:{width:1000,height:800},deviceScaleFactor:2,isMobile:true,hasTouch:true});
+    await tablet.goto(url);await tablet.waitForFunction(()=>window.heroAtom);
+    const tabletStart=await tablet.evaluate(()=>heroAtom.snapshot());
+    await tablet.waitForTimeout(1200);
+    const tabletEnd=await tablet.evaluate(()=>heroAtom.snapshot());
+    assert.equal(tabletEnd.performance.pixelRatio,2,'tablet preserves the production pixel ratio');
+    assert.ok(tabletEnd.frames-tabletStart.frames<=80,'render loop is capped near 60 FPS on a high-refresh tablet');
+    await tablet.close();
 
     const reduced=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
     await reduced.goto(url);await reduced.waitForFunction(()=>window.heroAtom);
@@ -99,6 +138,6 @@ const projectedExtent=state=>{
     await fallback.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith('webgl') ? null : original.call(this,type,...args);};});
     await fallback.goto(url);await fallback.locator('#atom-fallback').waitFor({state:'visible'});
     assert.equal(await fallback.locator('#atom-canvas').isHidden(),true);await fallback.close();
-    console.log('PASS: full-width scene, fixed desktop atom size and right alignment, preserved mobile layout and hero dimensions, editor-dark background fade, text stacking, approved v9 ShakyCam preset, local assets, interaction, reduced motion and fallback.');
+    console.log('PASS: full-width scene, fixed desktop atom size and right alignment, preserved mobile layout and hero dimensions, optimized procedural background, touch tap/core drag, approved v9 ShakyCam preset, local assets, interaction, reduced motion and fallback.');
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

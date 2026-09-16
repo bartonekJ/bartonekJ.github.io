@@ -288,6 +288,16 @@ Schválený produkční preset používá klidové vrstvy A/B `5,4 px @ 0,7` a `
 
 Ověřeno automaticky: vypnutý efekt má nulový posun, zapnutý mění celý canvas, klidové vzorky se plynule a nepravidelně mění, výbuch zvýší amplitudu a jeho obálka odezní zpět ke klidové úrovni. Produkční regrese navíc kontroluje preset verze 9 se zapnutým ShakyCam, interakci s jádrem na jeho právě posunuté obrazové pozici, omezení pohybu a mobilní layout.
 
+### 2026-09-16 — Dotyk a výkon Hero atomu
+
+Na telefonu se scéna chovala plynule, ale na výkonnějším Idea Tab Pro klesala pod přibližně 30 FPS. Důvodem není počet elementů: tablet má 3K/144Hz displej, dostává desktopový limit pixel ratio 2 a plnoobrazovkový Worley shader proto počítal šest cloud i warp oktáv přes několik milionů pixelů až 144krát za sekundu. Uživatel upřednostňuje plné interní rozlišení a souhlasí se změnou konkrétního tvaru mlhoviny i adaptivním snížením její výpočetní složitosti.
+
+Renderer používá `high-performance`, nejvýše 60 renderovaných FPS a aritmetický hash bez drahých trigonometrických operací. Po dvousekundovém zahřátí měří FPS ve dvousekundových oknech. Pod 50 FPS přechází během jedné návštěvy pouze směrem `full → balanced → reduced`; pixel ratio zůstává beze změny. Stupně používají 6/6, 4/3 a 2/1 cloud/warp oktáv pro schválený šestivrstvý preset. Až `reduced` mění orbity z 192×8 na 128×6 a minimální trail z 28 na 20 segmentů. Editor ukazuje FPS a stupeň, aby šel výsledek posoudit na fyzickém tabletu.
+
+Na dotyku funguje swipe i tap. Swipe používá stejnou dráhovou fyziku jako kurzor; tap pouze vloží bodový impulz a neobchází podmínku energie vnitřního obalu. Převážně svislý tah mimo jádro scrolluje. Jádro sleduje 56px neviditelný hit target s vlastním `touch-action: none`: tap zůstává impulzem, pohyb nad 8 px otáčí soustavou. Zbytek scény zachovává `pan-y pinch-zoom`, další prsty se ignorují a náklon zařízení zůstává mimo rozsah.
+
+Preset a jeho export zůstávají ve verzi 9, protože gesta i výkonové stupně jsou runtime pravidla. Diagnostika `snapshot()` nově uvádí FPS, stupeň, efektivní oktávy, segmentaci a pixel ratio. Automatická regrese ověřuje všechny tři stupně, mobilní DPR, limit 60 FPS, tap, swipe, scroll, druhý prst, rotaci a hit target při ShakyCamu. Reálným akceptačním bodem je ustálených alespoň 50 FPS na Idea Tab Pro; pokud je ani `reduced` nedosáhne, rozlišení se bez nového výslovného rozhodnutí nesnižuje.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.

@@ -17,7 +17,11 @@ function reportState(state) {
   pause.textContent=paused ? 'Spustit pohyb' : 'Pozastavit';
   pause.setAttribute('aria-pressed',String(paused));
   if(state==='lost') { status.textContent='Grafika byla pozastavena prohlížečem. Čekám na obnovení.'; return; }
-  status.textContent=paused ? 'Pohyb pozastavený · nastavení zůstává aktivní' : 'Dvě vrstvy · reaguje na pohyb kurzoru';
+  const performanceState=atom?.snapshot().performance;
+  const qualityLabel={full:'FULL',balanced:'BALANCED',reduced:'REDUCED'}[performanceState?.quality] || 'FULL';
+  const fps=performanceState?.fps>0 ? `${Math.round(performanceState.fps)} FPS` : 'měřím FPS';
+  status.textContent=paused ? 'Pohyb pozastavený · nastavení zůstává aktivní'
+    : `Kurzor + dotyk · ${fps} · ${qualityLabel}`;
 }
 function update(path) {
   // Preserve a required geometry rebuild if several controls change in one frame.
@@ -143,7 +147,9 @@ fileInput.addEventListener('change',async()=>{
 
 try {
   const { AtomScene }=await import('./atom.js');
-  atom=new AtomScene(stage,config,reportState);
+  const qualityParam=new URLSearchParams(location.search).get('quality');
+  const qualityTier=['full','balanced','reduced'].includes(qualityParam) ? qualityParam : undefined;
+  atom=new AtomScene(stage,config,reportState,qualityTier ? {qualityTier,adaptiveQuality:false} : {});
   reportState(atom.paused ? 'paused' : 'running');
   // Prototype-only inspection for visual and interaction regression checks.
   window.heroAtom={
@@ -152,6 +158,7 @@ try {
     setConfig:input=>{config=validateConfig(input);refreshFields();atom.update(config,'seed');},
     pause:value=>atom.setPaused(value),
     previewBurst:()=>atom.previewBurst(),
+    setQualityTier:tier=>atom.setQualityTier(tier),
   };
   window.addEventListener('pagehide',event=>{if(!event.persisted) atom.dispose();});
 } catch(error) {

@@ -10,10 +10,16 @@ uniform vec2 uResolution;
 uniform vec3 uTint, uBaseColor, uEdgeColor;
 uniform vec2 uBackgroundFade, uCameraOffset;
 uniform float uTime, uIntensity, uScale, uSpeed, uSpacing, uGridOpacity, uDotSize;
-uniform int uNoiseType, uOctaves;
+uniform int uNoiseType, uCloudOctaves, uWarpOctaves;
 uniform float uWarp;
 uniform vec2 uLight;
-float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+// Arithmetic hash: no transcendental operations in the hottest full-screen path.
+vec2 hash2(vec2 p) {
+  vec3 p3=fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
+  p3+=dot(p3,p3.yzx+33.33);
+  return fract((p3.xx+p3.yz)*p3.zy);
+}
+float hash(vec2 p) { return hash2(p).x; }
 float noise(vec2 p) {
   vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
   return mix(mix(hash(i), hash(i+vec2(1,0)), f.x),
@@ -21,8 +27,8 @@ float noise(vec2 p) {
 }
 // Gradient noise with unit gradients and quintic interpolation (Perlin family).
 vec2 gradient(vec2 lattice) {
-  float angle=hash(lattice+19.17)*6.28318530718;
-  return vec2(cos(angle),sin(angle));
+  vec2 direction=hash2(lattice+19.17)*2.0-1.0;
+  return normalize(direction+vec2(0.0001));
 }
 float perlin(vec2 p) {
   vec2 cell=floor(p), f=fract(p);
@@ -37,7 +43,7 @@ float worley(vec2 p) {
   for(int y=-1;y<=1;y++) for(int x=-1;x<=1;x++) {
     vec2 offset=vec2(float(x),float(y)), id=cell+offset;
     // Bounded jitter keeps the nearest feature within the 3x3 neighborhood.
-    vec2 feature=0.25+0.5*vec2(hash(id),hash(id+vec2(31.7,17.2)));
+    vec2 feature=0.25+0.5*hash2(id+vec2(31.7,17.2));
     nearest=min(nearest,length(offset+feature-f));
   }
   return 1.0-clamp(nearest,0.0,1.0);
@@ -50,11 +56,11 @@ float sampleNoise(vec2 p,int kind) {
   if(kind==3) return clamp(abs(n)*1.7,0.0,1.0);
   return n*0.5+0.5;
 }
-float fbm(vec2 p,int kind) {
+float fbm(vec2 p,int kind,int octaves) {
   float v = 0.0, a = 0.5;
   mat2 r = mat2(0.80,0.60,-0.60,0.80);
   for (int i=0; i<6; i++) {
-    if(i>=uOctaves) break;
+    if(i>=octaves) break;
     v += a*sampleNoise(p,kind); p = r*p*2.03+7.1; a *= 0.5;
   }
   return v;
@@ -64,8 +70,8 @@ void main() {
   vec2 uv = vUv + vec2(-uCameraOffset.x,uCameraOffset.y)/uResolution;
   vec2 p = uv * vec2(uResolution.x/uResolution.y, 1.0) * uScale;
   float t = uTime * uSpeed;
-  vec2 warp = vec2(fbm(p+vec2(t,0.0),0), fbm(p+vec2(2.8,-t*0.7),0));
-  float cloud = fbm(p*1.6 + uWarp*warp + vec2(-t*0.35,t*0.18),uNoiseType);
+  vec2 warp = vec2(fbm(p+vec2(t,0.0),0,uWarpOctaves), fbm(p+vec2(2.8,-t*0.7),0,uWarpOctaves));
+  float cloud = fbm(p*1.6 + uWarp*warp + vec2(-t*0.35,t*0.18),uNoiseType,uCloudOctaves);
   float filaments = pow(max(0.0, 1.0-abs(cloud-0.5)*2.0), 9.0);
   float distanceToLight = length((uv-uLight)*vec2(1.5,1.0));
   float light = exp(-distanceToLight*distanceToLight*3.2);

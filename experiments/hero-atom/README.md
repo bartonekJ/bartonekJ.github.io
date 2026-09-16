@@ -25,7 +25,7 @@ Produkční základ kolem atomu je stejný jako v editoru (`#0b1011`). Backgroun
 - **Export JSON / Načíst JSON** uloží a obnoví úplnou konfiguraci. Změny se automaticky neukládají do zdrojových souborů ani po obnovení stránky.
 - Nové exporty mají verzi 9; import přijímá i verze 1–8. Doplní nové parametry, převede starší záblesk na samostatný výbuch a náklony X/Y/Z na prostorové natočení. U verzí 1–3 zůstává paleta sdílená. Starší verze 1–4 dostanou oba násobiče reakce stop/bodů nastavené na 1. Verze 1–5 mají po importu druhé dráhy vypnuté, aby nepřibyly automaticky. Verze 1–6 dostanou ShakyCam vypnutou, aby se jejich vzhled a pohyb při importu nezměnil. Verze 7 a 8 převedou původní společné amplitudy a frekvence na dvojice A/B se stejným přibližným výsledkem.
 - **Nový seed** vygeneruje jiné uspořádání. **Výchozí** obnoví hodnoty z `config.js`; čas scény pokračuje.
-- Kurzor předává energii při pohybu v blízkosti prvků. Na dotykovém zařízení zůstává svislé scrollování; náklon se nečte.
+- Kurzor i dotykový tah předávají energii při pohybu v blízkosti prvků. Krátký tap vytvoří bodový fyzický impulz; kartu ani výbuch nevolá přímo. Převážně svislý tah mimo jádro dál scrolluje stránku a náklon zařízení se nečte.
 - Karty a výbuch vznikají pouze při dostatečně silné reakci **vnitřních** elementů. Vnější obal reaguje na kurzor, ale jádro nenabíjí. V klidu se karty nezobrazují ani automaticky neopakují.
 - **Easter egg:** uchop jádro levým tlačítkem a táhni. Otáčíš oběma obaly v prostoru, bez nabíjení jádra. Funguje i při pauze nebo vypnutém předávání energie; pohyb animace tím nespustíš. Myš může opustit scénu, puštění tlačítka nebo ztráta aktivního okna tah ukončí. Natočení se uloží v JSON. Gesto podporuje myš a pero, dotyk ponechává scrollování.
 - **Výbuch jádra → Vyzkoušet výbuch** spustí samostatný světelný výbuch bez karty. Jde o výslovné spuštění náhledu, které obnoví i pozastavený pohyb.
@@ -156,6 +156,18 @@ Každý výbuch vytvoří samostatný otřes. Jeho obálka je `(1 − exp(−age
 
 Three.js kamera používá projekční view offset v CSS pixelech. Stejný skutečný obrazový posun dostává procedurální pozadí přes shader uniformu; promítané HTML karty a hit test jádra používají posunutou projekci. Mlhovina, grid, prostorová geometrie, výbuch i billboardy se proto pohybují jako jedna scéna. Produkční levý barevný přechod zůstává ukotvený k layoutu, aby na hraně canvasu nevznikala pohybující se spára. Pauza zmrazí i ShakyCam.
 
+## Dotykové ovládání
+
+Vodorovný nebo diagonální tah přes soustavu používá stejný segmentový model impulzu jako kurzor. Převážně svislý pohyb se po 8 px vyhodnotí jako scroll a energii nepřidá. Tap do 10 px pohybu a 500 ms vytvoří bodový impulz o ekvivalentní délce interakčního radiusu; vznik karty stále vyžaduje skutečnou reakci vnitřních elementů a překročení `cards.triggerEnergy`.
+
+Jádro sleduje neviditelná dotyková zóna 56 px včetně posunu ShakyCam. Tah začínající v této zóně se po 8 px změní v prostorovou rotaci. Kratší dotyk zůstane tapem. `touch-action: none` platí pouze pro tuto malou zónu; zbytek scény používá `pan-y pinch-zoom`. Další prsty se ignorují, stylus se chová jako kurzor a `pointercancel` gesto vždy ukončí.
+
+## Adaptivní výkon
+
+Renderer žádá výkonnou GPU a renderuje nejvýše 60 snímků za sekundu, i když má displej vyšší obnovovací frekvenci. Procedurální shader používá aritmetický hash bez trigonometrických operací; žádná obrázková textura nepřibyla. Konkrétní rozložení mlhoviny se proti starému hashi změnilo, její zvolený typ, barvy, intenzita a ostrost zůstávají řízené stejnými parametry.
+
+Po dvousekundovém zahřátí se FPS měří ve dvousekundových oknech. Při výsledku pod 50 renderer nevratně pro danou návštěvu přejde `full → balanced → reduced`, aby kvalita neoscilovala. `full` používá uložený počet cloud/warp oktáv a geometrii 192×8. `balanced` používá přibližně dvě třetiny cloud oktáv, nejvýše tři warp oktávy a plnou geometrii. `reduced` používá přibližně třetinu cloud oktáv, jednu warp oktávu, orbity 128×6 a minimálně 20 segmentů trailu. Pixel ratio se nesnižuje: úzký mobil zachovává strop 1,25, tablet a desktop respektují uložený limit až 2. Editor ukazuje naměřené FPS a aktivní stupeň; query `?quality=full|balanced|reduced` dovolí stupeň při vizuální kontrole uzamknout.
+
 ## Renderování a soubory
 
 - `atom.js`: geometrie obou vrstev, fáze pohybu, impulz kurzoru a exponenciální útlum, ShakyCam, billboardy, pauza a životní cyklus rendereru.
@@ -167,7 +179,7 @@ Three.js kamera používá projekční view offset v CSS pixelech. Stejný skute
 - Kořenový `hero-atom.js`: malý produkční vstup. Načte validovaný JSON preset, zjistí token `--ink`, určí virtuální rám původní pravé/spodní oblasti, spustí sdílený renderer a při chybě zobrazí textový fallback.
 - Kořenové `index.html` a `styles.css`: produkční canvas přes celé `.hero`, HTML billboardy, vrstvení textu nad scénou a zachování původní výšky layoutu.
 
-Klidová scéna používá devět draw calls při zapnutých druhých drahách, osm bez nich: pozadí, tři dávky pro každou vrstvu, jádro a případně jedna společná dávka doplňkových kružnic. Aktivní výbuchy přidají jednu společnou světelnou vrstvu. Pozadí má vlastní barvu; geometrie vychází z palety soustavy s úpravami obou obalů. Rozlišení má strop, na úzkých displejích nejvýše 1,25×. Renderer se zastavuje mimo viewport a v neaktivní kartě prohlížeče. Bez WebGL 2 se zobrazí textový náhradní stav. Obnova ztraceného WebGL kontextu znovu spustí vykreslování.
+Klidová scéna používá devět draw calls při zapnutých druhých drahách, osm bez nich: pozadí, tři dávky pro každou vrstvu, jádro a případně jedna společná dávka doplňkových kružnic. Aktivní výbuchy přidají jednu společnou světelnou vrstvu. Pozadí má vlastní barvu; geometrie vychází z palety soustavy s úpravami obou obalů. Renderer se zastavuje mimo viewport a v neaktivní kartě prohlížeče. Bez WebGL 2 se zobrazí textový náhradní stav. Obnova ztraceného WebGL kontextu znovu spustí vykreslování.
 
 ## Ověření
 
@@ -183,7 +195,7 @@ node experiments/hero-atom/verify.cjs
 
 Ověření používá vývojový Playwright (v tomto workspace už je v nadřazeném projektu) a Edge. Jinde lze nastavit `EDGE_PATH`. Playwright ani Node nejsou potřeba v publikovaném webu.
 
-Kontroluje skutečně odlišné pixely pěti šumů, růst intenzity trailů nad 1, vysoké impulzy, práh emise, záblesk, rozestupy, neopakování slovního spojení a zánik karty bez smyčky. Dále kompatibilitu starších exportů, lokální zdroje bez rasterů, omezení pohybu, živé parametry, seed, validaci JSON, útlum, pauzu, zastavení mimo viewport, obnovu WebGL, mobilní rozvržení a náhradní stav bez WebGL. Vizuálně byly zkontrolované varianty mlhoviny, výboj, karta po odletu, desktop a viewport 390 px. Reálný výkon a spotřebu je stále potřeba ověřit na fyzickém telefonu.
+Kontroluje skutečně odlišné pixely pěti šumů, tři stupně kvality, zachování pixel ratio a limit render loopu. Dotyková regrese pokrývá tap, swipe, svislý scroll, další prst, rotaci jádra a hit target sledující ShakyCam. Dále se ověřuje růst intenzity trailů nad 1, vysoké impulzy, práh emise, záblesk, rozestupy, neopakování slovního spojení, zánik karty bez smyčky, kompatibilita starších exportů, lokální zdroje bez rasterů, omezení pohybu, živé parametry, seed, validace JSON, útlum, pauza, zastavení mimo viewport, obnova WebGL, mobilní rozvržení a náhradní stav bez WebGL. Vizuálně se kontroluje plná i snížená mlhovina, výboj, karta, desktop a viewport 390 px. Skutečné FPS je nutné potvrdit na fyzickém IdeaTabu.
 
 Produkční integraci ověřuje samostatný smoke test:
 

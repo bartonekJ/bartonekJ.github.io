@@ -2,7 +2,7 @@
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
-const url = 'http://127.0.0.1:4173/experiments/hero-atom/';
+const url = 'http://127.0.0.1:4173/experiments/hero-atom/?quality=full';
 const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 (async () => {
   const browser = await chromium.launch({ executablePath, headless: true, args: ['--enable-unsafe-swiftshader'] });
@@ -20,6 +20,21 @@ const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsof
     assert.equal((await snapshot()).cards.length,0,'no cards before interaction');
     assert.ok(requests.every(request=>request.startsWith('http://127.0.0.1:4173/')), 'all runtime assets are local');
     assert.ok(!requests.some(request=>/\.(png|jpe?g|webp)(\?|$)/i.test(request)), 'no raster assets in the scene');
+    const fullQuality=(await snapshot()).performance;
+    assert.deepEqual({quality:fullQuality.quality,cloud:fullQuality.cloudOctaves,warp:fullQuality.warpOctaves,
+      orbit:fullQuality.orbitSegments,tube:fullQuality.tubeSegments},
+      {quality:'full',cloud:5,warp:5,orbit:192,tube:8});
+    await page.evaluate(()=>heroAtom.setQualityTier('balanced'));
+    let quality=(await snapshot()).performance;
+    assert.deepEqual({quality:quality.quality,cloud:quality.cloudOctaves,warp:quality.warpOctaves,
+      orbit:quality.orbitSegments,tube:quality.tubeSegments},
+      {quality:'balanced',cloud:4,warp:3,orbit:192,tube:8});
+    await page.evaluate(()=>heroAtom.setQualityTier('reduced'));
+    quality=(await snapshot()).performance;
+    assert.deepEqual({quality:quality.quality,cloud:quality.cloudOctaves,warp:quality.warpOctaves,
+      orbit:quality.orbitSegments,tube:quality.tubeSegments,minTrail:quality.minTrailSegments},
+      {quality:'reduced',cloud:2,warp:1,orbit:128,tube:6,minTrail:20});
+    await page.evaluate(()=>heroAtom.setQualityTier('full'));
 
     // Changing speed in the editor must preserve phase; counts and zero-orbit layers must work.
     await page.locator('#tune').click();
@@ -436,18 +451,58 @@ const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsof
     assert.notDeepEqual(await page.locator('#atom-canvas').screenshot(),soft,'spatial falloff changes rendered light');
     await page.locator('#close-controls').click();
 
-    // A triggered billboard fits a narrow viewport; touch scrolling does not emit cards.
-    const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+    // Touch keeps vertical scroll, while tap/swipe use the same physical energy path and the core rotates.
+    const mobile=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true,reducedMotion:'reduce'});
     mobile.on('pageerror',error=>errors.push(error.message));
     await mobile.goto(url);await mobile.waitForFunction(()=>window.heroAtom);await mobile.evaluate(()=>document.fonts.ready);
     await mobile.locator('#atom-stage').scrollIntoViewIfNeeded();
     assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+    assert.deepEqual(await mobile.evaluate(()=>({stage:getComputedStyle(document.querySelector('#atom-stage')).touchAction,
+      core:getComputedStyle(document.querySelector('.atom-core-hit')).touchAction,
+      pixelRatio:heroAtom.snapshot().performance.pixelRatio})),{stage:'pan-y pinch-zoom',core:'none',pixelRatio:1.25});
+    const dispatchTouch=async points=>mobile.evaluate(points=>{
+      const el=document.querySelector('#atom-stage'),r=el.getBoundingClientRect(),id=17;
+      const fire=(type,point,primary=true)=>el.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,
+        clientX:r.left+point.x,clientY:r.top+point.y,pointerId:id,pointerType:'touch',isPrimary:primary,
+        button:0,buttons:type==='pointerup' ? 0 : 1}));
+      fire('pointerdown',points[0],points[0].primary!==false);
+      points.slice(1,-1).forEach(point=>fire('pointermove',point,point.primary!==false));
+      fire('pointerup',points.at(-1),points.at(-1).primary!==false);
+    },points);
     await mobile.evaluate(()=>{
-      const c=heroAtom.getConfig();c.cards.triggerEnergy=0.1;c.interaction.strength=40;heroAtom.setConfig(c);heroAtom.pause(false);
-      const el=document.querySelector('#atom-stage'),r=el.getBoundingClientRect();
-      for(const x of [r.left+20,r.right-20]) el.dispatchEvent(new PointerEvent('pointermove',{clientX:x,clientY:r.top+r.height*.5,pointerType:'touch'}));
+      const c=heroAtom.getConfig();c.cards.triggerEnergy=100;c.interaction.strength=1;c.interaction.maxBoost=100;
+      heroAtom.setConfig(c);heroAtom.pause(false);
     });
-    await mobile.waitForTimeout(100);assert.equal(await mobile.evaluate(()=>heroAtom.snapshot().emissions),0);
+    const mobileState=await mobile.evaluate(()=>heroAtom.snapshot());
+    const cy=mobileState.center.y;
+    await dispatchTouch([{x:35,y:cy-90,primary:false},{x:35,y:cy-90,primary:false}]);
+    await dispatchTouch([{x:35,y:cy-90},{x:37,y:cy+40},{x:38,y:cy+120}]);
+    await mobile.waitForTimeout(80);
+    assert.ok((await mobile.evaluate(()=>heroAtom.snapshot().layers.flatMap(layer=>layer.boosts).reduce((a,b)=>Math.max(a,b),0)))<0.001,
+      'non-primary and vertical touch do not add impulse');
+    const tapPoint=await mobile.evaluate(()=>heroAtom.snapshot().layers[1].positions[0]);
+    await dispatchTouch([tapPoint,tapPoint]);await mobile.waitForTimeout(80);
+    let touched=await mobile.evaluate(()=>heroAtom.snapshot());
+    assert.ok(Math.max(...touched.layers[1].boosts)>0,'tap adds a physical impulse');
+    assert.equal(touched.emissions,0,'tap does not call the card/burst path directly');
+    const beforeTouchDrag=touched.orientation;
+    await mobile.evaluate(()=>{
+      const c=heroAtom.getConfig();c.cards.triggerEnergy=100;heroAtom.setConfig(c);
+      const el=document.querySelector('#atom-stage'),hit=document.querySelector('.atom-core-hit').getBoundingClientRect();
+      const x=hit.left+hit.width/2,y=hit.top+hit.height/2,id=23;
+      const fire=(type,cx,cy)=>el.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,clientX:cx,clientY:cy,
+        pointerId:id,pointerType:'touch',isPrimary:true,button:0,buttons:type==='pointerup' ? 0 : 1}));
+      fire('pointerdown',x,y);fire('pointermove',x+46,y+26);fire('pointerup',x+46,y+26);
+    });
+    assert.notDeepEqual((await mobile.evaluate(()=>heroAtom.snapshot())).orientation,beforeTouchDrag,'touch drag on core rotates');
+    assert.equal(await mobile.evaluate(()=>{
+      const s=heroAtom.snapshot(),r=document.querySelector('.atom-core-hit').getBoundingClientRect(),stage=document.querySelector('#atom-stage').getBoundingClientRect();
+      return Math.hypot(r.left+r.width/2-stage.left-s.center.x-s.shake.x,r.top+r.height/2-stage.top-s.center.y-s.shake.y)<1;
+    }),true,'touch target follows the shaken core');
+    await mobile.evaluate(()=>{const c=heroAtom.getConfig();c.cards.triggerEnergy=0.1;c.interaction.strength=40;heroAtom.setConfig(c);});
+    const swipePoint=await mobile.evaluate(()=>heroAtom.snapshot().layers[1].positions[0]);
+    await dispatchTouch([{x:swipePoint.x-90,y:swipePoint.y},{x:swipePoint.x,y:swipePoint.y},{x:swipePoint.x+90,y:swipePoint.y}]);
+    await mobile.waitForTimeout(300);assert.ok((await mobile.evaluate(()=>heroAtom.snapshot().emissions))>0,'touch swipe can emit through inner energy');
     const mobileRect=await mobile.locator('#atom-stage').boundingBox();
     await mobile.mouse.move(mobileRect.x+20,mobileRect.y+mobileRect.height*.5);
     await mobile.mouse.move(mobileRect.x+mobileRect.width-20,mobileRect.y+mobileRect.height*.5,{steps:12});
@@ -471,6 +526,6 @@ const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsof
     await fallback.goto(url); await fallback.locator('#atom-fallback').waitFor({state:'visible'});
     assert.equal(await fallback.locator('#pause').isDisabled(),true);
     await fallback.close();
-    console.log('PASS: volumetric orbits at edge-on angles; five companion styles; signed offsets, thickness, intensity and repeat count; independent particles/trails; v1-v8 import; impulse trails and radiance; palettes; dual-layer ShakyCam idle and burst response; core drag; bursts; cards; pause; mobile/touch; context recovery; fallback.');
+    console.log('PASS: adaptive quality tiers and 60 FPS renderer; procedural noise; volumetric orbits; touch tap/swipe/scroll/core drag; particles/trails; v1-v8 import; palettes; dual-layer ShakyCam; bursts; cards; pause; context recovery; fallback.');
   } finally { await browser.close(); }
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -14,10 +14,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .atom-hero .eyebrow { font-size: 10px; margin-bottom: 27px; }
 .atom-hero .hero-lead { max-width: 400px; margin-top: 28px; font-size: 18px; line-height: 1.45; }
 .atom-hero .hero-actions { margin-top: 28px; }
-.atom-stage { position: absolute; inset: 0 0 0 36%; overflow: hidden; touch-action: pan-y; --atom-tint: #ff9309; }
+.atom-stage { position: absolute; inset: 0 0 0 36%; overflow: hidden; touch-action: pan-y pinch-zoom; --atom-tint: #ff9309; }
 .atom-stage::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, var(--atom-base), transparent 15%); }
 #atom-canvas { display: block; width: 100%; height: 100%; }
 #atom-cards { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.atom-core-hit { position: absolute; z-index: 2; top: 0; left: 0; width: 56px; height: 56px; border-radius: 50%; background: transparent; touch-action: none; }
 .atom-card { position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 15px; padding: 14px 18px; white-space: nowrap; border: 1px solid #6c6d6866; border-radius: 6px; color: #eee9de; background: #101415eb; box-shadow: 0 8px 26px #0003, inset 0 1px 0 #ffffff05; font-family: var(--font-product); font-weight: 600; letter-spacing: .1em; line-height: 1; will-change: transform, opacity; }
 .atom-card strong { color: var(--atom-tint); font-size: 22px; font-family: var(--font-ui); font-weight: 450; }
 .atom-fallback { position: absolute; inset: 40% 0 auto; text-align: center; font-family: var(--font-product); }

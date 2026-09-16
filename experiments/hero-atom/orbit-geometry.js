@@ -7,8 +7,9 @@ export const TUBE_SEGMENTS=8;
 export const companionRadius=(radius,offset)=>radius*(1+offset/100);
 
 // One batch of real, circular tube sections; trails keep their separate flat ribbons.
-export function createOrbitGeometry(orbits,width,{offset=0,subtleBreaks=false}={}) {
-  const stride=TUBE_SEGMENTS+1, perOrbit=(ORBIT_SEGMENTS+1)*stride;
+export function createOrbitGeometry(orbits,width,{offset=0,subtleBreaks=false,
+  orbitSegments=ORBIT_SEGMENTS,tubeSegments=TUBE_SEGMENTS}={}) {
+  const stride=tubeSegments+1, perOrbit=(orbitSegments+1)*stride;
   const positions=new Float32Array(orbits.length*perOrbit*3);
   const normals=new Float32Array(positions.length);
   const progress=new Float32Array(orbits.length*perOrbit);
@@ -17,18 +18,18 @@ export function createOrbitGeometry(orbits,width,{offset=0,subtleBreaks=false}={
   const indices=[],point=new THREE.Vector3(),normal=new THREE.Vector3();
   orbits.forEach((orbit,i)=>{
     const radius=companionRadius(orbit.radius,offset);
-    for(let j=0;j<=ORBIT_SEGMENTS;j++) {
-      const angle=j/ORBIT_SEGMENTS*Math.PI*2,cos=Math.cos(angle),sin=Math.sin(angle);
-      for(let k=0;k<=TUBE_SEGMENTS;k++) {
-        const section=k/TUBE_SEGMENTS*Math.PI*2,radial=Math.cos(section),axial=Math.sin(section);
+    for(let j=0;j<=orbitSegments;j++) {
+      const angle=j/orbitSegments*Math.PI*2,cos=Math.cos(angle),sin=Math.sin(angle);
+      for(let k=0;k<=tubeSegments;k++) {
+        const section=k/tubeSegments*Math.PI*2,radial=Math.cos(section),axial=Math.sin(section);
         const v=i*perOrbit+j*stride+k;
         point.set((radius+width*radial)*cos,(radius+width*radial)*sin,width*axial)
           .applyQuaternion(orbit.rotation).toArray(positions,v*3);
         normal.set(radial*cos,radial*sin,axial).applyQuaternion(orbit.rotation).toArray(normals,v*3);
-        progress[v]=j/ORBIT_SEGMENTS;
+        progress[v]=j/orbitSegments;
         dotHalfWidth[v]=width/(radius*Math.PI*2);
         strength[v]=subtleBreaks && j%8===0 ? 0.3 : 1;
-        if(j<ORBIT_SEGMENTS && k<TUBE_SEGMENTS) {
+        if(j<orbitSegments && k<tubeSegments) {
           const a=v,b=v+stride;
           indices.push(a,b,a+1,b,b+1,a+1);
         }

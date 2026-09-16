@@ -5,6 +5,19 @@ import { backgroundVertex, backgroundFragment, burstFragment, orbitVertex, orbit
 
 const DEG = Math.PI / 180;
 const TAU = Math.PI * 2;
+const FRAME_INTERVAL=1000/60;
+const QUALITY_WARMUP=2000;
+const QUALITY_WINDOW=2000;
+const QUALITY_MIN_FPS=50;
+const TOUCH_ROTATE_THRESHOLD=8;
+const TOUCH_TAP_DISTANCE=10;
+const TOUCH_TAP_DURATION=500;
+const CORE_TOUCH_SIZE=56;
+const QUALITY_PROFILES=[
+  {name:'full',orbitSegments:192,tubeSegments:8,minTrailSegments:28},
+  {name:'balanced',orbitSegments:192,tubeSegments:8,minTrailSegments:28},
+  {name:'reduced',orbitSegments:128,tubeSegments:6,minTrailSegments:20},
+];
 const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 const smooth = (a, b, x) => { const t = clamp((x-a)/(b-a),0,1); return t*t*(3-2*t); };
 const mixNumber = (a,b,t) => a+(b-a)*t;
@@ -54,7 +67,7 @@ export class AtomScene {
     this.stage=stage; this.config=config; this.onState=onState; this.options=options;
     this.canvas=stage.querySelector('canvas');
     this.cardRoot=stage.querySelector('#atom-cards');
-    this.renderer=new THREE.WebGLRenderer({canvas:this.canvas,antialias:true,alpha:false,powerPreference:'low-power'});
+    this.renderer=new THREE.WebGLRenderer({canvas:this.canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
     this.renderer.outputColorSpace=THREE.SRGBColorSpace;
     this.baseColor=new THREE.Color(options.backgroundColor || '#0b1011');
     this.edgeColor=new THREE.Color(options.edgeBackgroundColor || options.backgroundColor || '#0b1011');
@@ -74,11 +87,17 @@ export class AtomScene {
     this.bursts=[]; this.burstFrames=[]; this.lastPreview=-Infinity; this.shakeBursts=[]; this.shakeBurstLevel=0;
     this.cardRandom=randomGenerator(config.seed^0x5EED); this.lastMessage=-1;
     this.shakeRandom=randomGenerator(config.seed^0x5A4ECA7);
-    this.lastTime=0; this.raf=0; this.frames=0; this.layers=[];
+    const forcedTier=QUALITY_PROFILES.findIndex(profile=>profile.name===options.qualityTier);
+    this.qualityIndex=forcedTier>=0 ? forcedTier : 0;
+    this.adaptiveQuality=options.adaptiveQuality!==false && forcedTier<0;
+    this.performanceFps=0; this.performanceFrames=0; this.performanceStarted=0; this.performanceWarmupUntil=0;
+    this.lastTime=0; this.nextFrameTime=0; this.raf=0; this.frames=0; this.layers=[];
     this.visible=true; this.lost=false; this.disposed=false;
     this.motionQuery=matchMedia('(prefers-reduced-motion: reduce)');
     this.paused=this.motionQuery.matches;
-    this.pendingImpulse=[]; this.pointer=null;
+    this.pendingImpulse=[]; this.pointer=null; this.touch=null;
+    this.coreHit=document.createElement('div'); this.coreHit.className='atom-core-hit'; this.coreHit.setAttribute('aria-hidden','true');
+    stage.append(this.coreHit);
     this.abort=new AbortController();
     const signal=this.abort.signal;
     this.createBackground(); this.createCore(); this.createBurstLayer(); this.rebuild(false); this.createCards();
@@ -90,12 +109,13 @@ export class AtomScene {
     this.intersectionObserver.observe(stage);
     document.addEventListener('visibilitychange',()=>this.syncLoop(),{signal});
     this.motionQuery.addEventListener('change',()=>this.setPaused(this.motionQuery.matches),{signal});
-    stage.addEventListener('pointermove',e=>this.onPointerMove(e),{signal,passive:true});
+    stage.addEventListener('pointermove',e=>this.onPointerMove(e),{signal});
     stage.addEventListener('pointerdown',e=>this.onPointerDown(e),{signal});
-    for(const name of ['pointerup','pointercancel','lostpointercapture'])
-      stage.addEventListener(name,e=>{if(this.drag?.id===e.pointerId) this.endDrag();},{signal});
-    window.addEventListener('blur',()=>this.endDrag(),{signal});
-    stage.addEventListener('pointerleave',()=>{this.pointer=null;if(!this.drag) stage.style.cursor='';},{signal});
+    stage.addEventListener('pointerup',e=>this.onPointerEnd(e,false),{signal});
+    for(const name of ['pointercancel','lostpointercapture'])
+      stage.addEventListener(name,e=>this.onPointerEnd(e,true),{signal});
+    window.addEventListener('blur',()=>this.cancelInteraction(),{signal});
+    stage.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch') this.pointer=null;if(!this.drag) stage.style.cursor='';},{signal});
     this.canvas.addEventListener('webglcontextlost',e=>{
       e.preventDefault(); this.lost=true; this.syncLoop(); this.onState('lost');
     },{signal});
@@ -110,7 +130,7 @@ export class AtomScene {
         uBackgroundFade:{value:new THREE.Vector2(...(this.options.backgroundFade || [0,0.12]))},uCameraOffset:{value:new THREE.Vector2()},uTime:{value:0},
         uIntensity:{value:0},uScale:{value:0},uSpeed:{value:0},uSpacing:{value:24},
         uGridOpacity:{value:0},uDotSize:{value:0},uLight:{value:new THREE.Vector2()},
-        uNoiseType:{value:0},uOctaves:{value:5},uWarp:{value:2.6}},
+        uNoiseType:{value:0},uCloudOctaves:{value:5},uWarpOctaves:{value:5},uWarp:{value:2.6}},
       vertexShader:backgroundVertex,fragmentShader:backgroundFragment,depthTest:false,depthWrite:false,
     });
     const quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2),this.backgroundMaterial);
@@ -170,6 +190,43 @@ export class AtomScene {
     if(this.paused) this.setPaused(false);
     this.triggerBurst(); this.invalidate();
   }
+  get qualityProfile() { return QUALITY_PROFILES[this.qualityIndex]; }
+  effectiveQuality() {
+    const configured=Math.max(1,Math.round(this.config.background.octaves));
+    if(this.qualityIndex===0) return {cloudOctaves:configured,warpOctaves:configured};
+    if(this.qualityIndex===1) {
+      const cloudOctaves=Math.max(1,Math.ceil(configured*2/3));
+      return {cloudOctaves,warpOctaves:Math.min(3,cloudOctaves)};
+    }
+    return {cloudOctaves:Math.max(1,Math.ceil(configured/3)),warpOctaves:1};
+  }
+  setQualityTier(tier,automatic=false) {
+    const next=typeof tier==='number' ? tier : QUALITY_PROFILES.findIndex(profile=>profile.name===tier);
+    if(next<0 || next>=QUALITY_PROFILES.length || next===this.qualityIndex) return false;
+    const geometryChanged=this.qualityProfile.orbitSegments!==QUALITY_PROFILES[next].orbitSegments
+      || this.qualityProfile.tubeSegments!==QUALITY_PROFILES[next].tubeSegments
+      || this.qualityProfile.minTrailSegments!==QUALITY_PROFILES[next].minTrailSegments;
+    this.qualityIndex=next;
+    if(geometryChanged) this.rebuild(true);
+    this.resetPerformanceWindow(performance.now(),automatic ? QUALITY_WARMUP : 0);
+    this.onState('quality'); this.invalidate();
+    return true;
+  }
+  resetPerformanceWindow(timestamp=0,warmup=QUALITY_WARMUP) {
+    this.performanceFrames=0; this.performanceStarted=0; this.performanceWarmupUntil=timestamp+warmup;
+  }
+  measurePerformance(timestamp) {
+    if(timestamp<this.performanceWarmupUntil) return;
+    if(!this.performanceStarted) {this.performanceStarted=timestamp;this.performanceFrames=1;return;}
+    this.performanceFrames++;
+    const elapsed=timestamp-this.performanceStarted;
+    if(elapsed<QUALITY_WINDOW) return;
+    this.performanceFps=(this.performanceFrames-1)*1000/elapsed;
+    this.performanceFrames=0; this.performanceStarted=0;
+    this.onState('performance');
+    if(this.adaptiveQuality && this.performanceFps<QUALITY_MIN_FPS && this.qualityIndex<QUALITY_PROFILES.length-1)
+      this.setQualityTier(this.qualityIndex+1,true);
+  }
   rebuild(preserve=true) {
     const previous=this.layers;
     this.layers=['outer','inner'].map((name,index)=>{
@@ -190,13 +247,15 @@ export class AtomScene {
           size:cfg.elementSize*(1+spread(cfg.sizeSpread)),rate:cfg.speed*DEG*(1+spread(cfg.speedSpread)),
           white:random()<cfg.whiteFraction ? 1 : 0, boost:preserve ? previous[index]?.elements[i]?.boost ?? 0 : 0,screen:{x:0,y:0}};
       });
-      const ringGeometry=createOrbitGeometry(orbits,cfg.lineWidth,{subtleBreaks:name==='outer'});
+      const profile=this.qualityProfile;
+      const geometryOptions={subtleBreaks:name==='outer',orbitSegments:profile.orbitSegments,tubeSegments:profile.tubeSegments};
+      const ringGeometry=createOrbitGeometry(orbits,cfg.lineWidth,geometryOptions);
       const rings=new THREE.Mesh(ringGeometry,this.orbitMaterial(cfg.orbitOpacity,cfg.radius,cfg.lineWhiteness,cfg.saturation));
       rings.frustumCulled=false; rings.renderOrder=1;
       const companionConfig=this.config.innerCompanion;
       let companion=null;
       if(name==='inner' && companionConfig.enabled && orbits.length) {
-        companion=new THREE.Mesh(createOrbitGeometry(orbits,companionConfig.lineWidth,{offset:companionConfig.radiusOffset}),
+        companion=new THREE.Mesh(createOrbitGeometry(orbits,companionConfig.lineWidth,{...geometryOptions,subtleBreaks:false,offset:companionConfig.radiusOffset}),
           this.orbitMaterial(companionConfig.intensity,cfg.radius,cfg.lineWhiteness,cfg.saturation,companionConfig.style,companionConfig.repeats));
         companion.frustumCulled=false; companion.renderOrder=1;
       }
@@ -208,7 +267,7 @@ export class AtomScene {
       const points=new THREE.Points(pointGeometry,this.pointMaterial(cfg.glow,cfg.radius,cfg.saturation,cfg.coreWhiteness));
       points.frustumCulled=false; points.renderOrder=3;
       // Keep long accelerated trails smooth, without changing the neutral geometry.
-      const trailSegments=Math.max(28,Math.ceil(cfg.trailDegrees*cfg.trailImpulseMultiplier/2.5));
+      const trailSegments=Math.max(profile.minTrailSegments,Math.ceil(cfg.trailDegrees*cfg.trailImpulseMultiplier/2.5));
       const trailGeometry=createRibbonGeometry(elements.length,trailSegments);
       trailGeometry.attributes.position.setUsage(THREE.DynamicDrawUsage);
       for(let i=0;i<elements.length;i++) for(let j=0;j<=trailSegments;j++) for(let side=0;side<2;side++) {
@@ -274,7 +333,9 @@ export class AtomScene {
     const viewWidth=viewHeight*this.camera.aspect;
     this.root.position.set((centerX/this.width-0.5)*viewWidth,(0.5-centerY/this.height)*viewHeight,0);
     this.centerX=centerX; this.centerY=centerY; this.visualCenterX=centerX; this.visualCenterY=centerY;
+    this.fieldRadius=Math.min(focusWidth,focusHeight)*0.53;
     this.shake.set(0,0); this.backgroundMaterial.uniforms.uCameraOffset.value.set(0,0);
+    this.coreHit.style.transform=`translate3d(${centerX-CORE_TOUCH_SIZE/2}px,${centerY-CORE_TOUCH_SIZE/2}px,0)`;
     this.backgroundMaterial.uniforms.uResolution.value.set(this.width,this.height);
     this.pointer=null;
   }
@@ -289,54 +350,122 @@ export class AtomScene {
     if(!config.interaction.enabled) {this.pendingImpulse.length=0;this.cardEnergy=0;}
     this.resize(); this.invalidate();
   }
-  isOverCore(x,y) {
-    return Math.hypot(x-this.visualCenterX,y-this.visualCenterY)<=22;
+  isOverCore(x,y,radius=22) {
+    return Math.hypot(x-this.visualCenterX,y-this.visualCenterY)<=radius;
   }
-  onPointerDown(event) {
-    if(event.pointerType==='touch' || !event.isPrimary || event.button!==0 || this.drag || this.lost) return;
+  isInsideField(x,y) {
+    return Math.hypot(x-this.visualCenterX,y-this.visualCenterY)<=this.fieldRadius;
+  }
+  relativePointer(event) {
     const rect=this.stage.getBoundingClientRect();
-    if(!this.isOverCore(event.clientX-rect.left,event.clientY-rect.top)) return;
+    return {x:event.clientX-rect.left,y:event.clientY-rect.top,t:event.timeStamp};
+  }
+  queueImpulse(a,b,length=Math.hypot(b.x-a.x,b.y-a.y),speed=null) {
+    if(this.paused || !this.config.interaction.enabled || length<=0) return;
+    const elapsed=clamp((b.t-a.t)/1000,0.008,0.15);
+    this.pendingImpulse.push({a,b,length,speed:speed ?? Math.min(2200,length/elapsed)});
+    if(this.pendingImpulse.length>32) this.pendingImpulse.shift();
+  }
+  queueTap(point) {
+    const equivalentLength=this.config.interaction.radius;
+    this.queueImpulse(point,point,equivalentLength,1100);
+  }
+  capturePointer(id) {
+    try {this.stage.setPointerCapture(id);} catch {}
+  }
+  releasePointer(id) {
+    try {if(this.stage.hasPointerCapture(id)) this.stage.releasePointerCapture(id);} catch {}
+  }
+  beginDrag(event,x,y) {
     // Fold the current automatic rotation into the pose so an exported drag matches the view.
     this.viewOrientation.copy(this.root.quaternion); this.precessionPhase=0;
     this.config.scene.orientation=this.viewOrientation.toArray();
-    this.drag={id:event.pointerId,x:event.clientX,y:event.clientY};
+    this.drag={id:event.pointerId,x,y};
     this.pointer=null; this.pendingImpulse.length=0;
-    this.stage.setPointerCapture(event.pointerId); this.stage.style.cursor='grabbing';
+    this.capturePointer(event.pointerId); this.stage.style.cursor='grabbing';
     event.preventDefault();
+  }
+  onPointerDown(event) {
+    if(!event.isPrimary || event.button!==0 || this.drag || this.touch || this.lost) return;
+    const point=this.relativePointer(event);
+    if(event.pointerType==='touch') {
+      const core=this.isOverCore(point.x,point.y,CORE_TOUCH_SIZE/2);
+      this.touch={id:event.pointerId,start:point,last:point,mode:core ? 'core' : 'pending'};
+      if(core) this.capturePointer(event.pointerId);
+      return;
+    }
+    if(!this.isOverCore(point.x,point.y)) return;
+    this.beginDrag(event,event.clientX,event.clientY);
+  }
+  rotateDrag(event) {
+    if(event.pointerId!==this.drag?.id) return;
+    const dx=event.clientX-this.drag.x,dy=event.clientY-this.drag.y;
+    this.drag.x=event.clientX; this.drag.y=event.clientY;
+    const distance=Math.hypot(dx,dy);
+    if(distance>0) {
+      this.rotationAxis.set(dy,dx,0).normalize();
+      this.dragRotation.setFromAxisAngle(this.rotationAxis,distance*Math.PI/Math.min(this.width,this.height));
+      this.viewOrientation.premultiply(this.dragRotation).normalize();
+      this.config.scene.orientation=this.viewOrientation.toArray();
+      this.invalidate();
+    }
   }
   endDrag() {
     if(!this.drag) return;
     const id=this.drag.id; this.drag=null; this.pointer=null; this.pendingImpulse.length=0;
     this.stage.style.cursor='';
-    if(this.stage.hasPointerCapture(id)) this.stage.releasePointerCapture(id);
+    this.releasePointer(id);
   }
-  onPointerMove(event) {
-    if(event.pointerType==='touch') return;
-    if(this.drag) {
-      if(event.pointerId!==this.drag.id) return;
-      const dx=event.clientX-this.drag.x,dy=event.clientY-this.drag.y;
-      this.drag.x=event.clientX; this.drag.y=event.clientY;
-      const distance=Math.hypot(dx,dy);
-      if(distance>0) {
-        this.rotationAxis.set(dy,dx,0).normalize();
-        this.dragRotation.setFromAxisAngle(this.rotationAxis,distance*Math.PI/Math.min(this.width,this.height));
-        this.viewOrientation.premultiply(this.dragRotation).normalize();
-        this.config.scene.orientation=this.viewOrientation.toArray();
-        this.invalidate();
+  cancelInteraction() {
+    const touchId=this.touch?.id; this.touch=null; if(touchId!==undefined) this.releasePointer(touchId);
+    this.endDrag(); this.pointer=null; this.pendingImpulse.length=0;
+  }
+  onTouchMove(event) {
+    if(this.drag) {this.rotateDrag(event);event.preventDefault();return;}
+    if(event.pointerId!==this.touch?.id) return;
+    const next=this.relativePointer(event),start=this.touch.start;
+    const dx=next.x-start.x,dy=next.y-start.y,distance=Math.hypot(dx,dy);
+    if(this.touch.mode==='core') {
+      if(distance>=TOUCH_ROTATE_THRESHOLD) {
+        this.beginDrag(event,event.clientX-dx,event.clientY-dy);
+        this.touch=null; this.rotateDrag(event);
       }
       return;
     }
-    const rect=this.stage.getBoundingClientRect();
-    const next={x:event.clientX-rect.left,y:event.clientY-rect.top,t:event.timeStamp};
+    if(this.touch.mode==='pending' && distance>=TOUCH_ROTATE_THRESHOLD) {
+      if(Math.abs(dy)>Math.abs(dx)*1.2) {this.touch.mode='scroll';this.pointer=null;return;}
+      this.touch.mode='impulse';
+    }
+    if(this.touch.mode==='impulse') {
+      const segmentLength=Math.hypot(next.x-this.touch.last.x,next.y-this.touch.last.y);
+      if(segmentLength>0.5) this.queueImpulse(this.touch.last,next,segmentLength);
+      event.preventDefault();
+    }
+    this.touch.last=next;
+  }
+  onPointerEnd(event,cancelled) {
+    if(event.pointerId===this.drag?.id) {this.touch=null;this.endDrag();return;}
+    if(event.pointerId!==this.touch?.id) return;
+    const touch=this.touch,point=this.relativePointer(event);
+    this.touch=null;
+    this.releasePointer(event.pointerId);
+    const distance=Math.hypot(point.x-touch.start.x,point.y-touch.start.y);
+    const duration=point.t-touch.start.t;
+    if(!cancelled && (touch.mode==='core' || touch.mode==='pending') && distance<=TOUCH_TAP_DISTANCE
+      && duration<=TOUCH_TAP_DURATION && this.isInsideField(point.x,point.y)) this.queueTap(point);
+  }
+  onPointerMove(event) {
+    if(event.pointerType==='touch') {this.onTouchMove(event);return;}
+    if(this.drag) {
+      this.rotateDrag(event);
+      return;
+    }
+    const next=this.relativePointer(event);
     this.stage.style.cursor=this.isOverCore(next.x,next.y) ? 'grab' : '';
     if(this.paused || !this.config.interaction.enabled) return;
     if(this.pointer) {
       const length=Math.hypot(next.x-this.pointer.x,next.y-this.pointer.y);
-      const elapsed=clamp((next.t-this.pointer.t)/1000,0.008,0.15);
-      if(length>0.5) {
-        this.pendingImpulse.push({a:this.pointer,b:next,length,speed:Math.min(2200,length/elapsed)});
-        if(this.pendingImpulse.length>32) this.pendingImpulse.shift();
-      }
+      if(length>0.5) this.queueImpulse(this.pointer,next,length);
     }
     this.pointer=next;
   }
@@ -421,6 +550,7 @@ export class AtomScene {
     this.visualCenterY=(-this.projected.y*0.5+0.5)*this.height;
     this.shake.set(this.visualCenterX-this.centerX,this.visualCenterY-this.centerY);
     this.backgroundMaterial.uniforms.uCameraOffset.value.copy(this.shake);
+    this.coreHit.style.transform=`translate3d(${this.visualCenterX-CORE_TOUCH_SIZE/2}px,${this.visualCenterY-CORE_TOUCH_SIZE/2}px,0)`;
   }
   updateCore() {
     this.core.material.uniforms.uViewportHeight.value=this.height*this.renderer.getPixelRatio();
@@ -501,7 +631,9 @@ export class AtomScene {
     bg.uTime.value=this.time; bg.uIntensity.value=b.nebulaIntensity; bg.uScale.value=b.nebulaScale;
     bg.uSpeed.value=b.nebulaSpeed; bg.uSpacing.value=b.gridSpacing; bg.uGridOpacity.value=b.gridOpacity;
     bg.uDotSize.value=b.dotSize; bg.uLight.value.set(b.lightX,b.lightY);
-    bg.uNoiseType.value=NOISE_TYPES.findIndex(([id])=>id===b.noiseType); bg.uOctaves.value=b.octaves; bg.uWarp.value=b.warp;
+    const quality=this.effectiveQuality();
+    bg.uNoiseType.value=NOISE_TYPES.findIndex(([id])=>id===b.noiseType);
+    bg.uCloudOctaves.value=quality.cloudOctaves; bg.uWarpOctaves.value=quality.warpOctaves; bg.uWarp.value=b.warp;
     const energy=this.updateElements(dt); this.updateCards(dt,energy); this.updateCore();
     this.renderer.render(this.scene,this.camera); this.frames++;
   }
@@ -509,13 +641,17 @@ export class AtomScene {
   tick=(timestamp)=>{
     this.raf=0;
     if(!this.running) return;
+    if(!this.nextFrameTime) this.nextFrameTime=timestamp;
+    if(timestamp+0.5<this.nextFrameTime) {this.raf=requestAnimationFrame(this.tick);return;}
+    do this.nextFrameTime+=FRAME_INTERVAL; while(this.nextFrameTime<=timestamp);
     const dt=this.lastTime ? Math.min(0.05,(timestamp-this.lastTime)/1000) : 0;
-    this.lastTime=timestamp; this.render(dt); this.raf=requestAnimationFrame(this.tick);
+    this.lastTime=timestamp; this.render(dt); this.measurePerformance(timestamp); this.raf=requestAnimationFrame(this.tick);
   };
   syncLoop() {
-    this.endDrag();
+    this.cancelInteraction();
     if(this.raf) cancelAnimationFrame(this.raf);
-    this.raf=0; this.lastTime=0; this.pointer=null; this.pendingImpulse.length=0;
+    this.raf=0; this.lastTime=0; this.nextFrameTime=0;
+    this.resetPerformanceWindow(performance.now());
     if(this.running) this.raf=requestAnimationFrame(this.tick);
   }
   invalidate() { if(!this.lost && !this.disposed) this.render(0); }
@@ -523,10 +659,14 @@ export class AtomScene {
     this.paused=paused; this.syncLoop(); this.onState(paused ? 'paused' : 'running');
   }
   snapshot() {
+    const quality=this.effectiveQuality(),profile=this.qualityProfile;
     return {time:this.time,paused:this.paused,running:this.running,frames:this.frames,
       tint:this.tint.getHexString(),nebulaTint:this.nebulaTint.getHexString(),drawCalls:this.renderer.info.render.calls,
       orientation:this.viewOrientation.toArray(),rotating:!!this.drag,center:{x:this.centerX,y:this.centerY},
       shake:{x:this.shake.x,y:this.shake.y,burst:this.shakeBurstLevel,events:this.shakeBursts.length},
+      performance:{fps:this.performanceFps,quality:profile.name,pixelRatio:this.renderer.getPixelRatio(),
+        cloudOctaves:quality.cloudOctaves,warpOctaves:quality.warpOctaves,
+        orbitSegments:profile.orbitSegments,tubeSegments:profile.tubeSegments,minTrailSegments:profile.minTrailSegments},
       noiseType:this.config.background.noiseType,energy:this.cardEnergy,flash:this.flash,emissions:this.emissions,
       bursts:this.burstFrames.map(burst=>({...burst})),
       cards:this.cards.map(({phrase,born,direction})=>({phrase,born,direction})),
@@ -540,6 +680,6 @@ export class AtomScene {
     this.disposed=true; this.syncLoop(); this.abort.abort();
     this.resizeObserver.disconnect(); this.intersectionObserver.disconnect();
     this.scene.traverse(object=>{object.geometry?.dispose();object.material?.dispose();});
-    this.renderer.dispose(); this.cardRoot.replaceChildren();
+    this.renderer.dispose(); this.cardRoot.replaceChildren(); this.coreHit.remove();
   }
 }
