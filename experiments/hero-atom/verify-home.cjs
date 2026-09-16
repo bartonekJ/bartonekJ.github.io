@@ -30,6 +30,13 @@ const projectedExtent=state=>{
     assert.equal(await page.locator('#atom-fallback').isHidden(),true);
     let state=await page.evaluate(()=>heroAtom.snapshot());
     assert.deepEqual(state.layers.map(layer=>[layer.orbits,layer.elements]),[[7,33],[5,7]],'production preset is loaded');
+    assert.equal(await page.evaluate(()=>heroAtom.snapshot().shake && heroAtom.snapshot().shake.events>=0),true);
+    assert.equal(await page.evaluate(async()=>{
+      const response=await fetch('./experiments/bybartonek-hero-atom-2645671074.json');
+      const preset=await response.json();
+      return preset.version===9 && preset.config.cameraShake.enabled
+        && preset.config.cameraShake.idleAmplitudeA===5.4 && preset.config.cameraShake.burstAmplitudeA===36;
+    }),true,'production uses the approved v9 ShakyCam preset');
     assert.equal(state.drawCalls,9);assert.equal(state.cards.length,0);
     assert.ok(Math.abs(state.center.x-(layout.copy.width+(layout.hero.width-layout.copy.width)/2))<0.01,'atom stays centered in the former right column');
     assert.ok(Math.abs(state.center.y-layout.hero.height/2)<0.01);
@@ -54,8 +61,9 @@ const projectedExtent=state=>{
     const card=await page.locator('.atom-card:visible').first().boundingBox();
     assert.ok(card.x>=stage.x && card.x+card.width<=stage.x+stage.width && card.y>=stage.y && card.y+card.height<=stage.y+stage.height);
     const orientation=state.orientation;
-    await page.mouse.move(stage.x+state.center.x,stage.y+state.center.y);await page.mouse.down();
-    await page.mouse.move(stage.x+state.center.x+80,stage.y+state.center.y+40,{steps:4});await page.mouse.up();
+    const core=await page.evaluate(()=>{const s=heroAtom.snapshot();return{x:s.center.x+s.shake.x,y:s.center.y+s.shake.y};});
+    await page.mouse.move(stage.x+core.x,stage.y+core.y);await page.mouse.down();
+    await page.mouse.move(stage.x+core.x+80,stage.y+core.y+40,{steps:4});await page.mouse.up();
     assert.notDeepEqual((await page.evaluate(()=>heroAtom.snapshot())).orientation,orientation,'core drag works in production');
     assert.deepEqual(errors,[]);await page.close();
 
@@ -91,6 +99,6 @@ const projectedExtent=state=>{
     await fallback.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith('webgl') ? null : original.call(this,type,...args);};});
     await fallback.goto(url);await fallback.locator('#atom-fallback').waitFor({state:'visible'});
     assert.equal(await fallback.locator('#atom-canvas').isHidden(),true);await fallback.close();
-    console.log('PASS: full-width scene, fixed desktop atom size and right alignment, preserved mobile layout and hero dimensions, editor-dark background fade, text stacking, production preset, local assets, interaction, reduced motion and fallback.');
+    console.log('PASS: full-width scene, fixed desktop atom size and right alignment, preserved mobile layout and hero dimensions, editor-dark background fade, text stacking, approved v9 ShakyCam preset, local assets, interaction, reduced motion and fallback.');
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -15,6 +15,14 @@ export const DEFAULT_CONFIG = {
     intensity: 8, startRadius: 0.04, radius: 2,
     expansionSeconds: 1.2, decaySeconds: 0.55, falloff: 5,
   },
+  cameraShake: {
+    enabled: true,
+    idleAmplitudeA: 0.48, idleFrequencyA: 0.55,
+    idleAmplitudeB: 0.22, idleFrequencyB: 1.3, idlePhaseB: 11.8,
+    burstAmplitudeA: 13, burstFrequencyA: 13,
+    burstAmplitudeB: 5, burstFrequencyB: 22.5, burstPhaseB: 73,
+    burstDecay: 0.65,
+  },
   inner: {
     orbitCount: 7, elementCount: 11, radius: 1.52, radiusSpread: 0.16,
     angle: 58, angleSpread: 37, azimuth: 0, azimuthSpread: 15, orbitOpacity: 0.43, lineWidth: 0.009,
@@ -132,6 +140,20 @@ export const CONTROL_GROUPS = [
     ['decaySeconds', 'Čas exponenciálního útlumu', 0.1, 3, 0.05, 's'],
     ['falloff', 'Prostorový falloff', 2, 12, 0.1],
   ]],
+  ['cameraShake', 'ShakyCam', [
+    ['enabled', 'Zapnout chvění kamery', 'checkbox'],
+    ['idleAmplitudeA', 'Klid · amplituda vrstvy A', 0, 8, 0.05, 'px'],
+    ['idleFrequencyA', 'Klid · frekvence vrstvy A', 0.02, 8, 0.01, '×'],
+    ['idleAmplitudeB', 'Klid · amplituda vrstvy B', 0, 8, 0.05, 'px'],
+    ['idleFrequencyB', 'Klid · frekvence vrstvy B', 0.02, 8, 0.01, '×'],
+    ['idlePhaseB', 'Klid · fázový posun vrstvy B', -50, 50, 0.1, 'noise'],
+    ['burstAmplitudeA', 'Výbuch · amplituda vrstvy A', 0, 60, 0.5, 'px'],
+    ['burstFrequencyA', 'Výbuch · frekvence vrstvy A', 0.5, 60, 0.5, 'Hz'],
+    ['burstAmplitudeB', 'Výbuch · amplituda vrstvy B', 0, 60, 0.5, 'px'],
+    ['burstFrequencyB', 'Výbuch · frekvence vrstvy B', 0.5, 60, 0.5, 'Hz'],
+    ['burstPhaseB', 'Výbuch · fázový posun vrstvy B', -180, 180, 1, '°'],
+    ['burstDecay', 'Doznění po výbuchu', 0.1, 3, 0.05, 's'],
+  ]],
   ['background', 'Pozadí', [
     ['noiseType', 'Typ šumu mlhoviny', 'select', NOISE_TYPES],
     ['octaves', 'Počet vrstev šumu', 1, 6, 1],
@@ -213,10 +235,35 @@ export function validateConfig(input) {
 
 // Migrate legacy flash, fixed Euler tilt and shared palettes without changing their initial look.
 export function importConfig(data) {
-  if (!data || ![1, 2, 3, 4, 5, 6].includes(data.version)) throw new Error('Nepodporovaná verze konfigurace.');
-  if (data.version === 6) return validateConfig(data.config);
+  if (!data || ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(data.version)) throw new Error('Nepodporovaná verze konfigurace.');
+  if (data.version === 9) return validateConfig(data.config);
   const input = structuredClone(data.config);
   if (!input || typeof input !== 'object') throw new Error('Chybí konfigurace.');
+  const migrateBurstLayers=()=>{
+    const old=input.cameraShake;
+    if (!old || typeof old!=='object' || !Number.isFinite(old.burstAmplitude) || !Number.isFinite(old.burstFrequency))
+      throw new Error('Neplatné původní nastavení výbuchu ShakyCam.');
+    Object.assign(old,{burstAmplitudeA:old.burstAmplitude*0.72,burstFrequencyA:old.burstFrequency,
+      burstAmplitudeB:old.burstAmplitude*0.28,burstFrequencyB:old.burstFrequency*1.73,burstPhaseB:0});
+    delete old.burstAmplitude; delete old.burstFrequency;
+  };
+  if (data.version === 8) {migrateBurstLayers();return validateConfig(input);}
+  if (data.version === 7) {
+    const old=input.cameraShake;
+    if (!old || typeof old!=='object' || !Number.isFinite(old.idleAmplitude) || !Number.isFinite(old.idleSpeed))
+      throw new Error('Neplatné původní nastavení ShakyCam.');
+    input.cameraShake={
+      ...old,
+      idleAmplitudeA:old.idleAmplitude/1.45,idleFrequencyA:old.idleSpeed,
+      idleAmplitudeB:old.idleAmplitude*0.45/1.45,idleFrequencyB:old.idleSpeed*2.37,idlePhaseB:11.8,
+    };
+    delete input.cameraShake.idleAmplitude; delete input.cameraShake.idleSpeed;
+    migrateBurstLayers();
+    return validateConfig(input);
+  }
+  // Old exports keep their motion unchanged when opened in the current editor.
+  input.cameraShake={...DEFAULT_CONFIG.cameraShake,enabled:false};
+  if (data.version === 6) return validateConfig(input);
   input.innerCompanion={...DEFAULT_CONFIG.innerCompanion,enabled:false};
   if (data.version === 5) return validateConfig(input);
   for (const group of ['inner','outer']) {

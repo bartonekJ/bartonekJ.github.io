@@ -81,6 +81,11 @@ for(const [group,title,definitions] of CONTROL_GROUPS) {
     help.textContent='Radius je násobek vnějšího obalu. Náhled spustí jeden výbuch a pohyb scény, bez karty.';
     details.append(preview,help);
   }
+  if(group==='cameraShake') {
+    const help=document.createElement('p'); help.className='control-help';
+    help.textContent='Klid skládá dvě vrstvy hladkého noise; jeho posun B není periodický úhel. Výbuch skládá dvě skutečné sinusové vrstvy, proto je jeho fáze B ve stupních. Obě výbuchové vrstvy sdílejí exponenciální doznění.';
+    details.append(help);
+  }
   if(group==='nebulaColor' || group==='inner' || group==='outer' || group==='cards') {
     const help=document.createElement('p'); help.className='control-help';
     help.textContent=group==='nebulaColor'
@@ -117,7 +122,7 @@ document.querySelector('#reset').addEventListener('click',()=>{
   configStatus.textContent='Obnoveno výchozí nastavení. Čas animace pokračuje.';
 });
 document.querySelector('#export').addEventListener('click',()=>{
-  const blob=new Blob([JSON.stringify({version:6,config},null,2)+'\n'],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({version:9,config},null,2)+'\n'],{type:'application/json'});
   const url=URL.createObjectURL(blob), link=document.createElement('a');
   link.href=url; link.download=`bybartonek-hero-atom-${config.seed}.json`; link.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);

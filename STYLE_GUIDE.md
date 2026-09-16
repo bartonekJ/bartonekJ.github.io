@@ -276,6 +276,18 @@ Ověřeno bez změny rozměrů hero: 1440×780 px při viewportu 1440×900, 1000
 
 Související soubory: `index.html`, `styles.css`, `hero-atom.js`, `experiments/bybartonek-hero-atom-2645671074.json`, sdílený renderer v `experiments/hero-atom/` a jeho README.
 
+### 2026-09-16 — ShakyCam v editoru a produkci
+
+Uživatel nejprve chtěl v editoru vyzkoušet nepravidelné jemné chvění kamery přes celou scénu. Při výbuchu se má kamera zatřást výrazněji a plynule se vrátit k jemnému klidovému pohybu. Po doladění byl 16. září 2026 uložený preset verze 9 výslovně schválen i pro produkční homepage.
+
+Editor přidává skupinu `cameraShake`. Po první zkoušce uživatel požaduje větší rozdíl mezi oběma složkami: klid i výbuch proto mají dvě samostatné amplitudy A/B a dvě frekvence A/B. Klid používá dvě hladké noise vrstvy, nikoli krátkou sinusovou smyčku; vrstva B má posun vzorkovací souřadnice. Výbuch používá dvě skutečné sinusové složky, takže jeho vrstva B má periodický fázový posun ve stupních. Obě výbuchové vrstvy sdílejí krátký náběh a exponenciální doznění. Výchozí klidové amplitudy 0,48/0,22 px a výbuchové amplitudy 13/5 px jsou pracovní návrh pro ladění.
+
+Posun je součást projekce kamery a stejné skutečné vychýlení dostává procedurální pozadí. Mlhovina, grid, orbity, elementy, jádro, světelný výbuch a HTML billboardy se proto pohybují společně; hit test jádra sleduje jeho obrazovou polohu. Pauza chvění zmrazí. Export používá verzi 9. Import verzí 1–6 doplní parametry s `enabled: false`, aby staré soubory nezměnily pohyb bez výslovného rozhodnutí. Import verzí 7 a 8 rozdělí původní společné hodnoty do A/B vrstev se stejným přibližným výsledkem.
+
+Schválený produkční preset používá klidové vrstvy A/B `5,4 px @ 0,7` a `2,6 px @ 7,6`, posun B `−39,7`; výbuchové vrstvy `36 px @ 9,5 Hz` a `17 px @ 15,5 Hz`, fázi B `−51°` a doznění `0,4 s`. Tohle jsou záměrně výraznější hodnoty vybrané uživatelem v editoru, nikoli výchozí hodnoty nového presetu. Omezení pohybu scénu při načtení pozastaví stejně jako dříve.
+
+Ověřeno automaticky: vypnutý efekt má nulový posun, zapnutý mění celý canvas, klidové vzorky se plynule a nepravidelně mění, výbuch zvýší amplitudu a jeho obálka odezní zpět ke klidové úrovni. Produkční regrese navíc kontroluje preset verze 9 se zapnutým ShakyCam, interakci s jádrem na jeho právě posunuté obrazové pozici, omezení pohybu a mobilní layout.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.

@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 9,
   "config": {
     "seed": 2645671074,
     "scene": {
@@ -24,6 +24,20 @@
       "expansionSeconds": 1.2,
       "decaySeconds": 0.45,
       "falloff": 5
+    },
+    "cameraShake": {
+      "enabled": true,
+      "idleAmplitudeA": 5.4,
+      "idleFrequencyA": 0.7,
+      "idleAmplitudeB": 2.6,
+      "idleFrequencyB": 7.6,
+      "idlePhaseB": -39.7,
+      "burstAmplitudeA": 36,
+      "burstFrequencyA": 9.5,
+      "burstAmplitudeB": 17,
+      "burstFrequencyB": 15.5,
+      "burstPhaseB": -51,
+      "burstDecay": 0.4
     },
     "inner": {
       "orbitCount": 5,

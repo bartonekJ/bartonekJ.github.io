@@ -27,6 +27,12 @@ const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsof
     assert.equal(await page.locator('[id="interaction.strength"]').getAttribute('max'),'40');
     assert.equal(await page.locator('[id="interaction.maxBoost"]').getAttribute('max'),'100');
     assert.equal(await page.locator('[id="cards.triggerEnergy"]').getAttribute('max'),'100');
+    assert.equal(await page.locator('[id="cameraShake.idleAmplitudeA"]').getAttribute('max'),'8');
+    assert.equal(await page.locator('[id="cameraShake.idleAmplitudeB"]').getAttribute('max'),'8');
+    assert.equal(await page.locator('[id="cameraShake.idlePhaseB"]').getAttribute('min'),'-50');
+    assert.equal(await page.locator('[id="cameraShake.burstAmplitudeA"]').getAttribute('max'),'60');
+    assert.equal(await page.locator('[id="cameraShake.burstAmplitudeB"]').getAttribute('max'),'60');
+    assert.equal(await page.locator('[id="cameraShake.burstPhaseB"]').getAttribute('max'),'180');
     assert.equal(await page.locator('[id^="scene.tilt"]').count(),0,'global tilt sliders are replaced by direct dragging');
     await page.locator('summary').filter({hasText:'Pozadí'}).click();
     const noiseImages=[];
@@ -86,6 +92,34 @@ const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsof
       assert.notDeepEqual(await page.locator('#atom-canvas').screenshot(),colorImages.at(-1),`${key} affects rendered light`);
       assert.equal((await snapshot()).nebulaTint,separate.nebulaTint);
     }
+    await page.locator('#reset').click();
+
+    // ShakyCam moves the complete rendered scene with irregular idle noise and a decaying burst impulse.
+    await page.locator('summary').filter({hasText:'ShakyCam'}).click();
+    await page.evaluate(()=>{
+      const c=heroAtom.getConfig();Object.assign(c.cameraShake,{enabled:true,idleAmplitudeA:2.5,idleFrequencyA:0.35,idleAmplitudeB:4,idleFrequencyB:2.7,idlePhaseB:23.4,
+        burstAmplitudeA:18,burstFrequencyA:9,burstAmplitudeB:8,burstFrequencyB:27,burstPhaseB:83,burstDecay:0.35});
+      heroAtom.setConfig(c);
+    });
+    const shiftedShake=await snapshot();
+    assert.ok(Math.hypot(shiftedShake.shake.x,shiftedShake.shake.y)>0.1,'idle shake offsets the camera while paused');
+    const shiftedScene=await page.locator('#atom-canvas').screenshot();
+    await page.evaluate(()=>{const c=heroAtom.getConfig();c.cameraShake.enabled=false;heroAtom.setConfig(c);});
+    const stillShake=await snapshot();
+    assert.deepEqual(stillShake.shake,{x:0,y:0,burst:0,events:0});
+    assert.notDeepEqual(await page.locator('#atom-canvas').screenshot(),shiftedScene,'camera offset changes the complete rendered canvas');
+    await page.evaluate(()=>{const c=heroAtom.getConfig();c.cameraShake.enabled=true;heroAtom.setConfig(c);heroAtom.pause(false);});
+    const idleSamples=[];
+    for(let i=0;i<6;i++) {await page.waitForTimeout(90);idleSamples.push((await snapshot()).shake);}
+    assert.ok(new Set(idleSamples.map(({x,y})=>`${x.toFixed(2)},${y.toFixed(2)}`)).size>4,'idle shake changes irregularly over time');
+    await page.evaluate(()=>heroAtom.previewBurst());
+    const burstSamples=[];
+    for(let i=0;i<5;i++) {await page.waitForTimeout(45);burstSamples.push((await snapshot()).shake);}
+    assert.ok(Math.max(...burstSamples.map(sample=>sample.burst))>0.5,'burst adds a strong shake envelope');
+    assert.ok(Math.max(...burstSamples.map(({x,y})=>Math.hypot(x,y)))>8,'burst shake is visibly stronger than idle motion');
+    await page.waitForTimeout(1500);
+    assert.ok((await snapshot()).shake.burst<0.03,'burst shake settles back to idle motion');
+    await page.evaluate(()=>heroAtom.pause(true));
     await page.locator('#reset').click();await page.locator('#close-controls').click();
 
     // Real tube sections remain visible when an orbit is exactly edge-on.
@@ -166,9 +200,34 @@ const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsof
     const downloadPromise=page.waitForEvent('download'); await page.locator('#export').click();
     const download=await downloadPromise;
     const exported=JSON.parse(await fs.readFile(await download.path(),'utf8'));
-    assert.equal(exported.version,6);
+    assert.equal(exported.version,9);
     assert.deepEqual(exported.config.scene.orientation,afterDrag.orientation,'export keeps the dragged orientation');
-    const v5=structuredClone(exported);v5.version=5;delete v5.config.innerCompanion;
+    const v8=structuredClone(exported);v8.version=8;
+    const layeredBurst=v8.config.cameraShake;
+    v8.config.cameraShake={...layeredBurst,burstAmplitude:layeredBurst.burstAmplitudeA+layeredBurst.burstAmplitudeB,burstFrequency:layeredBurst.burstFrequencyA};
+    for(const key of ['burstAmplitudeA','burstFrequencyA','burstAmplitudeB','burstFrequencyB','burstPhaseB']) delete v8.config.cameraShake[key];
+    await page.locator('#import-file').setInputFiles({name:'v8.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(v8))});
+    await page.waitForFunction(()=>document.querySelector('#config-status').textContent==='Nastavení načteno.');
+    const migratedBurst=await page.evaluate(()=>heroAtom.getConfig().cameraShake);
+    assert.equal(migratedBurst.burstPhaseB,0);
+    assert.ok(Math.abs(migratedBurst.burstAmplitudeA-v8.config.cameraShake.burstAmplitude*0.72)<1e-12,'v8 burst migrates to layer A');
+    assert.ok(Math.abs(migratedBurst.burstAmplitudeB-v8.config.cameraShake.burstAmplitude*0.28)<1e-12,'v8 burst migrates to layer B');
+    const v7=structuredClone(v8);v7.version=7;
+    const currentShake=v7.config.cameraShake;
+    v7.config.cameraShake={enabled:currentShake.enabled,idleAmplitude:currentShake.idleAmplitudeA+currentShake.idleAmplitudeB,
+      idleSpeed:currentShake.idleFrequencyA,burstAmplitude:currentShake.burstAmplitude,
+      burstFrequency:currentShake.burstFrequency,burstDecay:currentShake.burstDecay};
+    await page.locator('#import-file').setInputFiles({name:'v7.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(v7))});
+    await page.waitForFunction(()=>document.querySelector('#config-status').textContent==='Nastavení načteno.');
+    const migratedShake=await page.evaluate(()=>heroAtom.getConfig().cameraShake);
+    assert.equal(migratedShake.enabled,true);assert.equal(migratedShake.idlePhaseB,11.8);
+    assert.ok(Math.abs(migratedShake.idleAmplitudeA-v7.config.cameraShake.idleAmplitude/1.45)<1e-12,'v7 idle blend migrates to layer A');
+    assert.ok(Math.abs(migratedShake.idleAmplitudeB-v7.config.cameraShake.idleAmplitude*0.45/1.45)<1e-12,'v7 idle blend migrates to layer B');
+    const v6=structuredClone(v7);v6.version=6;delete v6.config.cameraShake;
+    await page.locator('#import-file').setInputFiles({name:'v6.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(v6))});
+    await page.waitForFunction(()=>document.querySelector('#config-status').textContent==='Nastavení načteno.');
+    assert.equal(await page.evaluate(()=>heroAtom.getConfig().cameraShake.enabled),false,'v6 production preset keeps camera shake disabled');
+    const v5=structuredClone(v6);v5.version=5;delete v5.config.innerCompanion;
     await page.locator('#import-file').setInputFiles({name:'v5.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(v5))});
     await page.waitForFunction(()=>document.querySelector('#config-status').textContent==='Nastavení načteno.');
     assert.equal(await page.evaluate(()=>heroAtom.getConfig().innerCompanion.enabled),false,'older presets do not acquire extra orbits automatically');
@@ -412,6 +471,6 @@ const executablePath = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsof
     await fallback.goto(url); await fallback.locator('#atom-fallback').waitFor({state:'visible'});
     assert.equal(await fallback.locator('#pause').isDisabled(),true);
     await fallback.close();
-    console.log('PASS: volumetric orbits at edge-on angles; five companion styles; signed offsets, thickness, intensity and repeat count; independent particles/trails; v1-v5 import; impulse trails and radiance; palettes; core drag; bursts; cards; pause; mobile/touch; context recovery; fallback.');
+    console.log('PASS: volumetric orbits at edge-on angles; five companion styles; signed offsets, thickness, intensity and repeat count; independent particles/trails; v1-v8 import; impulse trails and radiance; palettes; dual-layer ShakyCam idle and burst response; core drag; bursts; cards; pause; mobile/touch; context recovery; fallback.');
   } finally { await browser.close(); }
 })().catch(error=>{console.error(error);process.exitCode=1;});

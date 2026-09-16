@@ -21,9 +21,9 @@ Produkční canvas pokrývá celé hero. Funkce `layout` ponechává střed atom
 Produkční základ kolem atomu je stejný jako v editoru (`#0b1011`). Background shader jej mezi přibližně 8 a 68 % šířky míchá do webového tokenu `--ink` na levém okraji. Maska ovlivňuje základ, mlhovinu a grid; prostorová geometrie ani HTML karty se nemaskují. Editor předává shodnou počáteční a okrajovou barvu, takže se v něm přechod neprojeví.
 
 - **Ladit scénu** otevře panel vlevo, aby na desktopu zůstal atom vidět.
-- **Pozastavit** zastaví obě vrstvy, karty, barevný cyklus i mlhovinu. Při zapnutém omezení pohybu se stránka načte pozastavená; pohyb lze výslovně spustit.
+- **Pozastavit** zastaví obě vrstvy, karty, barevný cyklus, mlhovinu i ShakyCam. Při zapnutém omezení pohybu se stránka načte pozastavená; pohyb lze výslovně spustit.
 - **Export JSON / Načíst JSON** uloží a obnoví úplnou konfiguraci. Změny se automaticky neukládají do zdrojových souborů ani po obnovení stránky.
-- Nové exporty mají verzi 6; import přijímá i verze 1–5. Doplní nové parametry, převede starší záblesk na samostatný výbuch a náklony X/Y/Z na prostorové natočení. U verzí 1–3 zůstává paleta sdílená. Starší verze 1–4 dostanou oba násobiče reakce stop/bodů nastavené na 1. Verze 1–5 mají po importu druhé dráhy vypnuté, aby nepřibyly automaticky; zapínají se v sekci **Vnitřní · druhé dráhy**. Hlavní orbity už vždy používají prostorový průřez.
+- Nové exporty mají verzi 9; import přijímá i verze 1–8. Doplní nové parametry, převede starší záblesk na samostatný výbuch a náklony X/Y/Z na prostorové natočení. U verzí 1–3 zůstává paleta sdílená. Starší verze 1–4 dostanou oba násobiče reakce stop/bodů nastavené na 1. Verze 1–5 mají po importu druhé dráhy vypnuté, aby nepřibyly automaticky. Verze 1–6 dostanou ShakyCam vypnutou, aby se jejich vzhled a pohyb při importu nezměnil. Verze 7 a 8 převedou původní společné amplitudy a frekvence na dvojice A/B se stejným přibližným výsledkem.
 - **Nový seed** vygeneruje jiné uspořádání. **Výchozí** obnoví hodnoty z `config.js`; čas scény pokračuje.
 - Kurzor předává energii při pohybu v blízkosti prvků. Na dotykovém zařízení zůstává svislé scrollování; náklon se nečte.
 - Karty a výbuch vznikají pouze při dostatečně silné reakci **vnitřních** elementů. Vnější obal reaguje na kurzor, ale jádro nenabíjí. V klidu se karty nezobrazují ani automaticky neopakují.
@@ -43,6 +43,7 @@ Jediným zdrojem výchozích hodnot je `DEFAULT_CONFIG` v [config.js](config.js)
 | `innerCompanion` | Druhá soustředná dráha ke každé vnitřní orbitě: zapnutí, kladný/záporný odstup v procentech poloměru rodiče, styl a hustota vzoru, vlastní intenzita a tloušťka. Barvu i rovinu dědí od rodiče. |
 | `core` | Velikost a záře světelného jádra. |
 | `burst` | Samostatný výbuch: počáteční intenzita, počáteční/cílový radius, doba rozpínání, časový útlum a prostorový exponenciální falloff. Radius se udává jako násobek vnějšího obalu. |
+| `cameraShake` | ShakyCam: zapnutí; dvě amplitudy, frekvence a posun B pro klid; dvě amplitudy, frekvence a fáze B pro výbuch; společný čas exponenciálního doznění výbuchu. Amplitudy jsou v CSS pixelech. |
 | `background` | Typ šumu, počet vrstev (`octaves`, 1–6), deformace souřadnic (`warp`, 0–5); rozestup, velikost a jas gridu; intenzita, detail a rychlost mlhoviny; pozice světla. X roste doprava, Y nahoru, jednotka odpovídá šířce/výšce scény. |
 | `color` | Paleta soustavy (dráhy, elementy, jádro, výbuch, šipky karet); zapnutí cyklu, jeho délka a společný barevný poměr. `mix: 0` = teplá, `1` = studená. Při vypnutém cyklu nastavuje pevný tint. |
 | `nebulaColor` | Vlastní teplá/studená paleta mlhoviny a gridu, sytost 0–3. `linked` může převzít paletu soustavy; vlastní barvy se přitom neztratí. Čas a poměr přechodu sdílí s `color`; sytost je vždy nezávislá. Výchozí nastavení má oddělené palety se stejnými počátečními barvami. |
@@ -145,9 +146,19 @@ Referenční vnější obal je `(outer.radius + outer.radiusSpread) × scene.sca
 
 Nový výbuch nepřepočítá starší výbuch od začátku. Vrstvy se překrývají, sdílejí aktuální parametry editoru a zanikají až pod zanedbatelnou intenzitou. Pauza zastaví i jejich čas. `intensity: 0` potlačí světelný efekt, ale nemění pravidla pro vznik karet.
 
+## ShakyCam
+
+ShakyCam vznikla jako experiment editoru. Po doladění uživatel 16. září 2026 schválil pro produkci preset verze 9 se zapnutým efektem. Používá klidové vrstvy A/B `5,4 px @ 0,7` a `2,6 px @ 7,6`, posun B `−39,7`; výbuchové vrstvy `36 px @ 9,5 Hz` a `17 px @ 15,5 Hz`, fázi B `−51°` a doznění `0,4 s`. Import exportu verze 1–6 efekt stále nastaví na vypnuto, aby starší soubory samy nezměnily pohyb. Verze 7 a 8 už ShakyCam obsahovaly a při migraci zachovají její stav.
+
+Klidový posun nevychází ze sinusoid. Každá osa sčítá dvě deterministické vrstvy hladkého jednorozměrného noise. Vrstvy A/B mají vlastní amplitudu v pixelech a vlastní frekvenci procházení šumem. `idlePhaseB` posouvá vzorkovací souřadnici B v rozsahu −50 až 50; není to periodický úhel a hodnota po plném „otočení“ nemusí dát stejný výsledek. Osy používají jiné seedy a pevné posuny. Pohyb je plynulý, ale v krátkém intervalu nemá zjevnou opakující se smyčku.
+
+Každý výbuch vytvoří samostatný otřes. Jeho obálka je `(1 − exp(−age / 0,012)) × exp(−age / burstDecay)`; krátký náběh zabrání jednosnímkovému skoku a exponenciální část jej vrátí ke klidovému chvění. Výbuchové vrstvy A/B jsou skutečné sinusové složky s vlastní amplitudou a frekvencí. `burstPhaseB` je proto periodický posun ve stupních −180 až 180. Náhodné fáze události odvozené ze seedu rozliší jednotlivé výbuchy a obě osy. Více blízkých výbuchů se sčítá s bezpečným omezením maximálního posunu.
+
+Three.js kamera používá projekční view offset v CSS pixelech. Stejný skutečný obrazový posun dostává procedurální pozadí přes shader uniformu; promítané HTML karty a hit test jádra používají posunutou projekci. Mlhovina, grid, prostorová geometrie, výbuch i billboardy se proto pohybují jako jedna scéna. Produkční levý barevný přechod zůstává ukotvený k layoutu, aby na hraně canvasu nevznikala pohybující se spára. Pauza zmrazí i ShakyCam.
+
 ## Renderování a soubory
 
-- `atom.js`: geometrie obou vrstev, fáze pohybu, impulz kurzoru a exponenciální útlum, billboardy, pauza a životní cyklus rendereru.
+- `atom.js`: geometrie obou vrstev, fáze pohybu, impulz kurzoru a exponenciální útlum, ShakyCam, billboardy, pauza a životní cyklus rendereru.
 - `orbit-geometry.js`: dávková geometrie skutečných torů, kulatý průřez, normály povrchu a soustředné doplňkové kružnice.
 - `shaders.js`: procedurální vrstvený šum mlhoviny, světlo zprava, bodový grid, dráhy a světelné body. Scéna neobsahuje obrázkové textury; mlhovina je plošný shader s dojmem hloubky, nikoli objemová simulace plynu.
 - `editor.js`: panel, import/export a spuštění. Data importu procházejí validací; texty se vkládají přes `textContent`.
@@ -160,7 +171,7 @@ Klidová scéna používá devět draw calls při zapnutých druhých drahách, 
 
 ## Ověření
 
-Výbuch má navíc kontrolu růstu radiusu za vnější obal, současného poklesu intenzity, nezávislého překrytí dvou emisí, pauzy, změny vykresleného falloffu a náhledu bez vzniku karty. Migrace importu se ověřuje pro verze 1–5. Kontroluje se také silná reakce samotného vnějšího obalu bez nabití jádra, nové barevné parametry ve skutečných pixelech, sdílení/oddělení palet a otáčení skutečným zachyceným ukazatelem včetně ukončení tahu mimo scénu a uložení orientace. U reakce stop a bodů se ověřuje přesné +10 % při maximálním impulzu, neutrální hodnota 1 i při aktivním impulzu, nezávislost obalů, změna skutečných pixelů při stejné fázi a plynulý návrat při útlumu.
+Výbuch má navíc kontrolu růstu radiusu za vnější obal, současného poklesu intenzity, nezávislého překrytí dvou emisí, pauzy, změny vykresleného falloffu a náhledu bez vzniku karty. Migrace importu se ověřuje pro verze 1–8. Kontroluje se také silná reakce samotného vnějšího obalu bez nabití jádra, nové barevné parametry ve skutečných pixelech, sdílení/oddělení palet a otáčení skutečným zachyceným ukazatelem včetně ukončení tahu mimo scénu a uložení orientace. U reakce stop a bodů se ověřuje přesné +10 % při maximálním impulzu, neutrální hodnota 1 i při aktivním impulzu, nezávislost obalů, změna skutečných pixelů při stejné fázi a plynulý návrat při útlumu. ShakyCam má kontrolu nulového posunu při vypnutí, změny celého canvasu, nepravidelného dvouvrstvého klidového pohybu, dvouvrstvého silnějšího otřesu po výbuchu a návratu ke klidu.
 
 Prostorové dráhy mají kontrolu viditelnosti v renderu zepředu i při natočení 89,9°, 90° a 90,1°. Doplňkové kružnice mají kontrolu pěti rozdílných vykreslených vzorů, kladného/záporného/nulového odstupu, změny intenzity, tloušťky a hustoty, vypnutí a zachování pozic elementů i délky a jasu jejich stop.
 

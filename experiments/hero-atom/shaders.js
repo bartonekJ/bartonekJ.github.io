@@ -8,7 +8,7 @@ precision highp float;
 varying vec2 vUv;
 uniform vec2 uResolution;
 uniform vec3 uTint, uBaseColor, uEdgeColor;
-uniform vec2 uBackgroundFade;
+uniform vec2 uBackgroundFade, uCameraOffset;
 uniform float uTime, uIntensity, uScale, uSpeed, uSpacing, uGridOpacity, uDotSize;
 uniform int uNoiseType, uOctaves;
 uniform float uWarp;
@@ -60,7 +60,8 @@ float fbm(vec2 p,int kind) {
   return v;
 }
 void main() {
-  vec2 uv = vUv;
+  // CSS-pixel camera displacement: X follows screen X, Y is inverted because UV grows upward.
+  vec2 uv = vUv + vec2(-uCameraOffset.x,uCameraOffset.y)/uResolution;
   vec2 p = uv * vec2(uResolution.x/uResolution.y, 1.0) * uScale;
   float t = uTime * uSpeed;
   vec2 warp = vec2(fbm(p+vec2(t,0.0),0), fbm(p+vec2(2.8,-t*0.7),0));
@@ -79,7 +80,7 @@ void main() {
   float dotMask = 1.0-smoothstep(uDotSize*0.35,uDotSize+0.5,length(cell));
   float gridArea = smoothstep(0.04,0.30,uv.x) * (1.0-smoothstep(0.38,0.82,length(uv-0.5)));
   color += mix(vec3(0.10),uTint*0.22,0.35)*dotMask*uGridOpacity*gridArea;
-  float backgroundMask=smoothstep(uBackgroundFade.x,uBackgroundFade.y,uv.x);
+  float backgroundMask=smoothstep(uBackgroundFade.x,uBackgroundFade.y,vUv.x);
   color=mix(uEdgeColor,color,backgroundMask);
   gl_FragColor = vec4(color,1.0);
   #include <colorspace_fragment>

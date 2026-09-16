@@ -7,6 +7,17 @@ const DEG = Math.PI / 180;
 const TAU = Math.PI * 2;
 const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 const smooth = (a, b, x) => { const t = clamp((x-a)/(b-a),0,1); return t*t*(3-2*t); };
+const mixNumber = (a,b,t) => a+(b-a)*t;
+function noiseHash(index,seed) {
+  let value=Math.imul((index|0)^(seed|0),0x45d9f3b);
+  value=Math.imul(value^(value>>>16),0x45d9f3b); value^=value>>>16;
+  return (value>>>0)/2147483648-1;
+}
+function smoothNoise1D(value,seed) {
+  const index=Math.floor(value),fraction=value-index;
+  const eased=fraction*fraction*(3-2*fraction);
+  return mixNumber(noiseHash(index,seed),noiseHash(index+1,seed),eased);
+}
 function randomGenerator(seed) {
   return () => {
     seed |= 0; seed = seed + 0x6D2B79F5 | 0;
@@ -57,11 +68,12 @@ export class AtomScene {
     this.viewOrientation=new THREE.Quaternion().fromArray(config.scene.orientation);
     this.precessionRotation=new THREE.Quaternion(); this.dragRotation=new THREE.Quaternion();
     this.rotationAxis=new THREE.Vector3(); this.upAxis=new THREE.Vector3(0,1,0); this.drag=null;
-    this.temp=new THREE.Vector3(); this.projected=new THREE.Vector3();
+    this.temp=new THREE.Vector3(); this.projected=new THREE.Vector3(); this.shake=new THREE.Vector2();
     this.time=0; this.colorPhase=0; this.precessionPhase=0;
     this.cardEnergy=0; this.lastEmission=-Infinity; this.emissions=0; this.flash=0;
-    this.bursts=[]; this.burstFrames=[]; this.lastPreview=-Infinity;
+    this.bursts=[]; this.burstFrames=[]; this.lastPreview=-Infinity; this.shakeBursts=[]; this.shakeBurstLevel=0;
     this.cardRandom=randomGenerator(config.seed^0x5EED); this.lastMessage=-1;
+    this.shakeRandom=randomGenerator(config.seed^0x5A4ECA7);
     this.lastTime=0; this.raf=0; this.frames=0; this.layers=[];
     this.visible=true; this.lost=false; this.disposed=false;
     this.motionQuery=matchMedia('(prefers-reduced-motion: reduce)');
@@ -95,7 +107,7 @@ export class AtomScene {
   createBackground() {
     this.backgroundMaterial=new THREE.ShaderMaterial({
       uniforms:{uResolution:{value:new THREE.Vector2()},uTint:{value:this.nebulaTint},uBaseColor:{value:this.baseColor},uEdgeColor:{value:this.edgeColor},
-        uBackgroundFade:{value:new THREE.Vector2(...(this.options.backgroundFade || [0,0.12]))},uTime:{value:0},
+        uBackgroundFade:{value:new THREE.Vector2(...(this.options.backgroundFade || [0,0.12]))},uCameraOffset:{value:new THREE.Vector2()},uTime:{value:0},
         uIntensity:{value:0},uScale:{value:0},uSpeed:{value:0},uSpacing:{value:24},
         uGridOpacity:{value:0},uDotSize:{value:0},uLight:{value:new THREE.Vector2()},
         uNoiseType:{value:0},uOctaves:{value:5},uWarp:{value:2.6}},
@@ -149,6 +161,8 @@ export class AtomScene {
     // A separate event retains the older expanding waves instead of restarting them.
     if(this.bursts.length>=48) this.bursts.shift();
     this.bursts.push(this.time);
+    if(this.shakeBursts.length>=24) this.shakeBursts.shift();
+    this.shakeBursts.push({born:this.time,phaseX:this.shakeRandom()*TAU,phaseY:this.shakeRandom()*TAU});
   }
   previewBurst() {
     if(this.time-this.lastPreview<0.5) return;
@@ -216,7 +230,7 @@ export class AtomScene {
   createCards() {
     this.cardRoot.replaceChildren();
     this.cards=[]; this.cardEnergy=0; this.lastEmission=-Infinity; this.flash=0;
-    this.bursts=[]; this.burstFrames=[];
+    this.bursts=[]; this.burstFrames=[]; this.shakeBursts=[]; this.shakeBurstLevel=0;
   }
   emitCard() {
     const cfg=this.config.cards;
@@ -246,7 +260,7 @@ export class AtomScene {
     this.width=Math.max(1,this.stage.clientWidth); this.height=Math.max(1,this.stage.clientHeight);
     this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1,this.config.scene.pixelRatio,this.width<600 ? 1.25 : 2));
     this.renderer.setSize(this.width,this.height,false);
-    this.camera.aspect=this.width/this.height;
+    this.camera.aspect=this.width/this.height; this.camera.clearViewOffset();
     const requested=this.options.layout?.({width:this.width,height:this.height,stage:this.stage}) || {};
     const focusWidth=clamp(requested.focusWidth || this.width,1,this.width);
     const focusHeight=clamp(requested.focusHeight || this.height,1,this.height);
@@ -259,7 +273,8 @@ export class AtomScene {
     this.camera.updateProjectionMatrix(); this.camera.updateMatrixWorld();
     const viewWidth=viewHeight*this.camera.aspect;
     this.root.position.set((centerX/this.width-0.5)*viewWidth,(0.5-centerY/this.height)*viewHeight,0);
-    this.centerX=centerX; this.centerY=centerY;
+    this.centerX=centerX; this.centerY=centerY; this.visualCenterX=centerX; this.visualCenterY=centerY;
+    this.shake.set(0,0); this.backgroundMaterial.uniforms.uCameraOffset.value.set(0,0);
     this.backgroundMaterial.uniforms.uResolution.value.set(this.width,this.height);
     this.pointer=null;
   }
@@ -268,14 +283,14 @@ export class AtomScene {
     this.config=config;
     this.viewOrientation.fromArray(config.scene.orientation);
     if(!path || /^(inner|outer|seed)/.test(path)) this.rebuild(path!=='seed');
-    if(path==='seed') {this.cardRandom=randomGenerator(config.seed^0x5EED);this.lastMessage=-1;}
+    if(path==='seed') {this.cardRandom=randomGenerator(config.seed^0x5EED);this.shakeRandom=randomGenerator(config.seed^0x5A4ECA7);this.lastMessage=-1;}
     if(path==='seed' || !config.cards.enabled || oldMessages!==JSON.stringify(config.cards.messages)) this.createCards();
     while(this.cards.length>config.cards.count) this.cards.shift().card.remove();
     if(!config.interaction.enabled) {this.pendingImpulse.length=0;this.cardEnergy=0;}
     this.resize(); this.invalidate();
   }
   isOverCore(x,y) {
-    return Math.hypot(x-this.centerX,y-this.centerY)<=22;
+    return Math.hypot(x-this.visualCenterX,y-this.visualCenterY)<=22;
   }
   onPointerDown(event) {
     if(event.pointerType==='touch' || !event.isPrimary || event.button!==0 || this.drag || this.lost) return;
@@ -369,6 +384,44 @@ export class AtomScene {
     this.pendingImpulse.length=0;
     return depositedEnergy/Math.max(1,Math.sqrt(movingCount));
   }
+  updateCameraShake() {
+    const cfg=this.config.cameraShake;
+    let requestedX=0,requestedY=0;
+    if(cfg.enabled) {
+      const timeA=this.time*cfg.idleFrequencyA,timeB=this.time*cfg.idleFrequencyB+cfg.idlePhaseB;
+      requestedX=smoothNoise1D(timeA,this.config.seed^0x18c31)*cfg.idleAmplitudeA
+        +smoothNoise1D(timeB,this.config.seed^0x51ed270b)*cfg.idleAmplitudeB;
+      requestedY=smoothNoise1D(timeA+37.2,this.config.seed^0x72ad9)*cfg.idleAmplitudeA
+        +smoothNoise1D(timeB+83.7,this.config.seed^0x2be91)*cfg.idleAmplitudeB;
+      this.shakeBursts=this.shakeBursts.filter(event=>
+        Math.exp(-(this.time-event.born)/cfg.burstDecay)>0.001);
+      this.shakeBurstLevel=0;
+      for(const event of this.shakeBursts) {
+        const age=Math.max(0,this.time-event.born);
+        const envelope=(1-Math.exp(-age/0.012))*Math.exp(-age/cfg.burstDecay);
+        this.shakeBurstLevel=Math.max(this.shakeBurstLevel,envelope);
+        const angleA=age*cfg.burstFrequencyA*TAU,angleB=age*cfg.burstFrequencyB*TAU;
+        const phaseB=cfg.burstPhaseB*DEG;
+        requestedX+=envelope*(cfg.burstAmplitudeA*Math.sin(angleA+event.phaseX)
+          +cfg.burstAmplitudeB*Math.sin(angleB+event.phaseY+phaseB));
+        requestedY+=envelope*(cfg.burstAmplitudeA*Math.sin(angleA+event.phaseY)
+          +cfg.burstAmplitudeB*Math.sin(angleB+event.phaseX-phaseB));
+      }
+      const limit=cfg.idleAmplitudeA+cfg.idleAmplitudeB+(cfg.burstAmplitudeA+cfg.burstAmplitudeB)*1.35;
+      requestedX=clamp(requestedX,-limit,limit); requestedY=clamp(requestedY,-limit,limit);
+    } else {
+      this.shakeBursts=[]; this.shakeBurstLevel=0;
+    }
+    this.camera.clearViewOffset();
+    if(requestedX || requestedY)
+      this.camera.setViewOffset(this.width,this.height,-requestedX,-requestedY,this.width,this.height);
+    this.camera.updateMatrixWorld();
+    this.projected.copy(this.root.position).project(this.camera);
+    this.visualCenterX=(this.projected.x*0.5+0.5)*this.width;
+    this.visualCenterY=(-this.projected.y*0.5+0.5)*this.height;
+    this.shake.set(this.visualCenterX-this.centerX,this.visualCenterY-this.centerY);
+    this.backgroundMaterial.uniforms.uCameraOffset.value.copy(this.shake);
+  }
   updateCore() {
     this.core.material.uniforms.uViewportHeight.value=this.height*this.renderer.getPixelRatio();
     this.core.material.uniforms.uGlow.value=this.config.core.glow;
@@ -443,6 +496,7 @@ export class AtomScene {
     this.precessionRotation.setFromAxisAngle(this.upAxis,this.precessionPhase);
     this.root.quaternion.copy(this.viewOrientation).multiply(this.precessionRotation);
     this.root.scale.setScalar(cfg.scene.scale);
+    this.updateCameraShake();
     const bg=this.backgroundMaterial.uniforms,b=cfg.background;
     bg.uTime.value=this.time; bg.uIntensity.value=b.nebulaIntensity; bg.uScale.value=b.nebulaScale;
     bg.uSpeed.value=b.nebulaSpeed; bg.uSpacing.value=b.gridSpacing; bg.uGridOpacity.value=b.gridOpacity;
@@ -472,6 +526,7 @@ export class AtomScene {
     return {time:this.time,paused:this.paused,running:this.running,frames:this.frames,
       tint:this.tint.getHexString(),nebulaTint:this.nebulaTint.getHexString(),drawCalls:this.renderer.info.render.calls,
       orientation:this.viewOrientation.toArray(),rotating:!!this.drag,center:{x:this.centerX,y:this.centerY},
+      shake:{x:this.shake.x,y:this.shake.y,burst:this.shakeBurstLevel,events:this.shakeBursts.length},
       noiseType:this.config.background.noiseType,energy:this.cardEnergy,flash:this.flash,emissions:this.emissions,
       bursts:this.burstFrames.map(burst=>({...burst})),
       cards:this.cards.map(({phrase,born,direction})=>({phrase,born,direction})),
