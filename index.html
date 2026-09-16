@@ -41,25 +41,11 @@
         </div>
       </div>
 
-      <div class="hero-visual" aria-hidden="true">
-        <div class="orbit orbit-large"></div>
-        <div class="orbit orbit-small"></div>
-        <div class="signal signal-a"></div>
-        <div class="signal signal-b"></div>
-        <div class="hero-core hero-core-idea">
-          <span>IDEA</span>
-          <strong>→</strong>
-          <span>TOOL</span>
-        </div>
-        <div class="hero-core hero-core-problem">
-          <span>PROBLEM</span>
-          <strong>→</strong>
-          <span>TOOL</span>
-        </div>
-        <div class="hero-core hero-core-practice">
-          <span>PRACTICE</span>
-          <strong>→</strong>
-          <span>TOOL</span>
+      <div class="hero-visual hero-atom" id="hero-atom" aria-hidden="true">
+        <canvas id="atom-canvas"></canvas>
+        <div id="atom-cards"></div>
+        <div class="hero-atom-fallback" id="atom-fallback" hidden>
+          <span>IDEA</span><strong>→</strong><span>TOOL</span>
         </div>
       </div>
     </section>
@@ -198,6 +184,7 @@
     </div>
   </footer>
 
+  <script type="module" src="hero-atom.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

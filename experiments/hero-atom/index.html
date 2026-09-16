@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b1011">
+  <title>byBartonek · Hero atom / studie 01</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+  <div class="preview" lang="en">
+    <header class="site-header">
+      <a class="brand" href="../../" aria-label="byBartonek home">
+        <span class="brand-logo" aria-hidden="true"></span>
+        <span class="brand-lockup" aria-hidden="true">
+          <span class="brand-name"><span class="brand-prefix">by</span><span class="brand-major">B</span><span class="brand-minor">artonek</span></span>
+          <span class="brand-tagline"><span>Built</span><span>from</span><span>practice</span></span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../../#sports-tech">Sports Technology</a>
+        <a href="../../#3d-design">3D Design &amp; Printing</a>
+        <a href="mailto:info@bybartonek.com">Contact</a>
+      </nav>
+    </header>
+    <main>
+      <section class="hero atom-hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">SPORTS TECHNOLOGY + 3D DESIGN</p>
+          <h1 id="hero-title"><span class="heading-light">Tools that<br>make</span><br><span class="heading-accent">good work<br>flow.</span></h1>
+          <p class="hero-lead">Sports technology, coaching software and functional 3D designs created where real-world experience meets engineering.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="../../#work">Explore the work</a>
+            <a class="button button-quiet" href="mailto:info@bybartonek.com">Get in touch</a>
+          </div>
+        </div>
+        <div class="atom-stage" id="atom-stage" aria-hidden="true">
+          <canvas id="atom-canvas"></canvas>
+          <div id="atom-cards"></div>
+          <div class="atom-fallback" id="atom-fallback" hidden>PROBLEM <span>→</span> IDEA <span>→</span> TOOL</div>
+        </div>
+        <p class="interaction-hint" aria-hidden="true"><span></span> Move through the field</p>
+      </section>
+    </main>
+  </div>
+  <footer class="lab-bar">
+    <div class="lab-caption"><span class="lab-index">01</span><div><strong>Prostorový atom</strong><span>Studie hero · živý prototyp</span></div></div>
+    <p id="lab-status" role="status">Načítám scénu…</p>
+    <div class="lab-actions">
+      <button id="pause" type="button" aria-pressed="false">Pozastavit</button>
+      <button id="tune" type="button" aria-controls="controls" aria-expanded="false">Ladit scénu <span aria-hidden="true">↗</span></button>
+    </div>
+  </footer>
+  <aside id="controls" class="controls" aria-labelledby="controls-title" hidden>
+    <div class="controls-header"><div><p class="editor-eyebrow">HERO / PARAMETRY</p><h2 id="controls-title">Ladění scény</h2></div><button id="close-controls" type="button" aria-label="Zavřít nastavení">×</button></div>
+    <p class="controls-intro">Změny uvidíš rovnou. Odchylka 0 znamená bez náhody; stejný seed zachová stejnou soustavu.</p>
+    <div class="seed-row"><label for="seed">Seed</label><input id="seed" type="number" min="0" max="4294967295" step="1" value="2718"><button id="new-seed" type="button" title="Vygenerovat jinou soustavu">Nový</button></div>
+    <div id="control-groups"></div>
+    <div class="config-actions"><button id="export" type="button">Export JSON</button><button id="import" type="button">Načíst JSON</button><button id="reset" type="button">Výchozí</button><input id="import-file" type="file" accept=".json,application/json" hidden></div>
+    <p id="config-status" role="status"></p>
+  </aside>
+  <noscript><p class="no-script">Pro interaktivní prototyp je potřeba JavaScript.</p></noscript>
+  <script type="module" src="editor.js"></script>
+</body>
+</html>

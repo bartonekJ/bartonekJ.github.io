@@ -1,0 +1,154 @@
+{
+  "version": 6,
+  "config": {
+    "seed": 2645671074,
+    "scene": {
+      "scale": 1,
+      "orientation": [
+        -0.8896148164623756,
+        0.323387879215536,
+        0.22068093027639887,
+        -0.2351716073837038
+      ],
+      "precession": 2,
+      "pixelRatio": 2
+    },
+    "core": {
+      "size": 0.15,
+      "glow": 0.17
+    },
+    "burst": {
+      "intensity": 20,
+      "startRadius": 0.1,
+      "radius": 1.3,
+      "expansionSeconds": 1.2,
+      "decaySeconds": 0.45,
+      "falloff": 5
+    },
+    "inner": {
+      "orbitCount": 5,
+      "elementCount": 7,
+      "radius": 1.36,
+      "radiusSpread": 0.1,
+      "angle": 0,
+      "angleSpread": 90,
+      "azimuth": 81,
+      "azimuthSpread": 90,
+      "orbitOpacity": 0.19,
+      "lineWidth": 0.015,
+      "elementSize": 0.077,
+      "sizeSpread": 0.34,
+      "speed": 18,
+      "speedSpread": 0.8,
+      "glow": 0.13,
+      "trailDegrees": 30,
+      "trailOpacity": 0.75,
+      "trailWidth": 4.2,
+      "whiteFraction": 0,
+      "trailImpulseMultiplier": 1,
+      "elementImpulseMultiplier": 1,
+      "saturation": 1.5,
+      "coreWhiteness": 0.57,
+      "lineWhiteness": 0.21,
+      "trailWhiteness": 0.05
+    },
+    "outer": {
+      "orbitCount": 7,
+      "elementCount": 33,
+      "radius": 2.56,
+      "radiusSpread": 0.03,
+      "angle": 0,
+      "angleSpread": 90,
+      "azimuth": 0,
+      "azimuthSpread": 18,
+      "orbitOpacity": 0.04,
+      "lineWidth": 0.008,
+      "elementSize": 0.012,
+      "sizeSpread": 0.8,
+      "speed": 5.4,
+      "speedSpread": 0.6,
+      "glow": 0.14,
+      "trailDegrees": 15,
+      "trailOpacity": 1.4,
+      "trailWidth": 0.8,
+      "whiteFraction": 0.75,
+      "trailImpulseMultiplier": 1,
+      "elementImpulseMultiplier": 1,
+      "saturation": 1.4,
+      "coreWhiteness": 0.06,
+      "lineWhiteness": 0.93,
+      "trailWhiteness": 0.12
+    },
+    "innerCompanion": {
+      "enabled": true,
+      "radiusOffset": 8,
+      "style": "dash-dot-dot",
+      "repeats": 33,
+      "intensity": 0.38,
+      "lineWidth": 0.005
+    },
+    "background": {
+      "noiseType": "worley",
+      "octaves": 6,
+      "warp": 4.65,
+      "gridSpacing": 45,
+      "gridOpacity": 0.6,
+      "dotSize": 1.05,
+      "nebulaIntensity": 0.08,
+      "nebulaScale": 1,
+      "nebulaSpeed": 0.005,
+      "lightX": 0.71,
+      "lightY": 0.96
+    },
+    "color": {
+      "warm": "#ff6600",
+      "cool": "#0094f0",
+      "cycle": true,
+      "cycleSeconds": 20,
+      "mix": 0
+    },
+    "nebulaColor": {
+      "linked": false,
+      "warm": "#f57600",
+      "cool": "#63bddf",
+      "saturation": 0.5
+    },
+    "interaction": {
+      "enabled": true,
+      "radius": 181,
+      "strength": 40,
+      "decay": 0.7,
+      "maxBoost": 100
+    },
+    "cards": {
+      "enabled": true,
+      "count": 3,
+      "cycleSeconds": 12,
+      "travelRadius": 1.18,
+      "birthScale": 0.37,
+      "fontSize": 14,
+      "opacity": 0.68,
+      "triggerEnergy": 92.5,
+      "energyDecay": 0.3,
+      "cooldown": 2.5,
+      "directionSpread": 19,
+      "messages": [
+        {
+          "from": "PROBLEM",
+          "to": "TOOL",
+          "direction": 145
+        },
+        {
+          "from": "IDEA",
+          "to": "TOOL",
+          "direction": 24
+        },
+        {
+          "from": "PRACTICE",
+          "to": "TOOL",
+          "direction": -58
+        }
+      ]
+    }
+  }
+}

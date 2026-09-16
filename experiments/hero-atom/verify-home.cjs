@@ -1,0 +1,96 @@
+// Production homepage integration smoke test. Run while serve.cjs is listening on 4173.
+const { chromium }=require('playwright');
+const assert=require('node:assert/strict');
+
+const url='http://127.0.0.1:4173/';
+const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
+const projectedExtent=state=>{
+  const points=state.layers.flatMap(layer=>layer.positions);
+  const xs=points.map(point=>point.x),ys=points.map(point=>point.y);
+  return {minX:Math.min(...xs),width:Math.max(...xs)-Math.min(...xs),height:Math.max(...ys)-Math.min(...ys)};
+};
+
+(async()=>{
+  const browser=await chromium.launch({executablePath,headless:true,args:['--enable-unsafe-swiftshader']});
+  const errors=[];
+  try {
+    const page=await browser.newPage({viewport:{width:1440,height:900}});
+    page.on('pageerror',error=>errors.push(error.message));
+    page.on('console',message=>{if(message.type()==='error') errors.push(message.text());});
+    const requests=[];page.on('request',request=>requests.push(request.url()));
+    await page.goto(url);await page.waitForFunction(()=>window.heroAtom);
+    const layout=await page.evaluate(()=>{
+      const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};
+      return {hero:box('.hero'),copy:box('.hero-copy'),visual:box('#hero-atom'),canvas:box('#atom-canvas'),overflow:document.documentElement.scrollWidth-innerWidth};
+    });
+    assert.equal(layout.hero.height,780,'existing desktop hero height');
+    assert.deepEqual(layout.canvas,layout.hero,'canvas expands across the full hero');
+    assert.deepEqual(layout.visual,layout.hero);
+    assert.equal(layout.overflow,0);assert.equal(await page.locator('.orbit').count(),0);
+    assert.equal(await page.locator('#atom-fallback').isHidden(),true);
+    let state=await page.evaluate(()=>heroAtom.snapshot());
+    assert.deepEqual(state.layers.map(layer=>[layer.orbits,layer.elements]),[[7,33],[5,7]],'production preset is loaded');
+    assert.equal(state.drawCalls,9);assert.equal(state.cards.length,0);
+    assert.ok(Math.abs(state.center.x-(layout.copy.width+(layout.hero.width-layout.copy.width)/2))<0.01,'atom stays centered in the former right column');
+    assert.ok(Math.abs(state.center.y-layout.hero.height/2)<0.01);
+    assert.equal(await page.evaluate(()=>{
+      const copy=getComputedStyle(document.querySelector('.hero-copy'));
+      const visual=getComputedStyle(document.querySelector('#hero-atom'));
+      return copy.position!=='static' && Number(copy.zIndex)>Number(visual.zIndex);
+    }),true,'hero copy remains above the full-width scene');
+    assert.ok(requests.every(request=>request.startsWith(url)),'production has no external runtime requests');
+
+    const stage=await page.locator('#hero-atom').boundingBox();
+    for(let pass=0;pass<5 && (await page.evaluate(()=>heroAtom.snapshot().emissions))===0;pass++) {
+      const positions=await page.evaluate(()=>heroAtom.snapshot().layers[1].positions);
+      for(const point of positions) {
+        await page.mouse.move(stage.x+point.x-90,stage.y+point.y);
+        await page.mouse.move(stage.x+point.x+90,stage.y+point.y,{steps:3});
+      }
+      await page.waitForTimeout(60);
+    }
+    state=await page.evaluate(()=>heroAtom.snapshot());
+    assert.equal(state.emissions,1,'real homepage interaction emits a card and burst');
+    const card=await page.locator('.atom-card:visible').first().boundingBox();
+    assert.ok(card.x>=stage.x && card.x+card.width<=stage.x+stage.width && card.y>=stage.y && card.y+card.height<=stage.y+stage.height);
+    const orientation=state.orientation;
+    await page.mouse.move(stage.x+state.center.x,stage.y+state.center.y);await page.mouse.down();
+    await page.mouse.move(stage.x+state.center.x+80,stage.y+state.center.y+40,{steps:4});await page.mouse.up();
+    assert.notDeepEqual((await page.evaluate(()=>heroAtom.snapshot())).orientation,orientation,'core drag works in production');
+    assert.deepEqual(errors,[]);await page.close();
+
+    const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+    await mobile.goto(url);await mobile.waitForFunction(()=>window.heroAtom);
+    const mobileLayout=await mobile.evaluate(()=>{
+      const hero=document.querySelector('.hero').getBoundingClientRect(),copy=document.querySelector('.hero-copy').getBoundingClientRect(),visual=document.querySelector('#hero-atom').getBoundingClientRect();
+      const center=heroAtom.snapshot().center;
+      return {heroHeight:hero.height,copyHeight:copy.height,visualHeight:visual.height,visualWidth:visual.width,center,overflow:document.documentElement.scrollWidth-innerWidth};
+    });
+    assert.ok(Math.abs(mobileLayout.heroHeight-mobileLayout.copyHeight-380)<0.01,'existing mobile hero height is copy plus the original 380px visual region');
+    assert.equal(mobileLayout.visualHeight,mobileLayout.heroHeight,'background scene covers the full mobile hero');
+    assert.equal(mobileLayout.visualWidth,390);assert.equal(mobileLayout.overflow,0);await mobile.close();
+    assert.ok(Math.abs(mobileLayout.center.x-195)<0.01);
+    assert.ok(Math.abs(mobileLayout.center.y-(Math.round(mobileLayout.heroHeight)-190))<0.01,'atom stays in its former 380px mobile region');
+
+    const reduced=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
+    await reduced.goto(url);await reduced.waitForFunction(()=>window.heroAtom);
+    const frozen=await reduced.evaluate(()=>heroAtom.snapshot());await reduced.waitForTimeout(250);
+    assert.equal(frozen.paused,true);assert.equal((await reduced.evaluate(()=>heroAtom.snapshot().time)),frozen.time);await reduced.close();
+
+    const narrow=await browser.newPage({viewport:{width:800,height:760},reducedMotion:'reduce'});
+    await narrow.goto(url);await narrow.waitForFunction(()=>window.heroAtom);
+    const narrowResult=await narrow.evaluate(()=>({
+      state:heroAtom.snapshot(),copyWidth:document.querySelector('.hero-copy').getBoundingClientRect().width,
+    }));
+    const wideExtent=projectedExtent(frozen),narrowExtent=projectedExtent(narrowResult.state);
+    assert.ok(Math.abs(narrowExtent.width/wideExtent.width-1)<0.04 && Math.abs(narrowExtent.height/wideExtent.height-1)<0.04,'desktop atom keeps its visual size as the browser narrows');
+    assert.ok(narrowExtent.minX<narrowResult.copyWidth,'full-size desktop atom can extend beneath the hero copy');
+    await narrow.close();
+
+    const fallback=await browser.newPage();
+    await fallback.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith('webgl') ? null : original.call(this,type,...args);};});
+    await fallback.goto(url);await fallback.locator('#atom-fallback').waitFor({state:'visible'});
+    assert.equal(await fallback.locator('#atom-canvas').isHidden(),true);await fallback.close();
+    console.log('PASS: full-width scene, fixed desktop atom size and right alignment, preserved mobile layout and hero dimensions, editor-dark background fade, text stacking, production preset, local assets, interaction, reduced motion and fallback.');
+  } finally {await browser.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});
