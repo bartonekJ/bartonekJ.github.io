@@ -476,9 +476,9 @@ Veřejná stránka `/jb-drill/help/` a všechny odkazy na ni jsou odstraněné. 
 
 ### 2026-09-29 — Hotová videa pro Features Chapter 01
 
-Všechny čtyři karty kapitoly `Rink intelligence` používají vlastní krátkou demonstraci: Bank Pass, Rim Pass, Board alignment a Puck pickup. Karty přebírají existující chování mediální karty — na desktopu se při hoveru nebo focusu rozšíří o náhled, kliknutí či aktivace klávesnicí otevře společný video modal a po dohrání se modal zavře. Na mobilu skrytý náhled nesmí rezervovat žádnou výšku; zobrazí se až při hoveru nebo focusu. Ostatní kapitoly zůstávají statické, dokud pro ně nevzniknou odpovídající videa; nesmí dostat nesouvisející placeholder pouze kvůli jednotnému vzhledu.
+Všechny čtyři karty kapitoly `Rink intelligence` používají vlastní krátkou demonstraci: Bank Pass, Rim Pass, Board alignment a Puck pickup. Karty přebírají existující chování mediální karty — na desktopu se při hoveru nebo focusu rozšíří o náhled, kliknutí či aktivace klávesnicí otevře společný video modal a po dohrání se modal zavře. Rozšířená karta zabírá pouze původní kartu plus pevnou šířku náhledu, ne celý sousední slot; část sousední karty tak zůstává viditelná a přímo dosažitelná kurzorem. Na mobilu skrytý náhled nesmí rezervovat žádnou výšku; zobrazí se až při hoveru nebo focusu. Ostatní kapitoly zůstávají statické, dokud pro ně nevzniknou odpovídající videa; nesmí dostat nesouvisející placeholder pouze kvůli jednotnému vzhledu.
 
-Pokud uživatel neurčí jinak, poster pro nové Features video se vytváří z posledního použitelného snímku videa. Před exportem je třeba ověřit, že konec není černý nebo přechodový snímek. Postery Chapter 01 zachovávají celý poměr stran záznamu a vlastní ořez pro kompaktní kartu řeší existující `object-fit: cover`.
+Pokud uživatel neurčí jinak, poster pro nové Features video se vytváří z posledního použitelného snímku videa. Před exportem je třeba ověřit, že konec není černý nebo přechodový snímek. Náhledová plocha má poměr 16:9 a zachovává dnešní vertikální rozměr; celý poster se do ní vejde pomocí `object-fit: contain`, takže se obsah snímku neořezává.
 
 ## Text pro nové vlákno
 
