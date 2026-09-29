@@ -453,9 +453,15 @@ Studie znovu používá současné tokeny, video kartu a modal bez nové barvy, 
 
 ### 2026-09-29 — Čitelnost podpůrných textů na stránkách JB_Drill
 
-Marketingové stránky Overview, Features a Download zachovávají pro krátké podpůrné texty a texty karet schválený `--font-ui` (Smooch Sans), aby zůstaly součástí stejného vizuálního jazyka. Jejich velikost ale nesmí klesat na drobných 12–13 px: běžné texty karet mají mít přibližně 15–18 px podle kontextu, volnější řádkování a na světlém pozadí tmavší odstín `#556472`. Delší odstavce v Overview, které už používají čitelnější `--font-reading` (Verdana), zůstávají beze změny.
+Marketingové stránky Overview, Features a Download rozlišují dvě jasné textové role. Šedý doprovodný text mimo karty používá `--font-reading` (Verdana) ve velikosti 13 px a s řádkováním 1.55. Popisy uvnitř všech karet používají jednotně `--font-ui` (Smooch Sans) v 15 px a s řádkováním 1.28. Na světlém pozadí obě role používají čitelnější odstín `#556472`. Obsah kompaktních Features karet se ve fixní výšce centruje jako celek, aby jednořádkový i dvouřádkový popis působil opticky vyváženě.
 
-Důvod: jako čitelný etalon uživatel označil úvodní odstavec Overview „Great coaching ideas shouldn’t…“. Ostatní šedé texty byly při stejné velikosti obrazovky znatelně hůře čitelné, ale výměna schváleného stylového fontu na všech místech by narušila charakter webu. Řešením je proto větší velikost, řádkování a mírně vyšší kontrast, nikoli nový font. Rozsah rozhodnutí: `docs.css`, produktové stránky JB_Drill Overview, Features a Download včetně jejich karet.
+Důvod: po kontrole stránky při skutečném 100% zoomu uživatel zvolil pro Verdanu zkušebně 13 px. Verdana se nemá používat uvnitř karet; doprovodné odstavce mají zůstat klidné a kompaktní, zatímco karty musí mít jednotný Smooch Sans. Rozsah rozhodnutí: `docs.css`, produktové stránky JB_Drill Overview, Features a Download včetně jejich karet.
+
+Download používá kolem všech dělicích linek výrazný symetrický svislý prostor: 32 px v běžném desktopovém i mobilním rozvržení a 40 px na desktopu od výšky 1100 px. Čitelné oddělení sekcí má přednost před dřívějším požadavkem vměstnat každou desktopovou výšku bez scrollování.
+
+### 2026-09-29 — Veřejný Windows download
+
+Windows karta na Download stránce je po publikaci aplikace aktivní odkaz na veřejný Microsoft Store listing `9NFF5QHLBM3B`; celá karta je klikací a stav popisuje jako dostupný. Google Play zůstává neaktivní s textem „Coming soon“. Dělicí linky mají kolem sebe velký a symetrický svislý prostor, aby jednotlivé bloky nepůsobily stlačeně.
 
 ## Text pro nové vlákno
 

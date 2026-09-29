@@ -432,7 +432,7 @@
 
 .product-body #workflow .overview-idea-platforms {
   margin: 22px 0 0;
-  font-size: 18px;
+  font-size: 13px;
   font-style: italic;
 }
 
@@ -474,8 +474,7 @@
 
 .product-features-intro > p:last-child {
   color: #556472;
-  font-size: 20px;
-  line-height: 1.4;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .feature-layout-study {
@@ -583,8 +582,7 @@
   max-width: 690px;
   margin: 15px 0 0;
   color: #556472;
-  font-size: 19px;
-  line-height: 1.42;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .feature-story {
@@ -634,9 +632,8 @@
 
 .feature-story-copy > p {
   margin: 0;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.42;
+  color: #556472;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .feature-detail-list {
@@ -707,7 +704,7 @@
 
 .feature-catalog-summary p {
   color: #556472;
-  font-size: 18px;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .feature-catalog-groups {
@@ -768,6 +765,9 @@
   top: 0;
   left: 0;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
   height: 102px;
   min-height: 0;
@@ -790,10 +790,6 @@
     box-shadow 180ms linear;
 }
 
-.feature-catalog-card--wide {
-  grid-column: 1 / -1;
-}
-
 .feature-catalog-card > span:first-child {
   font-size: 10px;
 }
@@ -809,8 +805,7 @@
   display: -webkit-box;
   overflow: hidden;
   color: #556472;
-  font-size: 15px;
-  line-height: 1.28;
+  font: 500 15px/1.28 var(--font-ui);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   transition: font-size 280ms linear;
@@ -968,13 +963,13 @@
 
 .download-page {
   width: calc(100% - clamp(44px, 8vw, 136px));
-  max-width: 1080px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 10px 0 8px;
+  padding: 3px 0;
 }
 
 .download-page-intro {
-  padding-bottom: 10px;
+  padding-bottom: 32px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -983,19 +978,18 @@
 }
 
 .download-page-intro > p:last-child {
-  max-width: 730px;
+  max-width: 100%;
   margin: 10px 0 0;
   color: #556472;
-  font-size: 17px;
-  line-height: 1.38;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .download-section {
-  padding-top: 12px;
+  padding-top: 32px;
 }
 
 .download-section + .download-section {
-  margin-top: 10px;
+  margin-top: 32px;
   border-top: 1px solid var(--line);
 }
 
@@ -1008,18 +1002,17 @@
 }
 
 .download-section > p:not(.product-section-label) {
-  max-width: 800px;
+  max-width: 100%;
   margin: 0;
   color: #556472;
-  font-size: 16px;
-  line-height: 1.36;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .download-store-grid,
 .download-plan-grid {
   display: grid;
   gap: 8px;
-  margin: 8px 0 0;
+  margin: 6px 0 0;
 }
 
 .download-store-grid {
@@ -1040,6 +1033,28 @@
   background: var(--paper-bright);
 }
 
+.download-store-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.download-store-card--link {
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.download-store-card--link:hover {
+  border-color: var(--orange-deep);
+  box-shadow: 0 8px 20px rgba(34, 31, 26, 0.09);
+  transform: translateY(-2px);
+}
+
+.download-store-card--link:focus-visible {
+  outline: 2px solid var(--orange-deep);
+  outline-offset: 2px;
+}
+
 .download-store-card > span {
   color: var(--orange-deep);
   font: 700 11px/1 var(--font-product);
@@ -1058,23 +1073,20 @@
 .download-plan-card p {
   margin: 0;
   color: #556472;
-  font-size: 15px;
-  line-height: 1.34;
+  font: 500 15px/1.28 var(--font-ui);
 }
 
 .download-section > p.download-plan-note {
-  margin-top: 6px;
-  font-size: 15px;
-  line-height: 1.34;
+  margin-top: 4px;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .download-link-steps {
-  max-width: 810px;
-  margin: 6px 0 0;
+  max-width: 100%;
+  margin: 4px 0 0;
   padding-left: 19px;
   color: #556472;
-  font-size: 15px;
-  line-height: 1.34;
+  font: 400 13px/1.55 var(--font-reading);
 }
 
 .download-link-steps li + li {
@@ -1089,6 +1101,37 @@
 
 .download-body .brand-footer {
   margin-right: 16px;
+}
+
+@media (min-width: 761px) and (min-height: 1100px) {
+  .download-page {
+    padding: 18px 0 16px;
+  }
+
+  .download-page-intro {
+    padding-bottom: 40px;
+  }
+
+  .download-section {
+    padding-top: 40px;
+  }
+
+  .download-section + .download-section {
+    margin-top: 40px;
+  }
+
+  .download-store-grid,
+  .download-plan-grid {
+    margin-top: 12px;
+  }
+
+  .download-section > p.download-plan-note {
+    margin-top: 8px;
+  }
+
+  .download-link-steps {
+    margin-top: 9px;
+  }
 }
 
 .overview-core-grid {
@@ -1125,7 +1168,7 @@
 .guide-body .docs-section .overview-core-card p:not(.eyebrow) {
   margin: 0;
   color: #556472;
-  font: 500 18px/1.32 var(--font-ui);
+  font: 500 15px/1.28 var(--font-ui);
 }
 
 .product-body .docs-shell {
@@ -1242,7 +1285,7 @@
   display: block;
   padding: 18px 22px 22px;
   color: #556472;
-  font: 400 16px/1.45 var(--font-reading);
+  font: 500 15px/1.28 var(--font-ui);
 }
 
 .overview-video-dialog {
@@ -1470,6 +1513,12 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 1.55;
+}
+
+.product-body .docs-section p:not(.eyebrow),
+.product-body .docs-section li,
+.product-body .docs-table td {
+  font-size: 13px;
 }
 
 .guide-body .step-card p,
@@ -1851,10 +1900,6 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .feature-catalog-card--wide {
-    grid-column: auto;
-  }
-
   .feature-catalog-group-title {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
@@ -1933,7 +1978,7 @@
   }
 
   .download-page-intro {
-    padding-bottom: 16px;
+    padding-bottom: 32px;
   }
 
   .download-page-title {
@@ -1941,15 +1986,15 @@
   }
 
   .download-page-intro > p:last-child {
-    font-size: 17px;
+    font-size: 13px;
   }
 
   .download-section {
-    padding-top: 19px;
+    padding-top: 32px;
   }
 
   .download-section + .download-section {
-    margin-top: 19px;
+    margin-top: 32px;
   }
 
   .download-section h2 {
@@ -1957,8 +2002,8 @@
   }
 
   .download-section > p:not(.product-section-label) {
-    font-size: 16px;
-    line-height: 1.4;
+    font-size: 13px;
+    line-height: 1.55;
   }
 
   .download-store-grid,
@@ -1975,12 +2020,12 @@
   .download-store-card p,
   .download-plan-card p {
     font-size: 15px;
-    line-height: 1.38;
+    line-height: 1.28;
   }
 
   .download-link-steps {
-    font-size: 15px;
-    line-height: 1.4;
+    font-size: 13px;
+    line-height: 1.55;
   }
 
   .download-body .site-footer {
