@@ -2008,19 +2008,20 @@
     right: auto;
     bottom: auto;
     left: auto;
+    display: block;
     grid-column: 1 / -1;
     width: 100%;
-    height: auto;
-    max-height: 0;
-    aspect-ratio: 2 / 1;
+    height: 0;
+    max-height: none;
+    aspect-ratio: auto;
     margin-top: 0;
     opacity: 0;
-    transition: max-height 280ms linear, margin-top 280ms linear, opacity 220ms linear;
+    transition: height 280ms linear, margin-top 280ms linear, opacity 220ms linear;
   }
 
   .feature-catalog-card--media:hover .feature-catalog-preview,
   .feature-catalog-card--media:focus-visible .feature-catalog-preview {
-    max-height: 50vw;
+    height: min(50vw, 220px);
     margin-top: 6px;
     opacity: 1;
   }

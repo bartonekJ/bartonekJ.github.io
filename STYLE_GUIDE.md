@@ -474,6 +474,12 @@ Hlavičky stránek JB_Drill obsahují přímý odkaz `JB_Play` na `https://play.
 
 Veřejná stránka `/jb-drill/help/` a všechny odkazy na ni jsou odstraněné. Detailní a aktuální nápovědu poskytuje přímo aplikace JB_Drill; stará webová kopie by obsah duplikovala a zabírala místo bez jasného účelu. Support zůstává samostatnou kontaktní stránkou bez karty Documentation a bez odkazu Help. Toto rozhodnutí nahrazuje starší zmínky o dostupnosti Help v produktové patičce; vestavěné nápovědy v aplikaci se netýká.
 
+### 2026-09-29 — Hotová videa pro Features Chapter 01
+
+Všechny čtyři karty kapitoly `Rink intelligence` používají vlastní krátkou demonstraci: Bank Pass, Rim Pass, Board alignment a Puck pickup. Karty přebírají existující chování mediální karty — na desktopu se při hoveru nebo focusu rozšíří o náhled, kliknutí či aktivace klávesnicí otevře společný video modal a po dohrání se modal zavře. Na mobilu skrytý náhled nesmí rezervovat žádnou výšku; zobrazí se až při hoveru nebo focusu. Ostatní kapitoly zůstávají statické, dokud pro ně nevzniknou odpovídající videa; nesmí dostat nesouvisející placeholder pouze kvůli jednotnému vzhledu.
+
+Pokud uživatel neurčí jinak, poster pro nové Features video se vytváří z posledního použitelného snímku videa. Před exportem je třeba ověřit, že konec není černý nebo přechodový snímek. Postery Chapter 01 zachovávají celý poměr stran záznamu a vlastní ořez pro kompaktní kartu řeší existující `object-fit: cover`.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.
