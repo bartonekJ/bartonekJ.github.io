@@ -578,11 +578,24 @@
   text-transform: uppercase;
 }
 
-.feature-variant-intro > p:last-child {
+.feature-variant-intro > p:not(.product-section-label):not(.feature-progress-note) {
   max-width: 690px;
   margin: 15px 0 0;
   color: #556472;
   font: 400 13px/1.55 var(--font-reading);
+}
+
+.feature-progress-note {
+  margin: 14px 0 0;
+  padding-left: 11px;
+  border-left: 2px solid var(--orange);
+  color: #556472;
+  font: 400 13px/1.45 var(--font-reading);
+}
+
+.feature-progress-note strong {
+  color: var(--orange-deep);
+  font-weight: 700;
 }
 
 .feature-story {
