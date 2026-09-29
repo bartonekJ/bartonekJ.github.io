@@ -14,7 +14,6 @@ Jde o statický web bez frameworku, buildu a externích runtime závislostí. St
 | --- | --- | --- |
 | `/` | Hlavní prezentace značky a dvou oblastí: sportovní technologie a 3D design | `index.html` + `styles.css` |
 | `/jb-drill/` | Představení produktu JB_Drill, jeho funkcí a platforem | `jb-drill/index.html` + `docs.css` + `jb-drill/hero.js` |
-| `/jb-drill/help/` | Rozsáhlá uživatelská příručka | `jb-drill/help/index.html` + `docs.css` |
 | `/support/` | Kontakty, podpora a doporučení pro hlášení chyb | `support/index.html` + `docs.css` |
 | `/privacy/` | Obecné zásady soukromí webu | `privacy/index.html` + `docs.css` |
 | `/jb-drill/privacy/` | Zásady soukromí produktu a požadavky na výmaz dat | `jb-drill/privacy/index.html` + `docs.css` |
@@ -470,6 +469,10 @@ Sedm kompaktních karet v úvodním přehledu funguje jako navigace na konkrétn
 ### 2026-09-29 — JB_Play v produktové navigaci
 
 Hlavičky stránek JB_Drill obsahují přímý odkaz `JB_Play` na `https://play.bybartonek.com/`. JB_Play není pouze cíl sdílených odkazů, ale samostatně použitelný online přehrávač pro otevírání vyexportovaných souborů, proto má být dostupný přímo z produktového webu. Odkaz používá existující styl `.site-nav`; nepřidává novou variantu navigace. Na úzkých displejích zůstává zachováno současné pravidlo, které ukazuje jen aktivní položku dané stránky.
+
+### 2026-09-29 — Odstranění samostatného webového Help
+
+Veřejná stránka `/jb-drill/help/` a všechny odkazy na ni jsou odstraněné. Detailní a aktuální nápovědu poskytuje přímo aplikace JB_Drill; stará webová kopie by obsah duplikovala a zabírala místo bez jasného účelu. Support zůstává samostatnou kontaktní stránkou bez karty Documentation a bez odkazu Help. Toto rozhodnutí nahrazuje starší zmínky o dostupnosti Help v produktové patičce; vestavěné nápovědy v aplikaci se netýká.
 
 ## Text pro nové vlákno
 
