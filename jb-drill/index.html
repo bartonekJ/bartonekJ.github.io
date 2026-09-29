@@ -1,163 +1,808 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="JB_Drill is a fast visual hockey drill editor for drawing, animation, tactics, session planning and coach-ready exports.">
-  <meta name="theme-color" content="#1d1d1c">
-  <title>JB_Drill — Hockey Drill Design &amp; Animation</title>
-  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="../docs.css">
-</head>
-<body class="docs-body guide-body">
-  <header class="site-header docs-header">
-    <a class="brand" href="../" aria-label="byBartonek home">
-      <span class="brand-logo" aria-hidden="true"></span>
-      <span class="brand-lockup" aria-hidden="true">
-        <span class="brand-name"><span class="brand-prefix">by</span><span class="brand-major">B</span><span class="brand-minor">artonek</span></span>
-        <span class="brand-tagline"><span>Built</span><span>from</span><span>practice</span></span>
-      </span>
-    </a>
-    <nav class="site-nav" aria-label="JB Drill navigation">
-      <a href="./" aria-current="page">JB_Drill</a>
-      <a href="help/">Help</a>
-      <a href="../support/">Support</a>
-    </nav>
-  </header>
-
-  <main>
-    <section class="docs-hero docs-hero--jb-drill docs-hero--video" data-hero-carousel>
-      <div class="jb-hero-visual">
-        <div class="jb-hero-media" aria-hidden="true">
-          <video class="jb-hero-video is-active" muted playsinline preload="auto" tabindex="-1"></video>
-          <video class="jb-hero-video" muted playsinline preload="metadata" tabindex="-1"></video>
-        </div>
-      </div>
-      <div class="docs-hero-inner">
-        <div class="page-context" aria-label="Current page">
-          <span>JB_Drill</span><b aria-hidden="true">/</b><strong>PRODUCT OVERVIEW</strong>
-        </div>
-        <p class="eyebrow">BUILT ON THE ICE, NOT AROUND A MENU</p>
-        <h1>Design the drill.<br><span>Show the action.</span></h1>
-        <p>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="JB_Drill is a fast visual hockey drill editor for drawing, animation, tactics, session planning and coach-ready exports.">
+        <meta name="theme-color" content="#1d1d1c">
+        <title>JB_Drill — Hockey Drill Design &amp; Animation</title>
+        <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml">
+        <link rel="stylesheet" href="../docs.css">
+    </head>
+    <body class="docs-body guide-body product-body">
+        <header class="site-header docs-header">
+            <a class="brand" href="../" aria-label="byBartonek home">
+                <span class="brand-logo" aria-hidden="true"></span>
+                <span class="brand-lockup" aria-hidden="true">
+                    <span class="brand-name">
+                        <span class="brand-prefix">by</span>
+                        <span class="brand-major">B</span>
+                        <span class="brand-minor">artonek</span>
+                    </span>
+                    <span class="brand-tagline">
+                        <span>Built</span>
+                        <span>from</span>
+                        <span>practice</span>
+                    </span>
+                </span>
+            </a>
+            <nav class="site-nav" aria-label="JB Drill navigation">
+                <a href="#overview" data-product-nav="overview" aria-current="page">JB_Drill</a>
+                <a href="#features" data-product-nav="features">Features</a>
+                <a href="../support/">Support</a>
+            </nav>
+        </header>
+        <main>
+            <section class="docs-hero docs-hero--jb-drill docs-hero--video" data-hero-carousel>
+                <div class="jb-hero-visual">
+                    <div class="jb-hero-media" aria-hidden="true">
+                        <video class="jb-hero-video is-active" muted playsinline preload="auto" tabindex="-1"></video>
+                        <video class="jb-hero-video" muted playsinline preload="metadata" tabindex="-1"></video>
+                    </div>
+                </div>
+                <div class="docs-hero-inner">
+                    <div class="page-context" aria-label="Current page">
+                        <img class="page-context-product-logo" src="../assets/JB_Drill_Logo_white.svg" alt="JB_Drill">
+                        <b aria-hidden="true">/</b>
+                        <strong>PRODUCT OVERVIEW</strong>
+                    </div>
+                    <p class="eyebrow">BUILT ON THE ICE, NOT AROUND A MENU</p>
+                    <h1>
+                        Design the drill.<br>
+                        <span>Show the action.</span>
+                    </h1>
+                    <p>
           JB_Drill turns the way coaches sketch on a board into a fast, touch-first workflow —
           then adds event logic, animation, tactical keyframes, a searchable drill library and clean exports.
         </p>
-        <div class="docs-hero-actions">
-          <a class="button button-primary" href="help/">Open user guide</a>
-          <a class="button button-quiet" href="mailto:support@bybartonek.com">Contact support</a>
-        </div>
-      </div>
-      <div class="jb-hero-slide-ui">
-        <div class="jb-hero-slide-label" aria-live="polite">EasyCurveEdit</div>
-        <div class="jb-hero-navigation">
-          <button class="jb-hero-arrow" type="button" data-hero-previous aria-label="Previous video shot">&#8592;</button>
-          <div class="jb-hero-segments" role="group" aria-label="JB Drill video shots">
-            <button class="jb-hero-segment is-active" type="button" data-shot="0" data-webm="../assets/jb-drill-hero/shot-01.webm" data-mp4="../assets/jb-drill-hero/shot-01.mp4" data-label="EasyCurveEdit" aria-label="Show EasyCurveEdit" aria-current="true"><span></span></button>
-            <button class="jb-hero-segment" type="button" data-shot="1" data-webm="../assets/jb-drill-hero/shot-02.webm" data-mp4="../assets/jb-drill-hero/shot-02.mp4" data-label="EasyPlacement" aria-label="Show EasyPlacement"><span></span></button>
-            <button class="jb-hero-segment" type="button" data-shot="2" data-webm="../assets/jb-drill-hero/shot-03.webm" data-mp4="../assets/jb-drill-hero/shot-03.mp4" data-label="FastDrillDrawing" aria-label="Show FastDrillDrawing"><span></span></button>
-            <button class="jb-hero-segment" type="button" data-shot="3" data-webm="../assets/jb-drill-hero/shot-04.webm" data-mp4="../assets/jb-drill-hero/shot-04.mp4" data-label="FastSessionFromLibrary" aria-label="Show FastSessionFromLibrary"><span></span></button>
-            <button class="jb-hero-segment" type="button" data-shot="4" data-webm="../assets/jb-drill-hero/shot-05.webm" data-mp4="../assets/jb-drill-hero/shot-05.mp4" data-label="Tactics" aria-label="Show Tactics"><span></span></button>
-          </div>
-          <button class="jb-hero-arrow" type="button" data-hero-next aria-label="Next video shot">&#8594;</button>
-        </div>
-      </div>
-    </section>
-
-    <div class="docs-shell">
-      <div class="docs-page-title" aria-label="Quick Start Guide">
-        <span>JB_DRILL DOCUMENTATION</span>
-        <strong>Quick Start <em>Guide</em></strong>
-      </div>
-      <aside class="docs-toc" aria-label="On this page">
-        <strong>JB_Drill</strong>
-        <a href="#workflow">Workflow</a>
-        <a href="#drawing">Smart drawing</a>
-        <a href="#animation">Animation</a>
-        <a href="#tactics">Tactics</a>
-        <a href="#session">Sessions &amp; exports</a>
-        <a href="#platforms">Platforms</a>
-      </aside>
-
-      <article class="docs-content">
-        <section class="docs-section" id="workflow">
-          <p class="eyebrow">THE IDEA</p>
-          <h2>Think about hockey, not software.</h2>
-          <p>
-            Place players and equipment, then draw the action exactly as you would on paper.
-            JB_Drill infers possession, event links, player colors and common hockey notation wherever it can.
-            Dragging a tool is a one-time action; tapping it keeps the tool active for repeated use.
+                    <div class="docs-hero-actions">
+                        <a class="button button-primary" href="download/">Download</a>
+                        <a class="button button-quiet" href="mailto:support@bybartonek.com">Contact support</a>
+                    </div>
+                </div>
+                <div class="jb-hero-slide-ui">
+                    <div class="jb-hero-slide-label" aria-live="polite">JB_Drill</div>
+                    <div class="jb-hero-navigation">
+                        <button class="jb-hero-arrow" type="button" data-hero-previous aria-label="Previous carousel slide">&#8592;</button>
+                        <div class="jb-hero-segments" role="group" aria-label="JB Drill carousel slides">
+                            <button class="jb-hero-segment is-active" type="button" data-shot="0" data-webm="../assets/jb-drill-hero/shot-00.webm" data-mp4="../assets/jb-drill-hero/shot-00.mp4" data-label="JB_Drill" aria-label="Show JB Drill hero art" aria-current="true">
+                                <span></span>
+                            </button>
+                            <button class="jb-hero-segment" type="button" data-shot="1" data-webm="../assets/jb-drill-hero/shot-03.webm" data-mp4="../assets/jb-drill-hero/shot-03.mp4" data-label="FastDrillDrawing" aria-label="Show FastDrillDrawing">
+                                <span></span>
+                            </button>
+                            <button class="jb-hero-segment" type="button" data-shot="2" data-webm="../assets/jb-drill-hero/shot-02.webm" data-mp4="../assets/jb-drill-hero/shot-02.mp4" data-label="EasyPlacement" aria-label="Show EasyPlacement">
+                                <span></span>
+                            </button>
+                            <button class="jb-hero-segment" type="button" data-shot="3" data-webm="../assets/jb-drill-hero/shot-01.webm" data-mp4="../assets/jb-drill-hero/shot-01.mp4" data-label="EasyCurveEdit" aria-label="Show EasyCurveEdit">
+                                <span></span>
+                            </button>
+                            <button class="jb-hero-segment" type="button" data-shot="4" data-webm="../assets/jb-drill-hero/shot-04.webm" data-mp4="../assets/jb-drill-hero/shot-04.mp4" data-label="FastSessionFromLibrary" aria-label="Show FastSessionFromLibrary">
+                                <span></span>
+                            </button>
+                            <button class="jb-hero-segment" type="button" data-shot="5" data-webm="../assets/jb-drill-hero/shot-05.webm" data-mp4="../assets/jb-drill-hero/shot-05.mp4" data-label="Tactics" aria-label="Show Tactics">
+                                <span></span>
+                            </button>
+                        </div>
+                        <button class="jb-hero-arrow" type="button" data-hero-next aria-label="Next carousel slide">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+            <nav class="product-view-switcher" aria-label="JB_Drill sections">
+                <div class="product-view-switcher-inner">
+                    <a class="product-view-link is-active" id="overview" href="#overview" data-product-view="overview" aria-current="page" aria-controls="overview-panel">
+                        <span class="product-view-number">01</span>
+                        <span class="product-view-name">Overview</span>
+                        <span class="product-view-arrow" aria-hidden="true">&#8599;</span>
+                    </a>
+                    <a class="product-view-link" id="features" href="#features" data-product-view="features" aria-controls="features-panel">
+                        <span class="product-view-number">02</span>
+                        <span class="product-view-name">Features</span>
+                        <span class="product-view-arrow" aria-hidden="true">&#8599;</span>
+                    </a>
+                </div>
+            </nav>
+            <div class="product-view-panel" id="overview-panel" aria-labelledby="overview">
+                <header class="product-panel-heading">
+                    <h2>
+                        <span class="product-display-name">
+                            JB<span class="product-short-underscore">_</span>
+                            Drill
+                        </span>
+                        <strong>Overview</strong>
+                    </h2>
+                </header>
+                <div class="docs-shell">
+                    <div class="docs-page-title" aria-label="Quick Start Guide">
+                        <span>JB_DRILL DOCUMENTATION</span>
+                        <strong>
+                            Quick Start <em>Guide</em>
+                        </strong>
+                    </div>
+                    <aside class="docs-toc" aria-label="On this page">
+                        <strong>JB_Drill</strong>
+                        <a href="#workflow">Workflow</a>
+                        <a href="#core-features">Core features</a>
+                        <a href="#drawing">Smart drawing</a>
+                        <a href="#animation">Animation</a>
+                        <a href="#tactics">Tactics</a>
+                        <a href="#jb-play">JB_Play</a>
+                        <a href="#session">Library, sessions &amp; exports</a>
+                        <a href="#paint">Paint</a>
+                    </aside>
+                    <article class="docs-content">
+                        <section class="docs-section overview-section-divider" id="workflow">
+                            <p class="eyebrow">THE IDEA</p>
+                            <h2>Finally, software that helps.</h2>
+                            <p>
+            Great coaching ideas shouldn’t get stuck in software. JB_Drill is built for coaches who create their own
+            drills. They can sketch the action almost as naturally as they would on a board. The app handles the repetitive
+            details, brings the action to life, and makes the result easy to share with players before practice.
+            Less time explaining at the board. More time coaching on the ice.
           </p>
-          <div class="step-grid">
-            <div class="step-card"><b>1</b><h3>Build the setup</h3><p>Place players, pucks, nets, pylons and training equipment.</p></div>
-            <div class="step-card"><b>2</b><h3>Sketch the drill</h3><p>Draw skating, passing and shooting directly on the rink.</p></div>
-            <div class="step-card"><b>3</b><h3>Check the timing</h3><p>Play the event graph and retime it directly on the rink or timeline.</p></div>
-            <div class="step-card"><b>4</b><h3>Share the plan</h3><p>Export a complete session as branded PDF pages or a single video.</p></div>
-          </div>
-        </section>
-
-        <section class="docs-section" id="drawing">
-          <p class="eyebrow">SMART DRAWING</p>
-          <h2>The rink understands context.</h2>
-          <div class="feature-grid">
-            <div class="feature-card"><h3>Possession-aware routes</h3><p>Routes inherit puck state from their player and update when a pass, shot or drop pass changes possession.</p></div>
-            <div class="feature-card"><h3>Automatic event links</h3><p>Start and end points snap to players, routes and passes while preserving a coherent action sequence.</p></div>
-            <div class="feature-card"><h3>Hockey-specific notation</h3><p>Forward, backward, lateral, pass, shot, saucer pass, endings, edges, transitions and finesse techniques.</p></div>
-            <div class="feature-card"><h3>Helpful automation</h3><p>Board passes, obstacle jumps, saucer passes, punch turns and obstacle finesse can be generated from the drawing context.</p></div>
-          </div>
-        </section>
-
-        <section class="docs-section" id="animation">
-          <p class="eyebrow">ANIMATE</p>
-          <h2>Make timing visible.</h2>
-          <p>
+                            <p class="overview-idea-finish">Paper is fast for a sketch. JB_Drill stays fast all the way to a finished drill.</p>
+                            <p class="overview-idea-platforms">
+            JB_Drill is built for touch on Android tablets and comfortable mouse-and-keyboard editing on Windows PCs.
+            The same drill format works on both.
+          </p>
+                        </section>
+                        <section class="docs-section overview-section-divider" id="core-features">
+                            <p class="eyebrow">WHAT'S IN THE BOX</p>
+                            <h2>From first sketch to shared play.</h2>
+                            <div class="overview-core-grid">
+                                <article class="overview-core-card">
+                                    <span>01 / CREATE</span>
+                                    <h3>Smart drawing</h3>
+                                    <p>Routes respond to players, puck possession and the action around them.</p>
+                                </article>
+                                <article class="overview-core-card">
+                                    <span>02 / MOVE</span>
+                                    <h3>Animate</h3>
+                                    <p>Turn a drill into a timed sequence with player movement and queues.</p>
+                                </article>
+                                <article class="overview-core-card">
+                                    <span>03 / EXPLAIN</span>
+                                    <h3>Tactics</h3>
+                                    <p>Show formations, puck movement and special-teams decisions over time.</p>
+                                </article>
+                                <article class="overview-core-card">
+                                    <span>04 / SHARE</span>
+                                    <h3>JB_Play</h3>
+                                    <p>Share an interactive session players can explore at their own pace, without opening the editor.</p>
+                                </article>
+                                <article class="overview-core-card overview-core-card--wide">
+                                    <span>05 / ORGANIZE</span>
+                                    <h3>Library</h3>
+                                    <p>Grow a searchable collection of personal coaching know-how, then build a session from saved drills in just a few clicks.</p>
+                                </article>
+                                <article class="overview-core-card">
+                                    <span>06 / ANNOTATE</span>
+                                    <h3>Paint</h3>
+                                    <p>Add freehand marks to the rink to explain a play during a game or explore a new drill idea.</p>
+                                </article>
+                                <article class="overview-core-card">
+                                    <span>07 / EXPORT</span>
+                                    <h3>PDF &amp; MP4</h3>
+                                    <p>Turn a session into a PDF or video carrying the club's own identity.</p>
+                                </article>
+                            </div>
+                        </section>
+                        <section class="docs-section" id="drawing">
+                            <p class="eyebrow">SMART DRAWING</p>
+                            <h2>The rink understands context.</h2>
+                            <p>
+            Draw first—there is no need to choose a line type before every stroke. JB_Drill infers skating, passes,
+            shots and other actions from context, removing most of the tool switching that slows drill drawing down in
+            conventional editors. Routes connect to players, passes and other routes while following puck possession.
+            JB_Drill can also add matching techniques and recognize when a player collects a puck from a pile. Reshape
+            the play and those connections stay with it.
+          </p>
+                            <div class="overview-preview-grid">
+                                <article class="overview-preview-card">
+                                    <a class="overview-preview-trigger" href="../assets/video/smart_drawing_01.mp4" data-video-mp4="../assets/video/smart_drawing_01.mp4" aria-label="Play video: Shape the movement">
+                                        <span class="overview-preview-title">Shape the movement</span>
+                                        <span class="overview-preview-image">
+                                            <img src="../assets/video/smart_drawing_01-poster.webp" alt="" width="960" height="480" loading="lazy" decoding="async">
+                                            <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                        </span>
+                                        <span class="overview-preview-description">Adjust the action right on the rink.</span>
+                                    </a>
+                                </article>
+                            </div>
+                        </section>
+                        <section class="docs-section" id="animation">
+                            <p class="eyebrow">ANIMATE</p>
+                            <h2>Make timing visible.</h2>
+                            <p>
             JB_Drill builds an initial schedule from the event graph, queues and player links. Scrub the timeline,
             move a player along an existing route, or adjust the speed and wait time of one section. Global speed,
             symmetric second phases and queue rotation remain editable without redrawing the drill.
           </p>
-        </section>
-
-        <section class="docs-section" id="tactics">
-          <p class="eyebrow">TACTICS</p>
-          <h2>Animate formations, not just routes.</h2>
-          <p>
+                            <div class="overview-preview-grid">
+                                <article class="overview-preview-card">
+                                    <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-03.mp4" data-video-webm="../assets/jb-drill-hero/shot-03.webm" data-video-mp4="../assets/jb-drill-hero/shot-03.mp4" aria-label="Play video: Sketch the drill">
+                                        <span class="overview-preview-title">Sketch the drill</span>
+                                        <span class="overview-preview-image">
+                                            <img src="../assets/jb-drill-hero/shot-03-poster.webp" alt="" width="960" height="480" loading="lazy" decoding="async">
+                                            <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                        </span>
+                                        <span class="overview-preview-description">Draw the action as naturally as you would on a board.</span>
+                                    </a>
+                                </article>
+                            </div>
+                        </section>
+                        <section class="docs-section" id="tactics">
+                            <p class="eyebrow">TACTICS</p>
+                            <h2>Animate formations, not just routes.</h2>
+                            <p>
             Link players into a unit, place formation keyframes and move either an individual or the entire shape.
             Formation overlays, player labels, puck movement and independent timing make the same canvas useful for
             breakouts, special teams, defensive structure and lineup presentations.
           </p>
-        </section>
-
-        <section class="docs-section" id="session">
-          <p class="eyebrow">TRAINING SESSIONS</p>
-          <h2>From library to locker room.</h2>
-          <ul>
-            <li>Keep multiple drills, layouts, notes, tags, animations and tactics in one <code>.jbdrill</code> file.</li>
-            <li>Search a drill library by age level and hockey category, then add several results to a new session.</li>
-            <li>See the equipment count automatically in Notes.</li>
-            <li>Export selected drills as a multipage PDF or one continuous video.</li>
-            <li>Use a local folder or a folder synchronized by your preferred cloud provider.</li>
-          </ul>
-        </section>
-
-        <section class="docs-section" id="platforms">
-          <p class="eyebrow">PLATFORMS</p>
-          <h2>Tablet-first. Desktop-ready.</h2>
-          <p>
-            The same drill format works on Android tablets and Windows PCs. Touch and pen gestures have mouse
-            equivalents, so a session can move between the bench, office and rink without conversion.
+                            <div class="overview-preview-grid">
+                                <article class="overview-preview-card">
+                                    <a class="overview-preview-trigger" href="../assets/video/tactics_01.mp4" data-video-mp4="../assets/video/tactics_01.mp4" aria-label="Play video: Show the tactics">
+                                        <span class="overview-preview-title">Show the tactics</span>
+                                        <span class="overview-preview-image">
+                                            <img src="../assets/jb-drill-hero/shot-05-poster.webp" alt="" width="960" height="480" loading="lazy" decoding="async">
+                                            <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                        </span>
+                                        <span class="overview-preview-description">Make formation movement clear before players take the ice.</span>
+                                    </a>
+                                </article>
+                            </div>
+                        </section>
+                        <section class="docs-section" id="jb-play">
+                            <p class="eyebrow">JB_PLAY</p>
+                            <h2>One link. The whole session.</h2>
+                            <p>
+            Share the complete session with one click. The link opens JB_Play directly in a browser, so the recipient
+            needs no JB_Drill installation or account. JB_Play is an interactive online player: browse every drill in
+            the session, play or scrub the animation, and open the notes and equipment list whenever needed.
           </p>
-          <div class="notice-card"><p>JB_Drill is currently in active testing. Store availability will be announced when the public release is ready.</p></div>
-        </section>
-      </article>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="brand brand-footer"><span class="brand-logo" aria-hidden="true"></span><span class="brand-lockup" aria-label="byBartonek"><span class="brand-name" aria-hidden="true"><span class="brand-prefix">by</span><span class="brand-major">B</span><span class="brand-minor">artonek</span></span><span class="brand-tagline" aria-hidden="true"><span>Built</span><span>from</span><span>practice</span></span></span></div>
-    <p>JB_Drill by Jiří Bartoněk.</p>
-    <div class="footer-links"><a href="help/">Help</a><a href="../support/">Support</a><a href="privacy/">JB_Drill Privacy</a><a href="privacy/#data-deletion">Data deletion</a><span>© <span id="year">2026</span></span></div>
-  </footer>
-  <script src="../script.js"></script>
-  <script src="hero.js"></script>
-</body>
+                            <div class="overview-preview-grid">
+                                <article class="overview-preview-card">
+                                    <a class="overview-preview-trigger" href="../assets/video/jb_play_01.mp4" data-video-mp4="../assets/video/jb_play_01.mp4" aria-label="Play video: Share the movement">
+                                        <span class="overview-preview-title">Share the movement</span>
+                                        <span class="overview-preview-image">
+                                            <img src="../assets/video/jb_play_01-poster.webp" alt="An interactive JB_Play session with drill tabs and notes open" width="960" height="480" loading="lazy" decoding="async">
+                                            <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                        </span>
+                                        <span class="overview-preview-description">Nothing to install—just open, browse, play, scrub and read.</span>
+                                    </a>
+                                </article>
+                            </div>
+                        </section>
+                        <section class="docs-section" id="session">
+                            <p class="eyebrow">LIBRARY, SESSIONS &amp; EXPORTS</p>
+                            <h2>From library to locker room.</h2>
+                            <p>
+            Save every drill to a searchable Library, then combine proven ideas into a complete training session with
+            notes, tags and automatic equipment counts. When the plan is ready, export it as a polished multipage PDF
+            or a continuous MP4 carrying the club's own identity.
+          </p>
+                            <div class="overview-preview-grid">
+                                <article class="overview-preview-card">
+                                    <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-04.mp4" data-video-webm="../assets/jb-drill-hero/shot-04.webm" data-video-mp4="../assets/jb-drill-hero/shot-04.mp4" aria-label="Play video: Build once, share your way">
+                                        <span class="overview-preview-title">Build once. Share your way.</span>
+                                        <span class="overview-preview-image">
+                                            <img src="../assets/jb-drill-hero/shot-04-poster.webp" alt="" width="960" height="480" loading="lazy" decoding="async">
+                                            <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                        </span>
+                                        <span class="overview-preview-description">Reuse saved drills, assemble the session, then export a complete PDF or MP4.</span>
+                                    </a>
+                                </article>
+                            </div>
+                        </section>
+                        <section class="docs-section" id="paint">
+                            <p class="eyebrow">PAINT</p>
+                            <h2>Sometimes freehand says it best.</h2>
+                            <p>
+            Sketch a drill the old-school way, just as you would on paper. Add notes and freehand ideas over an existing
+            drill, erase individual strokes or clear the entire painting. Paint is tuned for mouse and touch, with
+            pressure-sensitive pen support for natural line weight.
+          </p>
+                            <div class="overview-preview-grid">
+                                <article class="overview-preview-card">
+                                    <a class="overview-preview-trigger" href="../assets/video/paint_01.mp4" data-video-mp4="../assets/video/paint_01.mp4" aria-label="Play video: Draw it old school">
+                                        <span class="overview-preview-title">Draw it old school</span>
+                                        <span class="overview-preview-image">
+                                            <img src="../assets/video/paint_01-poster.webp" alt="Freehand hockey notes and sketches drawn over the rink in Paint mode" width="960" height="480" loading="lazy" decoding="async">
+                                            <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                        </span>
+                                        <span class="overview-preview-description">Sketch with a mouse, finger or pressure-sensitive pen—and erase only what you mean to.</span>
+                                    </a>
+                                </article>
+                            </div>
+                        </section>
+                    </article>
+                </div>
+            </div>
+            <section class="product-view-panel product-features-preview" id="features-panel" aria-labelledby="features" hidden>
+                <header class="product-panel-heading">
+                    <h2>
+                        <span class="product-display-name">
+                            JB<span class="product-short-underscore">_</span>
+                            Drill
+                        </span>
+                        <strong>Features</strong>
+                    </h2>
+                </header>
+                <div class="product-features-intro">
+                    <p class="product-section-label">THE DETAILS</p>
+                    <h3>Small decisions. A much faster workflow.</h3>
+                    <p>Behind the main modes is a layer of hockey-aware automation that quietly removes repetitive setup and keeps the coach focused on the drill.</p>
+                </div>
+                <div class="feature-layout-study" data-feature-layout-study>
+                    <div class="feature-layout-header" hidden>
+                        <div>
+                            <p class="product-section-label">LAYOUT STUDY</p>
+                            <strong>Choose how the details should feel.</strong>
+                        </div>
+                        <div class="feature-layout-tabs" role="tablist" aria-label="Feature page layout concepts">
+                            <button class="feature-layout-tab is-active" id="feature-tab-stories" type="button" role="tab" aria-selected="true" aria-controls="feature-variant-stories" data-feature-variant="stories">
+                                <span>A</span>
+                                Stories
+                            </button>
+                            <button class="feature-layout-tab" id="feature-tab-catalog" type="button" role="tab" aria-selected="false" aria-controls="feature-variant-catalog" data-feature-variant="catalog">
+                                <span>B</span>
+                                Catalog
+                            </button>
+                            <button class="feature-layout-tab" id="feature-tab-friction" type="button" role="tab" aria-selected="false" aria-controls="feature-variant-friction" data-feature-variant="friction">
+                                <span>C</span>
+                                Friction removed
+                            </button>
+                        </div>
+                    </div>
+                    <section class="feature-variant feature-variant--stories" id="feature-variant-stories" role="tabpanel" aria-labelledby="feature-tab-stories" data-feature-variant-panel="stories" hidden>
+                        <header class="feature-variant-intro">
+                            <p class="product-section-label">CONCEPT A / FEATURE STORIES</p>
+                            <h4>Show fewer things. Make each one memorable.</h4>
+                            <p>Four chapters group related features around the moment in which they help. Large demonstrations carry the page instead of turning every detail into an equal card.</p>
+                        </header>
+                        <article class="feature-story">
+                            <div class="feature-story-copy">
+                                <span class="feature-story-number">01 / USE THE WHOLE RINK</span>
+                                <h5>The rink completes the pass.</h5>
+                                <p>Aim through the boards and JB_Drill solves the bounce. Follow the perimeter and the pass becomes a rim pass. Training equipment can align to the boards as naturally as the puck moves around them.</p>
+                                <ul class="feature-detail-list" aria-label="Related rink-aware features">
+                                    <li>Bank Pass</li>
+                                    <li>Rim Pass</li>
+                                    <li>Board alignment</li>
+                                </ul>
+                            </div>
+                            <article class="overview-preview-card feature-story-media">
+                                <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-03.mp4" data-video-webm="../assets/jb-drill-hero/shot-03.webm" data-video-mp4="../assets/jb-drill-hero/shot-03.mp4" aria-label="Play video: Let the rink finish the geometry">
+                                    <span class="overview-preview-title">Let the rink finish the geometry</span>
+                                    <span class="overview-preview-image">
+                                        <img src="../assets/jb-drill-hero/shot-03-poster.webp" alt="Placeholder for rink-aware pass demonstrations" width="960" height="480" loading="lazy" decoding="async">
+                                        <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                    </span>
+                                    <span class="overview-preview-description">Bank passes, rim passes and board-aware placement belong together.</span>
+                                </a>
+                            </article>
+                        </article>
+                        <article class="feature-story feature-story--reverse">
+                            <div class="feature-story-copy">
+                                <span class="feature-story-number">02 / READ THE ACTION</span>
+                                <h5>Draw the event. Get the right notation.</h5>
+                                <p>A pass crossing an obstacle becomes a saucer pass. A route over a stick receives a jump marker. Cross a loose puck or a pile and the player picks it up, changing the route to puck carrying automatically.</p>
+                                <ul class="feature-detail-list" aria-label="Related action-aware features">
+                                    <li>Automatic Saucer Pass</li>
+                                    <li>Automatic stick jump</li>
+                                    <li>Automatic puck pickup</li>
+                                </ul>
+                            </div>
+                            <article class="overview-preview-card feature-story-media">
+                                <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-01.mp4" data-video-webm="../assets/jb-drill-hero/shot-01.webm" data-video-mp4="../assets/jb-drill-hero/shot-01.mp4" aria-label="Play video: Context becomes notation">
+                                    <span class="overview-preview-title">Context becomes notation</span>
+                                    <span class="overview-preview-image">
+                                        <img src="../assets/jb-drill-hero/shot-01-poster.webp" alt="Placeholder for obstacle and puck pickup demonstrations" width="960" height="480" loading="lazy" decoding="async">
+                                        <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                    </span>
+                                    <span class="overview-preview-description">The diagram explains what happened without extra setup.</span>
+                                </a>
+                            </article>
+                        </article>
+                        <article class="feature-story">
+                            <div class="feature-story-copy">
+                                <span class="feature-story-number">03 / ADD THE SKILL</span>
+                                <h5>A technique changes the route.</h5>
+                                <p>Drop Pivot, Transition or a Finesse technique onto an existing curve. The route adapts around it. Supported obstacles can place a deke automatically, a Toe Drag Release creates and aims its shot, and a qualifying trajectory generates its own Punch Turn.</p>
+                                <ul class="feature-detail-list" aria-label="Related technique features">
+                                    <li>Technique drag &amp; drop</li>
+                                    <li>Automatic Finesse</li>
+                                    <li>Toe Drag Release auto aim</li>
+                                    <li>Generated Punch Turn</li>
+                                </ul>
+                            </div>
+                            <article class="overview-preview-card feature-story-media">
+                                <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-04.mp4" data-video-webm="../assets/jb-drill-hero/shot-04.webm" data-video-mp4="../assets/jb-drill-hero/shot-04.mp4" aria-label="Play video: Skills that understand the route">
+                                    <span class="overview-preview-title">Skills that understand the route</span>
+                                    <span class="overview-preview-image">
+                                        <img src="../assets/jb-drill-hero/shot-04-poster.webp" alt="Placeholder for technique-aware route demonstrations" width="960" height="480" loading="lazy" decoding="async">
+                                        <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                    </span>
+                                    <span class="overview-preview-description">Technique marks are part of the event, not decoration on top.</span>
+                                </a>
+                            </article>
+                        </article>
+                        <article class="feature-story feature-story--reverse">
+                            <div class="feature-story-copy">
+                                <span class="feature-story-number">04 / REUSE AND PRESENT</span>
+                                <h5>Do the setup once.</h5>
+                                <p>Clone the first queued player and the following slots fill themselves. Generate the opposite phase with symmetry. When the plan is ready, Drill Notes and club identity become part of a polished PDF instead of a second document to assemble.</p>
+                                <ul class="feature-detail-list" aria-label="Related automation and export features">
+                                    <li>Automatic Queues</li>
+                                    <li>Symmetry</li>
+                                    <li>Drill Notes</li>
+                                    <li>Export identity</li>
+                                    <li>Branded PDF</li>
+                                </ul>
+                            </div>
+                            <article class="overview-preview-card feature-story-media">
+                                <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-05.mp4" data-video-webm="../assets/jb-drill-hero/shot-05.webm" data-video-mp4="../assets/jb-drill-hero/shot-05.mp4" aria-label="Play video: From repeated setup to finished handout">
+                                    <span class="overview-preview-title">From setup to finished handout</span>
+                                    <span class="overview-preview-image">
+                                        <img src="../assets/jb-drill-hero/shot-05-poster.webp" alt="Placeholder for queue, symmetry and export demonstrations" width="960" height="480" loading="lazy" decoding="async">
+                                        <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                    </span>
+                                    <span class="overview-preview-description">Automation continues after the last route is drawn.</span>
+                                </a>
+                            </article>
+                        </article>
+                    </section>
+                    <section class="feature-variant feature-variant--catalog is-active" id="feature-variant-catalog">
+                        <header class="feature-variant-intro">
+                            <p class="product-section-label">FEATURE CATALOG</p>
+                            <h4>Scan the full toolkit.</h4>
+                            <p>Features are grouped by the moment in which they help, keeping the complete toolkit easy to scan without turning it into one undifferentiated wall.</p>
+                        </header>
+                        <div class="feature-catalog-lead" hidden>
+                            <article class="overview-preview-card feature-catalog-media">
+                                <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-02.mp4" data-video-webm="../assets/jb-drill-hero/shot-02.webm" data-video-mp4="../assets/jb-drill-hero/shot-02.mp4" aria-label="Play video: A workflow made for direct input">
+                                    <span class="overview-preview-title">A workflow made for direct input</span>
+                                    <span class="overview-preview-image">
+                                        <img src="../assets/jb-drill-hero/shot-02-poster.webp" alt="JB_Drill touch-first placement demonstration" width="960" height="480" loading="lazy" decoding="async">
+                                        <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                    </span>
+                                    <span class="overview-preview-description">Place, draw and adjust without opening a chain of dialogs.</span>
+                                </a>
+                            </article>
+                            <div class="feature-catalog-summary">
+                                <span>DIRECT BY DEFAULT</span>
+                                <h5>The canvas does more than display the result.</h5>
+                                <p>It is where objects are placed, relationships are created, routes are refined and timing is understood.</p>
+                            </div>
+                        </div>
+                        <div class="feature-catalog-groups">
+                            <section class="feature-catalog-group" aria-labelledby="catalog-rink">
+                                <header class="feature-catalog-group-title">
+                                    <span>CHAPTER 01</span>
+                                    <h5 id="catalog-rink">Rink intelligence</h5>
+                                    <p>The boards and equipment participate in the drawing.</p>
+                                </header>
+                                <div class="feature-catalog-grid">
+                                    <article class="feature-catalog-card">
+                                        <span>BOUNCE</span>
+                                        <h5>Bank Pass</h5>
+                                        <p>Aim beyond the boards and JB_Drill solves the reflected puck path.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>FOLLOW</span>
+                                        <h5>Rim Pass</h5>
+                                        <p>Guide a pass along the boards and it follows the rounded rink perimeter.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>ALIGN</span>
+                                        <h5>Board alignment</h5>
+                                        <p>Supported long equipment and nets orient themselves to nearby rink geometry.</p>
+                                    </article>
+                                    <article class="feature-catalog-card feature-catalog-card--media" role="button" tabindex="0" data-video-mp4="../assets/video/smart_drawing_01.mp4" aria-label="Play video: Puck pickup">
+                                        <span>COLLECT</span>
+                                        <h5>Puck pickup</h5>
+                                        <p>Cross a loose puck or puck pile and possession becomes part of the route.</p>
+                                        <span class="feature-catalog-preview" aria-hidden="true">
+                                            <img src="../assets/video/smart_drawing_01-poster.webp" alt="" width="320" height="160" loading="lazy" decoding="async">
+                                            <span class="feature-catalog-preview-play">&#9654;</span>
+                                        </span>
+                                    </article>
+                                </div>
+                            </section>
+                            <section class="feature-catalog-group" aria-labelledby="catalog-context">
+                                <header class="feature-catalog-group-title">
+                                    <span>CHAPTER 02</span>
+                                    <h5 id="catalog-context">Action intelligence</h5>
+                                    <p>The event determines the right hockey notation.</p>
+                                </header>
+                                <div class="feature-catalog-grid">
+                                    <article class="feature-catalog-card">
+                                        <span>LIFT</span>
+                                        <h5>Automatic Saucer Pass</h5>
+                                        <p>A pass crossing a supported obstacle gains saucer-pass notation automatically.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>JUMP</span>
+                                        <h5>Automatic stick jump</h5>
+                                        <p>A skating route crossing a stick receives the corresponding jump marker.</p>
+                                    </article>
+                                    <article class="feature-catalog-card feature-catalog-card--media" role="button" tabindex="0" data-video-mp4="../assets/video/smart_drawing_01.mp4" aria-label="Play video: Automatic Finesse">
+                                        <span>DEKE</span>
+                                        <h5>Automatic Finesse</h5>
+                                        <p>A puck-carrying route around a supported obstacle can generate its own deke.</p>
+                                        <span class="feature-catalog-preview" aria-hidden="true">
+                                            <img src="../assets/video/smart_drawing_01-poster.webp" alt="" width="320" height="160" loading="lazy" decoding="async">
+                                            <span class="feature-catalog-preview-play">&#9654;</span>
+                                        </span>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>TURN</span>
+                                        <h5>Generated Punch Turn</h5>
+                                        <p>A qualifying curve shape produces trajectory-dependent Punch Turn notation.</p>
+                                    </article>
+                                </div>
+                            </section>
+                            <section class="feature-catalog-group" aria-labelledby="catalog-techniques">
+                                <header class="feature-catalog-group-title">
+                                    <span>CHAPTER 03</span>
+                                    <h5 id="catalog-techniques">Techniques on the route</h5>
+                                    <p>Skills edit the existing event instead of sitting on top of it.</p>
+                                </header>
+                                <div class="feature-catalog-grid">
+                                    <article class="feature-catalog-card">
+                                        <span>DROP</span>
+                                        <h5>Technique drag &amp; drop</h5>
+                                        <p>Drop a technique onto a compatible curve or one of its selected control points.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>CHANGE</span>
+                                        <h5>Pivot &amp; Transition</h5>
+                                        <p>The route before and after the technique updates to describe the skating change.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>FINISH</span>
+                                        <h5>Toe Drag Release</h5>
+                                        <p>Place Toe Drag at the route end and a shot is created and aimed at the nearest net.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>REFINE</span>
+                                        <h5>Finesse editing</h5>
+                                        <p>Deke Left, Deke Right and Toe Drag remain part of an editable connected curve.</p>
+                                    </article>
+                                </div>
+                            </section>
+                            <section class="feature-catalog-group" aria-labelledby="catalog-edit">
+                                <header class="feature-catalog-group-title">
+                                    <span>CHAPTER 04</span>
+                                    <h5 id="catalog-edit">Direct editing</h5>
+                                    <p>The visible drill remains the editing surface.</p>
+                                </header>
+                                <div class="feature-catalog-grid">
+                                    <article class="feature-catalog-card">
+                                        <span>CONNECT</span>
+                                        <h5>Persistent relationships</h5>
+                                        <p>Move a player or shared point and connected routes keep the play together.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>RESHAPE</span>
+                                        <h5>Curve-level editing</h5>
+                                        <p>Control points refine the path without replacing the event behind it.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>CHANGE</span>
+                                        <h5>Notation without redraw</h5>
+                                        <p>Change the skating type on the route that already exists.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>ADJUST</span>
+                                        <h5>Secondary gesture</h5>
+                                        <p>A second finger or middle mouse button adjusts rotation and curve shape during the drag.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>DELETE</span>
+                                        <h5>Scratch deletion</h5>
+                                        <p>Scratch across unwanted content instead of selecting each element separately.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>RECOLOR</span>
+                                        <h5>Color ownership</h5>
+                                        <p>Connected routes can follow their player's palette color through later changes.</p>
+                                    </article>
+                                </div>
+                            </section>
+                            <section class="feature-catalog-group" aria-labelledby="catalog-finish">
+                                <header class="feature-catalog-group-title">
+                                    <span>CHAPTER 05</span>
+                                    <h5 id="catalog-finish">Repeat and present</h5>
+                                    <p>Routine setup and paperwork stay out of the coach's way.</p>
+                                </header>
+                                <div class="feature-catalog-grid">
+                                    <article class="feature-catalog-card">
+                                        <span>QUEUE</span>
+                                        <h5>Automatic Queues</h5>
+                                        <p>Clone a queued player and the next available slot is assigned automatically.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>MIRROR</span>
+                                        <h5>Symmetry</h5>
+                                        <p>Generate an editable second phase instead of rebuilding the opposite side.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>EXPLAIN</span>
+                                        <h5>Drill Notes</h5>
+                                        <p>Keep coaching instructions and the generated equipment list with the drill.</p>
+                                    </article>
+                                    <article class="feature-catalog-card">
+                                        <span>BRAND</span>
+                                        <h5>Export identity</h5>
+                                        <p>Frame the club logo once and reuse it in PDF and video headers.</p>
+                                    </article>
+                                    <article class="feature-catalog-card feature-catalog-card--wide">
+                                        <span>DELIVER</span>
+                                        <h5>Complete PDF handouts</h5>
+                                        <p>Each drill becomes a clear page combining the rink, title, notes, equipment and club identity.</p>
+                                    </article>
+                                </div>
+                            </section>
+                        </div>
+                    </section>
+                    <section class="feature-variant feature-variant--friction" id="feature-variant-friction" role="tabpanel" aria-labelledby="feature-tab-friction" data-feature-variant-panel="friction" hidden>
+                        <header class="feature-variant-intro">
+                            <p class="product-section-label">CONCEPT C / FRICTION REMOVED</p>
+                            <h4>Explain the benefit before the mechanism.</h4>
+                            <p>Instead of listing tools, this version starts with the small frustrations coaches already recognize and shows how JB_Drill removes them.</p>
+                        </header>
+                        <div class="feature-friction-layout">
+                            <article class="overview-preview-card feature-friction-media">
+                                <a class="overview-preview-trigger" href="../assets/jb-drill-hero/shot-03.mp4" data-video-webm="../assets/jb-drill-hero/shot-03.webm" data-video-mp4="../assets/jb-drill-hero/shot-03.mp4" aria-label="Play video: Keep the thought moving">
+                                    <span class="overview-preview-title">Keep the thought moving</span>
+                                    <span class="overview-preview-image">
+                                        <img src="../assets/jb-drill-hero/shot-03-poster.webp" alt="A drill being created quickly in JB_Drill" width="960" height="480" loading="lazy" decoding="async">
+                                        <span class="overview-preview-play" aria-hidden="true">&#9654;</span>
+                                    </span>
+                                    <span class="overview-preview-description">The best quality-of-life feature is not having to think about the editor.</span>
+                                </a>
+                            </article>
+                            <div class="feature-friction-list">
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Construct the bounce point by hand</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Aim the Bank Pass</h5>
+                                        <p>JB_Drill solves the reflection while the coach chooses the start and target.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Trace a pass around the boards</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Draw the Rim Pass</h5>
+                                        <p>The path fits itself to the rounded rink perimeter.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Remember every obstacle symbol</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Let the action create notation</h5>
+                                        <p>Saucer passes, stick jumps and obstacle Finesse appear from what the route crosses.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Split a curve to add a skill</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Drop the technique onto it</h5>
+                                        <p>Pivot, Transition and Finesse become part of the connected route.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Draw and aim the finishing shot</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Finish with Toe Drag</h5>
+                                        <p>Toe Drag Release creates the shot and aims it at the nearest net.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Mark the puck pickup separately</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Skate across the puck</h5>
+                                        <p>The route collects a loose puck or one from the pile and continues with possession.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Rebuild a route after every change</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Edit the event in place</h5>
+                                        <p>Reshape it, change its notation or move connected content without breaking the play.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Select every unwanted element</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Scratch across it</h5>
+                                        <p>A direct gesture removes intersected content and asks only when intent is ambiguous.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Number every player in a queue</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Clone the next player</h5>
+                                        <p>Each clone receives the next available queue slot automatically.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Rebuild the opposite side</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Generate the symmetric phase</h5>
+                                        <p>Reuse the event logic, then adjust only the timing that differs.</p>
+                                    </div>
+                                </article>
+                                <article class="feature-friction-row">
+                                    <span class="feature-friction-before">Assemble a separate handout</span>
+                                    <span class="feature-friction-arrow" aria-hidden="true">&#8594;</span>
+                                    <div>
+                                        <h5>Export the complete drill</h5>
+                                        <p>The rink, Drill Notes, equipment list and club logo arrive together in the PDF.</p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </main>
+        <dialog class="overview-video-dialog" aria-labelledby="overview-video-title">
+            <div class="overview-video-header">
+                <strong id="overview-video-title">JB_Drill</strong>
+                <button class="overview-video-close" type="button" aria-label="Close video">&#10005;</button>
+            </div>
+            <video class="overview-video-media" playsinline muted preload="none" aria-label="JB_Drill feature demonstration">
+                <source type="video/webm">
+                <source type="video/mp4">
+            </video>
+            <div class="overview-video-controls">
+                <button class="overview-video-toggle" type="button" aria-label="Pause video">&#10074;&#10074;</button>
+                <input class="overview-video-progress" type="range" min="0" max="1" step="0.01" value="0" aria-label="Video position">
+                <span class="overview-video-time" aria-live="off">0:00 / 0:00</span>
+            </div>
+        </dialog>
+        <footer class="site-footer">
+            <div class="brand brand-footer">
+                <span class="brand-logo" aria-hidden="true"></span>
+                <span class="brand-lockup" aria-label="byBartonek">
+                    <span class="brand-name" aria-hidden="true">
+                        <span class="brand-prefix">by</span>
+                        <span class="brand-major">B</span>
+                        <span class="brand-minor">artonek</span>
+                    </span>
+                    <span class="brand-tagline" aria-hidden="true">
+                        <span>Built</span>
+                        <span>from</span>
+                        <span>practice</span>
+                    </span>
+                </span>
+            </div>
+            <p>JB_Drill by Jiří Bartoněk.</p>
+            <div class="footer-links">
+                <a href="help/">Help</a>
+                <a href="../support/">Support</a>
+                <a href="privacy/">JB_Drill Privacy</a>
+                <a href="privacy/#data-deletion">Data deletion</a>
+                <span>
+                    © <span id="year">2026</span>
+                </span>
+            </div>
+        </footer>
+        <script src="../script.js"></script>
+        <script src="hero.js"></script>
+        <script src="product-view.js"></script>
+        <script src="overview-video.js"></script>
+    </body>
 </html>

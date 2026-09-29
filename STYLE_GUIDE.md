@@ -127,7 +127,10 @@ Zachovej viditelný `:focus-visible`; hover nemá být jediným vodítkem intera
 ### Produkt a dokumentace
 
 - `.docs-hero`: úvodní blok produktové stránky nebo příručky. Používej krátký `page-context`, `eyebrow`, titulek, stručný odstavec a CTA.
-- `.docs-hero--jb-drill`: značkový vizuál JB_Drill. `.docs-hero--video` zapínej jen pro produktovou stránku s carousel videí; ovládání patří do `.jb-hero-slide-ui` a musí zůstat přístupné klávesnicí.
+- `.docs-hero--jb-drill`: značkový vizuál JB_Drill. Na produktové stránce je jméno JB_Drill v horním `page-context` větší než drobný text „Product Overview“, aniž by konkurovalo hlavnímu sloganu; specifické pravidlo `.product-body` nemění štítek v Help. `.docs-hero--video` zapínej jen pro produktovou stránku s carousel videí; ovládání patří do `.jb-hero-slide-ui` a musí zůstat přístupné klávesnicí.
+- `.product-view-switcher`: pouze dvojice kompaktních odkazových záložek Overview a Features bezprostředně pod produktovým Hero; při scrollování zůstávají připnuté pod sdílenou hlavičkou. Každá záložka vyplňuje svou polovinu šířky obrazovky: aktivní má světlé pozadí a oranžový horní proužek přes celou polovinu, neaktivní tmavé pozadí. Boční rámečky nejsou; barevný předěl ploch je jen uprostřed. Nápis Overview je zarovnaný se začátkem obsahového sloupce, jeho malé číslo je na desktopu v levém odsazení; na mobilu se čísla skrývají. `product-view.js` přepíná panely Overview/Features podle URL hashe; výchozí Overview zachovává stávající obsah. Download je samostatná stránka dostupná z tlačítka v Hero, ne třetí poloha přepínače. Tento vzor patří zatím jen na `/jb-drill/`.
+- `.overview-core-grid` / `.overview-core-card`: stručné hlavní schopnosti v Overview hned po úvodu „THE IDEA“. Na desktopu dvě karty vedle sebe; pátá karta Library zabírá celou šířku mezi dvěma dvojicemi nad ní a poslední dvojicí pod ní. Na mobilu je jeden sloupec. Textové karty mají kompaktní svislé odsazení a těsnější mezery mezi štítkem, názvem a popisem, protože slouží jen jako rychlý přehled; nepředstírají interaktivitu. Sekci oddělují stejné tenké linky jako úvod. Features je vyhrazené pro pozdější detailnější ukázky dílčích funkcí a QOL, ne pro opakování těchto karet.
+- `.overview-preview-card` a `.overview-video-dialog`: v produktovém Overview jsou prozatím video karty po jedné v podsekcích následujících až po úvodní „THE IDEA“; zamýšlené maximum jsou dvě na podsekci. Karta má zaoblené rohy, tmavou hlavičku s bílým názvem a světlé tělo kolem náhledu a popisu. Hover/focus převádí hlavičku na stejný světlý podklad jako tělo karty a přidává oranžový horní proužek navazující na obrys karty. Celá karta je odkaz na soubor MP4 pro případ vypnutého JavaScriptu; při běžném použití se otevře společný přehrávač s krátkou animací z pozice karty. Video se načítá až při otevření. Dialog má vlastní zavření, play/pause a časovou osu; kliknutí na obraz přepíná pauzu a po přirozeném dohrání se přehrávač vrátí do karty. Při `prefers-reduced-motion` přechodové animace vynechává.
 - `.docs-shell`: dokumentační rozvržení s `.docs-page-title`, navigací `.docs-toc` a článkem `.docs-content`. U delších příruček je TOC užitečný; krátké stránky ho nepotřebují.
 - `.docs-section`: samostatné téma s horním štítkem, jedním hlavním nadpisem a souvisejícím textem.
 - `.step-grid` / `.step-card`: posloupnost očíslovaných kroků. `.feature-grid` / `.feature-card`: rovnocenné vlastnosti. `.gesture-grid` / `.gesture-card`: ovládání nebo gesta, s klávesou či gestem v krátkém štítku.
@@ -177,6 +180,144 @@ Důvod:
 Kde se používá / výjimky:
 Související soubory:
 ```
+
+### 2026-09-19 — Přepínání Overview a Features pod JB_Drill Hero
+
+- Rozhodnutí: produktová stránka má jeden společný Hero a pod ním výrazný dvoupolohový přepínač `Overview | Features`; přepínání mění obsah bez procházení dlouhé stránky a zachovává přímé odkazy přes URL hash. `Download` v Hero vede do připraveného bloku pro obchody. Help zůstává dostupný v patičce, ale horní navigace místo něj ukazuje Features.
+- Důvod potvrzený uživatelem: Overview má být poutavá reklama na první pohled, Features podrobnější přesvědčení již zaujatého návštěvníka. Nyní chce nejprve vidět rozvržení a vzhled přepínače, nikoli finální texty a videa.
+- Rozsah: `/jb-drill/` (`jb-drill/index.html`, `jb-drill/product-view.js`, `docs.css`). Současný obsah Overview je dočasně zachovaný; obsah Features a odkazy na obchody jsou provizorní a nesmějí být považované za schválený finální copywriting.
+
+### 2026-09-20 — Kompaktní připnutý přepínač produktu
+
+- Rozhodnutí: přepínač Overview/Features má přibližně poloviční výšku oproti první variantě a po odscrollování Hero zůstává přímo pod horní lištou. Vedlejší podtitulky záložek byly odstraněny, aby přepínač nezabíral místo obsahu. Kotvy a boční navigace obsahu respektují kombinovanou výšku obou připnutých lišt.
+- Důvod potvrzený uživatelem: původní záložky byly příliš vysoké a po opuštění Hero zmizely, přestože mají umožnit kdykoli přepnout mezi prodejním Overview a Features.
+- Rozsah: pouze `/jb-drill/` (`jb-drill/index.html`, `docs.css`); sdílená horní lišta a ostatní stránky zůstávají beze změny.
+
+### 2026-09-20 — Barevný přechod přepínače jen uprostřed
+
+- Rozhodnutí: plochy Overview a Features se táhnou bez ohraničení od středové hranice až k protějšímu okraji viewportu. Aktivní/neaktivní stav určuje světlá/tmavá plocha, bez horní oranžové linky a bez dojmů samostatných obdélníkových karet. Text zůstává přibližně zarovnaný se současným obsahem.
+- Důvod potvrzený uživatelem: ohraničení po stranách a horní hrana způsobovaly, že aktivní pohled vypadal jako obdélník vystupující vzhůru; chce barevný předěl pouze mezi oběma pohledy.
+- Rozsah: pouze přepínač na `/jb-drill/` (`docs.css`); jeho výška, sticky chování a obsah panelů se nemění. Horní proužek byl následně vrácen podle následujícího rozhodnutí.
+
+### 2026-09-20 — Horní proužek přes celou aktivní polovinu
+
+- Rozhodnutí: oranžový horní proužek se vrací, ale nyní vede od středové hranice až k vnějšímu okraji aktivní poloviny. Je kreslen dovnitř plochy, takže nemění výšku připnutého přepínače.
+- Důvod potvrzený uživatelem: po odstranění bočních hranic a roztažení barev až k okrajům se mu řešení líbí; horní oranžový akcent chce zachovat v novém celoplošném uspořádání.
+- Rozsah: pouze aktivní záložka přepínače na `/jb-drill/` (`docs.css`).
+
+### 2026-09-20 — Testovací video karty v Overview
+
+- Rozhodnutí: úvodní blok Overview zachovává malý oranžový štítek, úderný nadpis a šedý popis. Čtyři dosavadní karty nahrazují video karty v pořadí tučný název → statický thumbnail → krátký popis. Každá používá právě jeden ze současných Hero klipů; pro test jsou vybrány umístění, kreslení, Tactics a sestavení session. Kliknutí kartu rychle rozbalí do přehrávače; po dokončení se sbalí. Kliknutí během přehrávání pauzuje a ponechá ji otevřenou; ruční zavření je nahoře a ovládání s posuvníkem dole.
+- Důvod potvrzený uživatelem: líbí se mu současná hierarchie úvodu a čtveřice obdélníků, ale karty mají na první pohled ukázat produkt v akci. Boční navigaci si může později přát vrátit, takže je na produktové stránce pouze skrytá, ne odstraněná.
+- Rozsah: pouze `/jb-drill/` (`jb-drill/index.html`, `jb-drill/overview-video.js`, `docs.css`, poster snímky v `assets/jb-drill-hero/`). Stávající Hero videa zůstávají beze změny; výběr a texty karet jsou provizorní pro posouzení vzhledu a interakce.
+
+### 2026-09-20 — Jedna video karta na podsekci a hlavička podle přepínače
+
+- Rozhodnutí: původní čtveřice karet pod prvním sdělením byla rozložena po jedné do všech šesti prozatímních podsekcí Overview. Jedna ukázka Hero se dočasně opakuje, protože teď se posuzuje vizuální rytmus, nikoli finální obsah. Karta zůstává široká jako jedna buňka původní dvojice. Horní rohy jsou ostré; tmavá hlavička s bílým titulkem při hoveru/focusu přejde do světle šedé, s oranžovým proužkem navazujícím na oranžový obrys karty. Thumbnail je odsazen uvnitř světlého těla. Dřívější textová čtveřice ve Smart drawing i výčet v Training sessions jsou pro jednotný vizuální rytmus provizorně shrnuty do šedého odstavce mezi titulkem a kartou.
+- Důvod potvrzený uživatelem: s video kartami chce šetřit — v jedné podsekci nejvýše dvě, spíše jednu. Vizuál hlavičky má navazovat na přepínač Overview/Features nad obsahem. Názvy sekcí, texty i přiřazení videí jsou stále provizorní.
+- Rozsah: pouze `/jb-drill/` (`jb-drill/index.html`, `docs.css`, `assets/jb-drill-hero/shot-01-poster.webp`). Komponenta přehrávače a videa samotná se nemění.
+
+### 2026-09-20 — Korekce rohů a hoveru video karet
+
+- Rozhodnutí: horní rohy karty se vracejí k původnímu zaoblení. Při hoveru/focusu používá hlavička přesně stejný světlý podklad jako tělo karty (`--paper-bright`); oranžový horní proužek a obrys zůstávají.
+- Důvod potvrzený uživatelem: požadavek na ostré horní rohy byl omyl a předchozí hover odstín hlavičky neodpovídal barvě karty.
+- Rozsah: pouze video karty Overview na `/jb-drill/` (`docs.css`).
+
+### 2026-09-20 — Jedna osa pro Overview, obchodní blok a obsah
+
+- Rozhodnutí: karta s odkazy na obchody má stejnou vnější šířku a vodorovnou pozici jako sloupec textu Overview. Slovo Overview v připnutém přepínači začíná na stejné levé ose; číslo zůstává před ním na širších obrazovkách a na mobilu se skrývá. Pravý okraj prvků přepínače je rovněž zarovnán k obsahu, zatímco plochy záložek zůstávají přes celé poloviny obrazovky.
+- Důvod potvrzený uživatelem: předchozí rozdílné šířky a začátky bloku i přepínače působily rozházeně a vizuálně rušně.
+- Rozsah: pouze produktová stránka `/jb-drill/` (`docs.css`); ostatní stránky a chování přepínání se nemění.
+
+### 2026-09-20 — Úvodní sdělení Overview pro trenéry
+
+- Rozhodnutí: první podsekce Overview ponechává oranžový štítek „THE IDEA“, ale hlavní nadpis mění na „Built for coaches who create.“ a pod ním používá obecnější text o přirozené tvorbě, automatizaci rutiny a sdílení před tréninkem. Název JB_Play se v úvodu ještě neobjevuje; bude vysvětlen až později. Jde o pracovní copy k vizuálnímu posouzení, ne o definitivní schválení celého Overview.
+- Důvod potvrzený uživatelem: úvod má být poutavý a srozumitelný i člověku, který dosud nezná jednotlivé produkty; zachovat chce štítek „THE IDEA“, zatímco heslo „Think about hockey, not software“ si prozatím ponechává jako hodnotný princip pro další práci.
+- Rozsah: pouze první podsekce `/jb-drill/` (`jb-drill/index.html`); styly a ostatní podsekce se nemění.
+
+### 2026-09-20 — Textový úvod bez videokarty
+
+- Rozhodnutí: z první podsekce „THE IDEA“ je odebrána video karta, která má patřit až do pozdějších obsahových podsekcí. Text úvodu zatím zůstává pracovní; uživatel vybírá silnější nadpis a druhý oddělený odstavec o rychlosti kreslení před další úpravou copy.
+- Důvod potvrzený uživatelem: první blok má nejdřív poutavě uvést smysl produktu, ne hned ukázat video. Předchozí nadpis „Built for coaches who create“ podle něj sám o sobě není dostatečně nosný a rychlost tvorby je podceněná.
+- Rozsah: pouze první podsekce `/jb-drill/` (`jb-drill/index.html`); pozdější video karty a přehrávač zůstávají.
+
+### 2026-09-20 — Úvod, který drží tempo s trenérem
+
+- Rozhodnutí: v „THE IDEA“ se pracovní nadpis mění na „A tool that keeps up with you.“ První odstavec zachovává motiv trenéra tvořícího vlastní cvičení, přirozeného kreslení a méně vysvětlování u tabule. Druhý, odsazený odstavec uzavírá rychlost přes kontrast papírové skici a hotového drillu: „Paper is fast for a sketch. JB_Drill stays fast all the way to a finished drill.“ Celý textový úvod odděluje od následující podsekce tenká linka v tokenu `--line` s prostorem po obou stranách.
+- Důvod potvrzený uživatelem: úvod má být nosnější a výslovně ukázat, že JBD nezpomaluje nápady a zůstává rychlé i při dokončování drillu. Samotné „Built for coaches who create“ patří spíše do vysvětlujícího textu než do hlavního titulku.
+- Rozsah: pouze první podsekce `/jb-drill/` (`jb-drill/index.html`, `docs.css`); další karty, sdílený dokumentační styl a přepínač zůstávají beze změny.
+
+### 2026-09-20 — „Finally, software that helps“ bez přímého oslovení
+
+- Rozhodnutí: uživatel vybral pro „THE IDEA“ nadpis „Finally, software that helps.“ jako stručné vyjádření hlavního důvodu vzniku JB_Drill. První odstavec je převeden důsledně do třetí osoby: cílí na trenéry tvořící vlastní cvičení, popisuje přirozené kreslení, automatizaci opakované práce a sdílení před tréninkem. Oddělený odstavec o rychlosti od skici k hotovému drillu i tenká dělicí linka zůstávají.
+- Důvod potvrzený uživatelem: nemá rád přímé oslovení čtenáře, ale chce, aby nadpis sebevědomě vystihl skutečný přínos nástroje, který při přípravě pomáhá místo zpomalování. „Finally“ vyjadřuje úlevu po zkušenosti s těžkopádnými editory.
+- Rozsah: pouze první podsekce `/jb-drill/` (`jb-drill/index.html`); bez změny stylů a ostatních sekcí.
+
+### 2026-09-20 — Hlavní čtveřice v Overview, detaily ve Features
+
+- Rozhodnutí: čtyři textové karty Smart drawing, Animate, Tactics a JB_Play se přesouvají z Features do Overview hned za „THE IDEA“. Uvádí je „WHAT'S IN THE BOX“ a pracovní nadpis „From first sketch to shared play.“; pod kartami je stejná jemná dělicí linka jako za úvodem. Features zatím obsahuje pouze krátký úvod pro budoucí drobnější funkce a QOL ukázky. Jeho obsahová osa se shoduje s Overview, aby přepnutí nepůsobilo jako posun stránky.
+- Důvod potvrzený uživatelem: Overview má rychle představit čtyři zásadní oblasti produktu. Features nemá stejnou čtveřici opakovat v kartách, ale později podrobněji ukázat menší praktické funkce a části těchto velkých oblastí.
+- Rozsah: `/jb-drill/` (`jb-drill/index.html`, `docs.css`); finální texty a obsah Features se budou dál navrhovat.
+
+### 2026-09-20 — Rozšíření hlavních schopností o Paint, Library a export
+
+- Rozhodnutí: Overview nyní krátce ukazuje sedm oblastí v pořadí Smart drawing, Paint, Animate, Tactics, Library, PDF & MP4 a JB_Play. Paint je skutečný název módu v aplikaci; karta jeho přínos vysvětluje jako rychlé volné poznámky na ledě při zápase nebo při rozmyšlení prostorového cvičení, aniž by „Sketch“ vydávala za název módu. Library zdůrazňuje uchování vlastního trenérského know-how a sestavení session ze zachovaných drillů. PDF a MP4 zmiňují klubovou identitu. Poslední karta JB_Play přes celou šířku uzavírá cestu od kreslení ke sdílení; na mobilu se všechny karty řadí pod sebe.
+- Důvod potvrzený uživatelem: tyto tři přínosy mají být viditelné už v Overview, protože jsou samy o sobě důležitou součástí produktu. Features se nadále soustředí na dílčí a QOL funkce.
+- Rozsah: `/jb-drill/` (`jb-drill/index.html`, `docs.css`); bez změny funkcí webu nebo aplikace.
+
+### 2026-09-20 — Pořadí hlavních schopností podle důležitosti
+
+- Rozhodnutí: sedm karet v Overview jde nyní v pořadí Smart drawing, Animate, Tactics, Library, JB_Play, Paint, PDF & MP4. JB_Play zůstává přes celou šířku, ale je páté, nikoli poslední; Paint a export tvoří závěrečnou dvojici. Číslování i slovní štítky sledují nové pořadí.
+- Důvod potvrzený uživatelem: core schopnosti mají být seřazeny podle významu pro produkt, nikoli podle posloupnosti použití nebo přesné shody všech marketingových titulků s názvy funkcí v aplikaci.
+- Rozsah: pouze pořadí a popisky karet v `/jb-drill/` (`jb-drill/index.html`); vzhled komponenty zůstává stejný.
+
+### 2026-09-20 — JB_Play před Library bez změny rozvržení
+
+- Rozhodnutí: ve stávající sedmikartové mřížce se prohodil pouze obsah pozic 04 a 05. JB_Play je nyní čtvrté a Library pátá, celá šířka stále patří páté kartě. Ostatní karty i rozvržení zůstaly stejné.
+- Důvod potvrzený uživatelem: Animate a Tactics jsou stejně důležité cesty k hotové ukázce, po nich následuje sdílení přes JB_Play. Library patří v pořadí až za ně; uživatel nechce kvůli tomu zavádět tři karty vedle sebe ani jiné seskupení.
+- Rozsah: `/jb-drill/` (`jb-drill/index.html`, `STYLE_GUIDE.md`); žádná změna CSS.
+
+### 2026-09-20 — Platformy v úvodu a výraznější jméno v Hero
+
+- Rozhodnutí: závěr „THE IDEA“ před dosavadní finální větou krátce jmenuje dotykové ovládání na Android tabletech, editaci myší a klávesnicí na Windows PC a společný formát drillů. V Hero produktové stránky je JB_Drill v původním kontextovém štítku zvětšený a světlejší; „Product Overview“ zůstává menší oranžové upřesnění. Hlavní slogan a Hero Help se nemění.
+- Důvod potvrzený uživatelem: dvě odlišná pohodlná prostředí práce jsou důležitou výhodou, která má být jasná už v úvodu. Název produktu byl naopak v Hero příliš malý a v konkurenci sloganu se ztrácel.
+- Rozsah: produktová stránka `/jb-drill/` (`jb-drill/index.html`, `docs.css`); bez změny ostatních stránek a bez tvrzení o automatické synchronizaci či licencování.
+
+### 2026-09-20 — Platformová věta skutečně až na konci úvodu
+
+- Rozhodnutí: věta o tabletu a PC následuje v „THE IDEA“ až po větě „Paper is fast for a sketch…“. Je oddělená malým odstupem, celá kurzivou a její písmo je o 2 px větší než běžný text této sekce (18 místo 16 px).
+- Důvod potvrzený uživatelem: informace o platformách má být skutečným posledním sdělením úvodu a mírně vystoupit z okolního textu; předchozí vložení před větu o papírové skice neodpovídalo zamýšlenému pořadí.
+- Rozsah: pouze úvod Overview na `/jb-drill/` (`jb-drill/index.html`, `docs.css`); Hero a ostatní texty se nemění.
+
+### 2026-09-20 — Samostatný Download a typografické názvy pohledů
+
+- Rozhodnutí: provizorní obchodní karta z Overview mizí. Na jejím místě a v panelu Features stojí příslušný název „JB_Drill Overview“ / „JB_Drill Features“ s tenkým názvem produktu a tučným označením pohledu, ve stejné velikosti a fontu jako dosavadní „User Guide“ v dokumentaci. Download má samostatnou cestu `/jb-drill/download/`, na kterou vede primární tlačítko společného Hero; nepřidává se jako třetí záložka ani jako další odkaz do patičky produktové stránky. Staré lokální `#download` přesměruje na novou cestu.
+- Důvod potvrzený uživatelem: Overview a Features jsou dva pohledy na produkt, zatímco Download má pojmout i vysvětlení licencování a skutečnosti, že Personal/Pro stačí koupit jen na jedné platformě. Velký název nemá přebírat výšku původní obchodní karty; má navazovat na vyzkoušenou tenko-tučenou typografii příručky.
+- Rozsah: `/jb-drill/` a `/jb-drill/download/` (`jb-drill/index.html`, `jb-drill/product-view.js`, `jb-drill/download/index.html`, `docs.css`). Download zatím ukazuje neaktivní místa pro obchody a pouze ověřené limity Free, Personal a Pro podle aktuálního produktového helpu; ceny ani funkční obchodní odkazy nejsou vymyšlené.
+
+### 2026-09-20 — Kratší podtržítko jen v tenkých titulcích
+
+- Rozhodnutí: v titulcích „JB_Drill Overview“, „JB_Drill Features“ a „JB_Drill Download“ je znak `_` oddělený do vlastního inline prvku. Je vodorovně zmenšený na třetinu a má tomu odpovídající šířku v rozvržení, takže zbytek názvu nezůstává nepřirozeně odsunutý. Vertikální tloušťka znaku a textový obsah titulku zůstávají; běžné výskyty názvu JB_Drill se nemění.
+- Důvod potvrzený uživatelem: tenký řez display fontu má příliš dlouhé podtržítko a ruší vyvážení nadpisů. Jde o lokální typografickou korekci, ne o změnu fontu nebo názvu produktu.
+- Rozsah: tři velké titulky na `/jb-drill/` a `/jb-drill/download/` (`jb-drill/index.html`, `jb-drill/download/index.html`, `docs.css`).
+
+### 2026-09-20 — Kompaktnější karty hlavních funkcí
+
+- Rozhodnutí: u sedmi karet v Overview jsou výrazně menší horní a dolní odsazení, odstupy mezi štítkem, nadpisem a popisem i řádkování popisu; zmenšila se také mezera mezi kartami a odstup mřížky od nadpisu. Po prvním zkrácení uživatel požádal o ještě úspornější variantu, proto mají karty nyní svislé odsazení 10 px a mezery v mřížce 8 px. Velikost nadpisů, dvousloupcové rozvržení a pořadí karet zůstávají.
+- Důvod potvrzený uživatelem: tento blok má být jen rychlý přehled hlavních schopností a dosavadní výška zabírala téměř celou stránku; první kompaktnější varianta byla lepší, ale stále ještě zbytečně vysoká.
+- Rozsah: pouze karty hlavních funkcí v Overview na `/jb-drill/` (`docs.css`); ostatní karty a obsah webu se nemění.
+
+### 2026-09-20 — Nejsilnější ukázka první v produktovém Hero
+
+- Rozhodnutí: v Hero carouselu se prohazuje první a třetí klip. FastDrillDrawing se načítá jako první, EasyCurveEdit se přesouvá na třetí pozici; přístupné názvy a viditelný popisek sledují nové pořadí. Video soubory ani samostatné video karty v Overview se nemění.
+- Důvod potvrzený uživatelem: nejlepší ukázka má být vidět hned při načtení stránky.
+- Rozsah: pouze Hero carousel na `/jb-drill/` (`jb-drill/index.html`).
+
+### 2026-09-25 — Finální Hero Art jako úvod carouselu
+
+- Rozhodnutí: první položkou produktového Hero carouselu je finální fotografický JB_Drill Hero Art bez vloženého textového loga. Statický obraz je připravený jako desetisekundový klip ve stejném poměru 2:1, rozlišení 1280 × 640 a dvojici formátů AV1 WebM / H.264 MP4 jako ostatní položky, takže používá stejné přechody, progress bar a fallback. Dosavadních pět ukázek následuje v nezměněném pořadí a délce. Textové jméno JB_Drill v kontextovém štítku Hero současně nahrazuje originální bílé SVG wordmark logo dodané uživatelem; „Product Overview“ zůstává samostatný oranžový kontext.
+- Důvod potvrzený uživatelem: nový Hero Art má být první obraz, který návštěvník po načtení produktové stránky uvidí; deset sekund mu dává klidný prostor bez zbytečně dlouhého zastavení carouselu. Použití bezejmenné fotografie a originálního SVG v kontextovém štítku zabraňuje souběhu dvou log a zachovává skutečný tvar značky místo fontové aproximace.
+- Rozsah: pouze Hero carousel a kontextový štítek na `/jb-drill/` (`jb-drill/index.html`, `docs.css`, `assets/JB_Drill_Logo_white.svg`, `assets/jb-drill-hero/shot-00.webm`, `assets/jb-drill-hero/shot-00.mp4`).
 
 ### 2026-09-16 — Záměr interaktivního atomu v hlavním hero
 
@@ -297,6 +438,24 @@ Renderer používá `high-performance`, nejvýše 60 renderovaných FPS a aritme
 Na dotyku funguje swipe i tap. Swipe používá stejnou dráhovou fyziku jako kurzor; tap pouze vloží bodový impulz a neobchází podmínku energie vnitřního obalu. Převážně svislý tah mimo jádro scrolluje. Jádro sleduje 56px neviditelný hit target s vlastním `touch-action: none`: tap zůstává impulzem, pohyb nad 8 px otáčí soustavou. Zbytek scény zachovává `pan-y pinch-zoom`, další prsty se ignorují a náklon zařízení zůstává mimo rozsah.
 
 Preset a jeho export zůstávají ve verzi 9, protože gesta i výkonové stupně jsou runtime pravidla. Diagnostika `snapshot()` nově uvádí FPS, stupeň, efektivní oktávy, segmentaci a pixel ratio. Automatická regrese ověřuje všechny tři stupně, mobilní DPR, limit 60 FPS, tap, swipe, scroll, druhý prst, rotaci a hit target při ShakyCamu. Reálným akceptačním bodem je ustálených alespoň 50 FPS na Idea Tab Pro; pokud je ani `reduced` nedosáhne, rozlišení se bez nového výslovného rozhodnutí nesnižuje.
+
+### 2026-09-21 — Pracovní studie stránky JB_Drill Features
+
+Uživatel požaduje nejprve porovnat několik způsobů, jak na samostatné stránce Features prezentovat menší unikátní funkce a workflow detaily. Nejde zatím o finální strukturu ani schválený výběr funkcí. Přepínač tří konceptů je proto pouze dočasný pracovní nástroj přímo ve stránce:
+
+- **Feature Stories** seskupují několik souvisejících detailů do tří velkých, video-led bloků. Varianta testuje klidnější stránku s menším počtem zapamatovatelných sdělení.
+- **Feature Catalog** používá jedno úvodní video a hustší síť dvanácti kompaktních karet. Varianta testuje rychlou skenovatelnost a možnost ukázat šíři nástrojů.
+- **Friction Removed** staví vždy vedle sebe známou repetitivní práci a způsob, jakým ji JB_Drill odstraňuje. Varianta testuje komunikaci přínosu před názvem mechanismu.
+
+Seznam záměrně nerozmělňuje velké Core Features z Overview. Po upřesnění uživatelem staví hlavně na konkrétních hokejových automatikách: Bank Pass, Rim Pass, automatický Saucer Pass a skok přes hokejku, sebrání puku z ledu nebo hromádky, Finesse a její automatické vložení, Toe Drag Release s automatickým zamířením, generovaný Punch Turn, techniky měnící existující jízdu, board alignment, automatické fronty a symetrie. Samostatnou skupinu tvoří Drill Notes, exportní identita a kompletní PDF s nákresem, poznámkami, seznamem vybavení a klubovým logem. Původně navržené obecnější QOL funkce zůstávají použitelné jako doplňkový obsah, ale nemají vytlačit tyto charakteristické schopnosti. Použité klipy a postery z existujícího hero jsou pouze vizuální placeholdery pro posouzení formátu; před publikací musí být nahrazené demonstracemi odpovídajícími konkrétním textům.
+
+Studie znovu používá současné tokeny, video kartu a modal bez nové barvy, fontu nebo externí závislosti. Ovládání variant funguje jako přístupný tablist i z klávesnice a responzivně přechází z dvou nebo tří sloupců na jeden. Finální stránka má po rozhodnutí uživatele obsahovat jen jeden vybraný formát; přepínač a ostatní varianty se odstraní.
+
+### 2026-09-29 — Čitelnost podpůrných textů na stránkách JB_Drill
+
+Marketingové stránky Overview, Features a Download zachovávají pro krátké podpůrné texty a texty karet schválený `--font-ui` (Smooch Sans), aby zůstaly součástí stejného vizuálního jazyka. Jejich velikost ale nesmí klesat na drobných 12–13 px: běžné texty karet mají mít přibližně 15–18 px podle kontextu, volnější řádkování a na světlém pozadí tmavší odstín `#556472`. Delší odstavce v Overview, které už používají čitelnější `--font-reading` (Verdana), zůstávají beze změny.
+
+Důvod: jako čitelný etalon uživatel označil úvodní odstavec Overview „Great coaching ideas shouldn’t…“. Ostatní šedé texty byly při stejné velikosti obrazovky znatelně hůře čitelné, ale výměna schváleného stylového fontu na všech místech by narušila charakter webu. Řešením je proto větší velikost, řádkování a mírně vyšší kontrast, nikoli nový font. Rozsah rozhodnutí: `docs.css`, produktové stránky JB_Drill Overview, Features a Download včetně jejich karet.
 
 ## Text pro nové vlákno
 
