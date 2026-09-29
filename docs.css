@@ -770,6 +770,9 @@
   --feature-card-gap: 5px;
   --feature-preview-width: 213px;
   --feature-expanded-extra: calc(var(--feature-preview-width) + 4px);
+  --feature-motion-duration: 210ms;
+  --feature-motion-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --feature-fade-duration: 140ms;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--feature-card-gap);
@@ -793,16 +796,16 @@
   background: rgba(255, 255, 255, 0.34);
   overflow: visible;
   transition:
-    top 280ms linear,
-    left 280ms linear,
-    width 280ms linear,
-    height 280ms linear,
-    margin-bottom 280ms linear,
-    padding 280ms linear,
-    border-color 180ms linear,
-    border-radius 180ms linear,
-    background-color 180ms linear,
-    box-shadow 180ms linear;
+    top var(--feature-motion-duration) var(--feature-motion-easing),
+    left var(--feature-motion-duration) var(--feature-motion-easing),
+    width var(--feature-motion-duration) var(--feature-motion-easing),
+    height var(--feature-motion-duration) var(--feature-motion-easing),
+    margin-bottom var(--feature-motion-duration) var(--feature-motion-easing),
+    padding var(--feature-motion-duration) var(--feature-motion-easing),
+    border-color var(--feature-fade-duration) var(--feature-motion-easing),
+    border-radius var(--feature-fade-duration) var(--feature-motion-easing),
+    background-color var(--feature-fade-duration) var(--feature-motion-easing),
+    box-shadow var(--feature-fade-duration) var(--feature-motion-easing);
 }
 
 .feature-catalog-card > span:first-child {
@@ -813,7 +816,7 @@
   margin: 6px 0 4px;
   font-size: 18px;
   line-height: 1;
-  transition: font-size 280ms linear;
+  transition: font-size var(--feature-motion-duration) var(--feature-motion-easing);
 }
 
 .feature-catalog-card p {
@@ -823,7 +826,7 @@
   font: 500 15px/1.28 var(--font-ui);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  transition: font-size 280ms linear;
+  transition: font-size var(--feature-motion-duration) var(--feature-motion-easing);
 }
 
 .feature-catalog-card--media:hover,
@@ -898,7 +901,7 @@
   box-shadow: 0 8px 22px rgba(34, 31, 26, 0.17);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 220ms linear;
+  transition: opacity var(--feature-fade-duration) var(--feature-motion-easing);
 }
 
 .feature-catalog-card:nth-child(3n) .feature-catalog-preview {
@@ -2020,7 +2023,10 @@
     margin-top: 0;
     border-width: 0;
     opacity: 0;
-    transition: max-height 280ms linear, margin-top 280ms linear, opacity 220ms linear;
+    transition:
+      max-height var(--feature-motion-duration) var(--feature-motion-easing),
+      margin-top var(--feature-motion-duration) var(--feature-motion-easing),
+      opacity var(--feature-fade-duration) var(--feature-motion-easing);
   }
 
   .feature-catalog-card--media:hover .feature-catalog-preview,
