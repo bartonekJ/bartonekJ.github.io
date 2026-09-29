@@ -482,6 +482,8 @@ Pokud uživatel neurčí jinak, poster pro nové Features video se vytváří z 
 
 Kapitola `Action intelligence` používá stejný vzor pro Automatic Saucer Pass, Automatic stick jump, Automatic Finesse a Generated Punch Turn. Po zmenšení rozbalené karty už pomalý lineární pohyb není potřeba: geometrie karty se mění za 210 ms s výraznou ease-out křivkou `cubic-bezier(0.16, 1, 0.3, 1)` a náhled se prolíná za 140 ms. Zrychlení nesmí měnit ochrannou hover oblast ani způsobit návrat problikávání na hraně karty.
 
+Kapitola `Techniques on the route` používá vlastní demonstrace pro Technique drag & drop, Pivot & Transition, Toe Drag Release a Finesse editing. Stejně jako předchozí kapitoly bere výchozí poster z posledního použitelného snímku a používá společný 16:9 náhled, rozbalení i video modal; nevytváří vlastní variantu karty.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.
