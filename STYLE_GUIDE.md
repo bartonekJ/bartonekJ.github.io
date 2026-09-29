@@ -467,6 +467,10 @@ Windows karta na Download stránce je po publikaci aplikace aktivní odkaz na ve
 
 Sedm kompaktních karet v úvodním přehledu funguje jako navigace na konkrétní podsekce s videem. Samotné podsekce přebírají klidnější princip původní varianty Feature Stories: společný nadpis a pod ním vedle sebe vysvětlující text a video karta, jejichž strany se po sekcích střídají. Na mobilu zůstává stabilní pořadí text před videem. Uživatel zvolil tento rytmus, aby Overview nebylo jen dlouhou svislou řadou textu a samostatných karet, ale návštěvníka vedlo od rychlého přehledu přímo k jednotlivým ukázkám.
 
+### 2026-09-29 — JB_Play v produktové navigaci
+
+Hlavičky stránek JB_Drill obsahují přímý odkaz `JB_Play` na `https://play.bybartonek.com/`. JB_Play není pouze cíl sdílených odkazů, ale samostatně použitelný online přehrávač pro otevírání vyexportovaných souborů, proto má být dostupný přímo z produktového webu. Odkaz používá existující styl `.site-nav`; nepřidává novou variantu navigace. Na úzkých displejích zůstává zachováno současné pravidlo, které ukazuje jen aktivní položku dané stránky.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.
