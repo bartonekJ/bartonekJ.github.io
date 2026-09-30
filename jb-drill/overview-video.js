@@ -5,11 +5,13 @@
 
   const title = dialog.querySelector('#overview-video-title');
   const closeButton = dialog.querySelector('.overview-video-close');
+  const stage = dialog.querySelector('.overview-video-stage');
   const video = dialog.querySelector('.overview-video-media');
   const webmSource = video.querySelector('source[type="video/webm"]');
   const mp4Source = video.querySelector('source[type="video/mp4"]');
   const playButton = dialog.querySelector('.overview-video-toggle');
   const fullscreenStartButton = dialog.querySelector('.overview-video-fullscreen-start');
+  const controls = dialog.querySelector('.overview-video-controls');
   const progress = dialog.querySelector('.overview-video-progress');
   const time = dialog.querySelector('.overview-video-time');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -20,6 +22,7 @@
   let openingAnimation = null;
   let closing = false;
   let mobileFullscreenSession = false;
+  let mobileLayer = null;
 
   function cardRoot(card) {
     return card.closest('.overview-preview-card, .feature-catalog-card');
@@ -93,11 +96,32 @@
     }
   }
 
+  function mountMobileLayer() {
+    if (mobileLayer) return;
+    mobileLayer = document.createElement('div');
+    mobileLayer.className = 'overview-video-mobile-layer';
+    mobileLayer.append(video, controls);
+    document.body.append(mobileLayer);
+    dialog.removeAttribute('open');
+  }
+
+  function restoreMobileLayer() {
+    if (!mobileLayer) return;
+    stage.insertBefore(video, fullscreenStartButton);
+    dialog.append(controls);
+    mobileLayer.remove();
+    mobileLayer = null;
+  }
+
   async function enterMobileFullscreen() {
     if (!mobileFullscreenSession || closing) return;
     fullscreenStartButton.disabled = true;
     const root = document.documentElement;
     const fullscreenRequestAvailable = Boolean(root.requestFullscreen || root.webkitRequestFullscreen);
+    dialog.classList.remove('is-mobile-launch');
+    dialog.classList.add('is-mobile-playback');
+    document.documentElement.classList.add('is-overview-video-fullscreen');
+    mountMobileLayer();
     try {
       if (root.requestFullscreen) {
         await root.requestFullscreen({ navigationUI: 'hide' });
@@ -106,9 +130,6 @@
         await new Promise((resolve) => requestAnimationFrame(resolve));
       }
       if (fullscreenElement()) {
-        document.documentElement.classList.add('is-overview-video-fullscreen');
-        dialog.classList.remove('is-mobile-launch');
-        dialog.classList.add('is-mobile-playback');
         await lockLandscape();
         video.play().catch(updateControls);
         return;
@@ -116,6 +137,11 @@
     } catch {
       // Try the native mobile video player below.
     }
+
+    restoreMobileLayer();
+    document.documentElement.classList.remove('is-overview-video-fullscreen');
+    dialog.classList.remove('is-mobile-playback');
+    if (!dialog.open) dialog.showModal();
 
     if (!fullscreenRequestAvailable && enterNativeVideoFullscreen()) return;
 
@@ -146,6 +172,7 @@
       }
     }
 
+    restoreMobileLayer();
     dialog.classList.remove('is-mobile-launch', 'is-mobile-playback');
     fullscreenStartButton.disabled = false;
     video.controls = false;
@@ -196,13 +223,18 @@
   }
 
   async function closeCard() {
-    if (!dialog.open || closing) return;
+    if ((!dialog.open && !mobileLayer) || closing) return;
     closing = true;
     const wasMobileFullscreen = mobileFullscreenSession;
     video.pause();
     openingAnimation?.cancel();
     openingAnimation = null;
     if (wasMobileFullscreen) await leaveMobileFullscreen();
+
+    if (wasMobileFullscreen && !dialog.open) {
+      resetPlayer();
+      return;
+    }
 
     if (activeCard && !wasMobileFullscreen && !reducedMotion.matches) {
       const cardRect = cardRoot(activeCard).getBoundingClientRect();
@@ -220,6 +252,26 @@
     } else {
       dialog.close();
     }
+  }
+
+  function resetPlayer() {
+    unlockOrientation();
+    restoreMobileLayer();
+    document.documentElement.classList.remove('is-overview-video-fullscreen');
+    dialog.classList.remove('is-mobile-launch', 'is-mobile-playback');
+    fullscreenStartButton.disabled = false;
+    video.controls = false;
+    video.playsInline = true;
+    mobileFullscreenSession = false;
+    video.pause();
+    webmSource.removeAttribute('src');
+    mp4Source.removeAttribute('src');
+    video.removeAttribute('poster');
+    video.load();
+    updateControls();
+    activeCard?.focus({ preventScroll: true });
+    activeCard = null;
+    closing = false;
   }
 
   function togglePlayback() {
@@ -260,30 +312,15 @@
     closeCard();
   });
   document.addEventListener('fullscreenchange', () => {
-    if (mobileFullscreenSession && !fullscreenElement() && dialog.open && !closing) closeCard();
+    if (mobileFullscreenSession && !fullscreenElement() && (dialog.open || mobileLayer) && !closing) closeCard();
   });
   document.addEventListener('webkitfullscreenchange', () => {
-    if (mobileFullscreenSession && !fullscreenElement() && dialog.open && !closing) closeCard();
+    if (mobileFullscreenSession && !fullscreenElement() && (dialog.open || mobileLayer) && !closing) closeCard();
   });
   video.addEventListener('webkitendfullscreen', () => {
     if (mobileFullscreenSession && dialog.open && !closing) closeCard();
   });
   dialog.addEventListener('close', () => {
-    unlockOrientation();
-    document.documentElement.classList.remove('is-overview-video-fullscreen');
-    dialog.classList.remove('is-mobile-launch', 'is-mobile-playback');
-    fullscreenStartButton.disabled = false;
-    video.controls = false;
-    video.playsInline = true;
-    mobileFullscreenSession = false;
-    video.pause();
-    webmSource.removeAttribute('src');
-    mp4Source.removeAttribute('src');
-    video.removeAttribute('poster');
-    video.load();
-    updateControls();
-    activeCard?.focus({ preventScroll: true });
-    activeCard = null;
-    closing = false;
+    resetPlayer();
   });
 })();

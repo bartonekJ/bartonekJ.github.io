@@ -1392,11 +1392,12 @@
   overflow: hidden;
 }
 
-:root.is-overview-video-fullscreen body > :not(.overview-video-dialog) {
+:root.is-overview-video-fullscreen body > :not(.overview-video-dialog):not(.overview-video-mobile-layer) {
   visibility: hidden;
 }
 
-:root.is-overview-video-fullscreen .overview-video-dialog {
+:root.is-overview-video-fullscreen .overview-video-dialog,
+:root.is-overview-video-fullscreen .overview-video-mobile-layer {
   visibility: visible;
 }
 
@@ -1532,6 +1533,38 @@
 .overview-video-dialog.is-mobile-playback::backdrop {
   background: transparent;
   backdrop-filter: none;
+}
+
+.overview-video-mobile-layer {
+  position: fixed;
+  z-index: 2147483647;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+  color: var(--warm-white);
+}
+
+.overview-video-mobile-layer .overview-video-media {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.overview-video-mobile-layer .overview-video-controls {
+  grid-template-columns: 40px minmax(0, 1fr);
+  min-height: 52px;
+  padding: 8px max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: #000;
+}
+
+.overview-video-mobile-layer .overview-video-time {
+  display: none;
 }
 
 .overview-video-dialog.is-mobile-playback .overview-video-header,
