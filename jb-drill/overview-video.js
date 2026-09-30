@@ -9,6 +9,7 @@
   const webmSource = video.querySelector('source[type="video/webm"]');
   const mp4Source = video.querySelector('source[type="video/mp4"]');
   const playButton = dialog.querySelector('.overview-video-toggle');
+  const fullscreenStartButton = dialog.querySelector('.overview-video-fullscreen-start');
   const progress = dialog.querySelector('.overview-video-progress');
   const time = dialog.querySelector('.overview-video-time');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -77,34 +78,50 @@
   }
 
   function enterNativeVideoFullscreen() {
-    if (typeof video.webkitEnterFullscreen !== 'function') return;
+    if (typeof video.webkitEnterFullscreen !== 'function') return false;
     video.controls = true;
     video.playsInline = false;
     try {
-      video.webkitEnterFullscreen?.();
+      video.play().catch(updateControls);
+      video.webkitEnterFullscreen();
+      dialog.classList.remove('is-mobile-launch');
+      return true;
     } catch {
-      // Keep the normal modal as a final fallback.
+      video.controls = false;
+      video.playsInline = true;
+      return false;
     }
   }
 
-  function enterMobileFullscreen() {
-    mobileFullscreenSession = true;
-    dialog.classList.add('is-mobile-playback');
-
-    const requestFullscreen = dialog.requestFullscreen || dialog.webkitRequestFullscreen;
-    if (!requestFullscreen) {
-      enterNativeVideoFullscreen();
-      return;
-    }
-
+  async function enterMobileFullscreen() {
+    if (!mobileFullscreenSession || closing) return;
+    fullscreenStartButton.disabled = true;
+    const root = document.documentElement;
+    const fullscreenRequestAvailable = Boolean(root.requestFullscreen || root.webkitRequestFullscreen);
     try {
-      const request = requestFullscreen.call(dialog, { navigationUI: 'hide' });
-      Promise.resolve(request).then(lockLandscape).catch(() => {
-        // The full-viewport dialog remains usable if browser fullscreen is denied.
-      });
+      if (root.requestFullscreen) {
+        await root.requestFullscreen({ navigationUI: 'hide' });
+      } else if (root.webkitRequestFullscreen) {
+        root.webkitRequestFullscreen();
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+      if (fullscreenElement()) {
+        dialog.classList.remove('is-mobile-launch');
+        dialog.classList.add('is-mobile-playback');
+        await lockLandscape();
+        video.play().catch(updateControls);
+        return;
+      }
     } catch {
-      // The full-viewport dialog remains usable if browser fullscreen is denied.
+      // Try the native mobile video player below.
     }
+
+    if (!fullscreenRequestAvailable && enterNativeVideoFullscreen()) return;
+
+    dialog.classList.remove('is-mobile-launch');
+    fullscreenStartButton.disabled = false;
+    playButton.focus({ preventScroll: true });
+    video.play().catch(updateControls);
   }
 
   async function leaveMobileFullscreen() {
@@ -118,7 +135,7 @@
       }
     }
 
-    if (fullscreenElement() === dialog) {
+    if (fullscreenElement()) {
       const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
       try {
         await exitFullscreen?.call(document);
@@ -127,7 +144,8 @@
       }
     }
 
-    dialog.classList.remove('is-mobile-playback');
+    dialog.classList.remove('is-mobile-launch', 'is-mobile-playback');
+    fullscreenStartButton.disabled = false;
     video.controls = false;
     video.playsInline = true;
     mobileFullscreenSession = false;
@@ -156,8 +174,10 @@
     dialog.showModal();
     const useMobileFullscreen = shouldUseMobileFullscreen();
     if (useMobileFullscreen) {
-      enterMobileFullscreen();
-      playButton.focus({ preventScroll: true });
+      mobileFullscreenSession = true;
+      dialog.classList.add('is-mobile-launch');
+      fullscreenStartButton.disabled = false;
+      fullscreenStartButton.focus({ preventScroll: true });
     } else {
       closeButton.focus({ preventScroll: true });
     }
@@ -170,7 +190,7 @@
       openingAnimation.finished.then(() => openingAnimation?.cancel()).catch(() => {});
     }
 
-    video.play().catch(updateControls);
+    if (!useMobileFullscreen) video.play().catch(updateControls);
   }
 
   async function closeCard() {
@@ -220,8 +240,11 @@
     }
   }
   closeButton.addEventListener('click', closeCard);
+  fullscreenStartButton.addEventListener('click', enterMobileFullscreen);
   playButton.addEventListener('click', togglePlayback);
-  video.addEventListener('click', togglePlayback);
+  video.addEventListener('click', () => {
+    if (!dialog.classList.contains('is-mobile-launch')) togglePlayback();
+  });
   video.addEventListener('ended', closeCard);
   for (const eventName of ['loadedmetadata', 'durationchange', 'timeupdate', 'play', 'pause', 'seeked']) {
     video.addEventListener(eventName, updateControls);
@@ -245,7 +268,8 @@
   });
   dialog.addEventListener('close', () => {
     unlockOrientation();
-    dialog.classList.remove('is-mobile-playback');
+    dialog.classList.remove('is-mobile-launch', 'is-mobile-playback');
+    fullscreenStartButton.disabled = false;
     video.controls = false;
     video.playsInline = true;
     mobileFullscreenSession = false;

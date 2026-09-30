@@ -1418,9 +1418,19 @@
 
 .overview-video-close:focus-visible,
 .overview-video-toggle:focus-visible,
+.overview-video-fullscreen-start:focus-visible,
 .overview-video-progress:focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 2px;
+}
+
+.overview-video-stage {
+  position: relative;
+  display: grid;
+  min-height: 0;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
 }
 
 .overview-video-media {
@@ -1431,6 +1441,37 @@
   background: #000;
   object-fit: contain;
   cursor: pointer;
+}
+
+.overview-video-fullscreen-start {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 9px;
+  background: rgba(29, 29, 28, 0.9);
+  color: var(--warm-white);
+  font: 800 18px/1 var(--font-display);
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.overview-video-fullscreen-start span {
+  color: var(--orange);
+  font: 700 14px/1 sans-serif;
+}
+
+.overview-video-dialog.is-mobile-launch .overview-video-fullscreen-start {
+  display: inline-flex;
+}
+
+.overview-video-dialog.is-mobile-launch .overview-video-controls {
+  display: none;
 }
 
 .overview-video-controls {
@@ -1485,6 +1526,14 @@
   max-height: none;
   aspect-ratio: auto;
   object-fit: contain;
+}
+
+.overview-video-dialog.is-mobile-playback .overview-video-stage,
+.overview-video-dialog.is-mobile-playback:fullscreen .overview-video-stage,
+.overview-video-dialog.is-mobile-playback:-webkit-full-screen .overview-video-stage {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
 }
 
 .overview-video-dialog.is-mobile-playback .overview-video-controls,
