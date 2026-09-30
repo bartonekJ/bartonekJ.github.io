@@ -23,6 +23,7 @@
   let closing = false;
   let mobileFullscreenSession = false;
   let mobileLayer = null;
+  let suppressDialogCloseReset = false;
 
   function cardRoot(card) {
     return card.closest('.overview-preview-card, .feature-catalog-card');
@@ -102,7 +103,10 @@
     mobileLayer.className = 'overview-video-mobile-layer';
     mobileLayer.append(video, controls);
     document.body.append(mobileLayer);
-    dialog.removeAttribute('open');
+    if (dialog.open) {
+      suppressDialogCloseReset = true;
+      dialog.close();
+    }
   }
 
   function restoreMobileLayer() {
@@ -122,11 +126,12 @@
     dialog.classList.add('is-mobile-playback');
     document.documentElement.classList.add('is-overview-video-fullscreen');
     mountMobileLayer();
+    const fullscreenTarget = mobileLayer || root;
     try {
-      if (root.requestFullscreen) {
-        await root.requestFullscreen({ navigationUI: 'hide' });
-      } else if (root.webkitRequestFullscreen) {
-        root.webkitRequestFullscreen();
+      if (fullscreenTarget.requestFullscreen) {
+        await fullscreenTarget.requestFullscreen({ navigationUI: 'hide' });
+      } else if (fullscreenTarget.webkitRequestFullscreen) {
+        fullscreenTarget.webkitRequestFullscreen();
         await new Promise((resolve) => requestAnimationFrame(resolve));
       }
       if (fullscreenElement()) {
@@ -171,6 +176,10 @@
         // Continue closing the dialog if fullscreen has already ended.
       }
     }
+
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
 
     restoreMobileLayer();
     dialog.classList.remove('is-mobile-launch', 'is-mobile-playback');
@@ -321,6 +330,10 @@
     if (mobileFullscreenSession && dialog.open && !closing) closeCard();
   });
   dialog.addEventListener('close', () => {
+    if (suppressDialogCloseReset) {
+      suppressDialogCloseReset = false;
+      return;
+    }
     resetPlayer();
   });
 })();
