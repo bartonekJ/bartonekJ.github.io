@@ -1455,6 +1455,53 @@
   text-align: right;
 }
 
+.overview-video-dialog.is-mobile-playback,
+.overview-video-dialog.is-mobile-playback:fullscreen,
+.overview-video-dialog.is-mobile-playback:-webkit-full-screen {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+  box-shadow: none;
+}
+
+.overview-video-dialog.is-mobile-playback .overview-video-header,
+.overview-video-dialog.is-mobile-playback:fullscreen .overview-video-header,
+.overview-video-dialog.is-mobile-playback:-webkit-full-screen .overview-video-header {
+  display: none;
+}
+
+.overview-video-dialog.is-mobile-playback .overview-video-media,
+.overview-video-dialog.is-mobile-playback:fullscreen .overview-video-media,
+.overview-video-dialog.is-mobile-playback:-webkit-full-screen .overview-video-media {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.overview-video-dialog.is-mobile-playback .overview-video-controls,
+.overview-video-dialog.is-mobile-playback:fullscreen .overview-video-controls,
+.overview-video-dialog.is-mobile-playback:-webkit-full-screen .overview-video-controls {
+  grid-template-columns: 40px minmax(0, 1fr);
+  min-height: 52px;
+  padding: 8px max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: #000;
+}
+
+.overview-video-dialog.is-mobile-playback .overview-video-time,
+.overview-video-dialog.is-mobile-playback:fullscreen .overview-video-time,
+.overview-video-dialog.is-mobile-playback:-webkit-full-screen .overview-video-time {
+  display: none;
+}
+
 .docs-shell {
   display: grid;
   grid-template-columns: 255px minmax(0, 900px);
