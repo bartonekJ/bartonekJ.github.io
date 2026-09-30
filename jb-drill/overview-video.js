@@ -106,6 +106,7 @@
         await new Promise((resolve) => requestAnimationFrame(resolve));
       }
       if (fullscreenElement()) {
+        document.documentElement.classList.add('is-overview-video-fullscreen');
         dialog.classList.remove('is-mobile-launch');
         dialog.classList.add('is-mobile-playback');
         await lockLandscape();
@@ -126,6 +127,7 @@
 
   async function leaveMobileFullscreen() {
     unlockOrientation();
+    document.documentElement.classList.remove('is-overview-video-fullscreen');
 
     if (video.webkitDisplayingFullscreen) {
       try {
@@ -268,6 +270,7 @@
   });
   dialog.addEventListener('close', () => {
     unlockOrientation();
+    document.documentElement.classList.remove('is-overview-video-fullscreen');
     dialog.classList.remove('is-mobile-launch', 'is-mobile-playback');
     fullscreenStartButton.disabled = false;
     video.controls = false;

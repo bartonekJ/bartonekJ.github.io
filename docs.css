@@ -1383,6 +1383,23 @@
   backdrop-filter: blur(5px);
 }
 
+:root.is-overview-video-fullscreen,
+:root.is-overview-video-fullscreen body {
+  background: #000;
+}
+
+:root.is-overview-video-fullscreen body {
+  overflow: hidden;
+}
+
+:root.is-overview-video-fullscreen body > :not(.overview-video-dialog) {
+  visibility: hidden;
+}
+
+:root.is-overview-video-fullscreen .overview-video-dialog {
+  visibility: visible;
+}
+
 .overview-video-header {
   display: flex;
   min-height: 52px;
@@ -1510,6 +1527,11 @@
   border-radius: 0;
   background: #000;
   box-shadow: none;
+}
+
+.overview-video-dialog.is-mobile-playback::backdrop {
+  background: #000;
+  backdrop-filter: none;
 }
 
 .overview-video-dialog.is-mobile-playback .overview-video-header,
