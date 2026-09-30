@@ -1530,7 +1530,7 @@
 }
 
 .overview-video-dialog.is-mobile-playback::backdrop {
-  background: #000;
+  background: transparent;
   backdrop-filter: none;
 }
 
