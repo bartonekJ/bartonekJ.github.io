@@ -496,6 +496,16 @@ Společný přehrávač Overview a Features na mobilním viewportu nejprve otev�
 
 Mobilní hlavička používá jedno standardní hamburger tlačítko a rozbalovací panel se všemi odkazy. Původní řešení pouze skrývalo všechny odkazy kromě posledního nebo aktuálního, takže navigace byla na telefonu neúplná. Menu se zavře po výběru odkazu, tapnutí mimo hlavičku, klávese Escape nebo návratu na desktopovou šířku. Při fullscreenu videa se ostatní části stránky neskrývají pomocí `visibility: hidden`; samostatná neprůhledná vrstva je zakryje sama.
 
+### 2026-10-01 — Desktopový koncept aktualit napříč produkty
+
+Aktuality jsou společný obsahový systém značky, nikoli další záložka uvnitř přepínače Overview / Features. Homepage proto používá na spodním okraji Hero samostatný tmavý pás s nejvýše pěti nejnovějšími položkami napříč produkty; produktová stránka odkazuje na vlastní archiv `/jb-drill/updates/`. Každá položka má vlastní statickou URL `/updates/<slug>/`, aby šla přímo sdílet a měla vlastní title, description, canonical a Open Graph metadata.
+
+Pás je součástí toku Hero a nesmí překrývat hlavní sdělení ani ovládání procedurálního atomu. Jedna až tři položky vyplní dostupnou šířku v jednom řádku. Čtyři nebo pět položek ukazují tři karty a posouvají se cyklicky vždy o jednu po pěti sekundách. Automatika se zastavuje při hoveru, focusu, ručním ovládání, skryté kartě prohlížeče a při `prefers-reduced-motion`; šipky, indikátory a klávesy vlevo/vpravo zůstávají dostupné ručně. Karta může být textová nebo mít obrazový náhled a celý její povrch je odkazem na detail.
+
+Archiv používá dvousloupcový master-detail layout: vlevo je sticky seznam od nejnovější položky, vpravo plný článek. Přechod mezi položkami používá běžné statické odkazy, takže se URL a metadata skutečně mění, přesto stránka vizuálně zůstává ve stejném systému. Obsah vzniká v kolekci `_updates` jako Markdown a GitHub Pages jej generuje nativním Jekyllem; existující HTML stránky se kvůli tomu nepřepisují do frameworku a nepřidává se vlastní deployment workflow.
+
+První fáze je pouze desktopový koncept na lokální větvi `codex/updates-desktop`. Pět položek je výslovně fiktivních a označených jako náhledový obsah. Mobilní podoba pásu je v této fázi skrytá a mobilní layout archivu je pouze bezpečný jednosloupcový fallback; finální mobilní návrh vznikne až po schválení desktopu. Pages CMS a skutečné publikování obsahu jsou záměrně odložené do následující fáze, aby se nejdřív neměnil publikační proces kolem neschválené šablony.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.

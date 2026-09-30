@@ -1,0 +1,5 @@
+---
+---
+{% assign product_updates = site.updates | where: "product", page.product | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+{% assign current_update = product_updates | first %}
+{% include updates-document.html current=current_update product=page.product is_archive=true %}

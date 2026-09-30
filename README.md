@@ -2,7 +2,9 @@
 
 Static public website for [bybartonek.com](https://bybartonek.com).
 
-The production pages use plain HTML, CSS and JavaScript with no build step. GitHub Pages can publish the repository directly from the `main` branch.
+The production pages use plain HTML, CSS and JavaScript. GitHub Pages applies its native Jekyll build only to the Markdown update collection and the small Liquid-powered latest-updates rail; no custom deployment workflow is required.
+
+Update entries live in `_updates/`. Each published entry receives its own `/updates/<slug>/` page and can appear in the latest-updates rail on the homepage. Product archives, such as `/jb-drill/updates/`, filter the same collection by the `product` front matter field.
 
 ## Design and content
 

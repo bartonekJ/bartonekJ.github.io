@@ -1,0 +1,162 @@
+{% assign current = include.current %}
+{% assign product = include.product | default: current.product %}
+{% assign product_updates = site.updates | where: "product", product | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+{% if include.is_archive %}
+    {% assign meta_title = page.title %}
+    {% assign meta_description = page.description %}
+    {% assign canonical_url = page.url %}
+{% else %}
+    {% capture meta_title %}{{ current.title }} — {{ current.product_label }}{% endcapture %}
+    {% assign meta_description = current.summary %}
+    {% assign canonical_url = current.url %}
+{% endif %}
+{% assign social_image = current.thumbnail | default: "/assets/icon-jb-drill.webp" %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ meta_description | strip_html | escape }}">
+    <meta name="theme-color" content="#1d1d1c">
+    <link rel="canonical" href="{{ canonical_url | absolute_url }}">
+    <meta property="og:type" content="{% if include.is_archive %}website{% else %}article{% endif %}">
+    <meta property="og:site_name" content="byBartonek">
+    <meta property="og:title" content="{{ meta_title | strip | escape }}">
+    <meta property="og:description" content="{{ meta_description | strip_html | escape }}">
+    <meta property="og:url" content="{{ canonical_url | absolute_url }}">
+    <meta property="og:image" content="{{ social_image | absolute_url }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ meta_title | strip | escape }}">
+    <meta name="twitter:description" content="{{ meta_description | strip_html | escape }}">
+    <meta name="twitter:image" content="{{ social_image | absolute_url }}">
+    <title>{{ meta_title | strip | escape }}</title>
+    <link rel="icon" href="{{ '/favicon.svg?v=2' | relative_url }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ '/updates.css?v=20261001-1' | relative_url }}">
+</head>
+<body class="docs-body updates-body">
+    <header class="site-header docs-header">
+        <a class="brand" href="{{ '/' | relative_url }}" aria-label="byBartonek home">
+            <span class="brand-logo" aria-hidden="true"></span>
+            <span class="brand-lockup" aria-hidden="true">
+                <span class="brand-name"><span class="brand-prefix">by</span><span class="brand-major">B</span><span class="brand-minor">artonek</span></span>
+                <span class="brand-tagline"><span>Built</span><span>from</span><span>practice</span></span>
+            </span>
+        </a>
+        <nav class="site-nav" aria-label="JB Drill navigation">
+            <a href="{{ '/jb-drill/#overview' | relative_url }}">JB_Drill</a>
+            <a href="{{ '/jb-drill/#features' | relative_url }}">Features</a>
+            <a href="{{ '/jb-drill/download/' | relative_url }}">Download</a>
+            <a href="{{ '/jb-drill/updates/' | relative_url }}" aria-current="page">Updates</a>
+            <a href="https://play.bybartonek.com/">JB_Play</a>
+            <a href="{{ '/support/' | relative_url }}">Support</a>
+        </nav>
+    </header>
+
+    <main>
+        <header class="updates-intro">
+            <div class="updates-intro-inner">
+                <div>
+                    <p class="product-section-label">RELEASES · FEATURES · FIELD NOTES</p>
+                    <h1><span class="product-display-name">JB<span class="product-short-underscore">_</span>Drill</span> <strong>Updates</strong></h1>
+                </div>
+                <p>What changed, what is new, and what is taking shape around JB_Drill.</p>
+            </div>
+        </header>
+
+        {% if current %}
+        <div class="updates-layout">
+            <aside class="updates-list-panel" aria-label="JB_Drill updates">
+                <div class="updates-list-heading">
+                    <span>Latest first</span>
+                    <strong>{{ product_updates.size }}</strong>
+                </div>
+                <nav class="updates-list">
+                    {% for item in product_updates %}
+                    <a class="updates-list-item{% if item.url == current.url %} is-active{% endif %}" href="{{ item.url | relative_url }}"{% if item.url == current.url %} aria-current="page"{% endif %}>
+                        <span class="updates-list-meta">
+                            <time datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: "%b %-d, %Y" }}</time>
+                            <b>{{ item.category }}</b>
+                        </span>
+                        <strong>{{ item.title }}</strong>
+                        <span>{{ item.summary }}</span>
+                    </a>
+                    {% endfor %}
+                </nav>
+            </aside>
+
+            <article class="update-article">
+                <header class="update-article-header">
+                    <div class="update-article-meta">
+                        <span>{{ current.product_label }}</span>
+                        <span>{{ current.category }}</span>
+                        <time datetime="{{ current.date | date_to_xmlschema }}">{{ current.date | date: "%B %-d, %Y" }}</time>
+                    </div>
+                    <h2>{{ current.title }}</h2>
+                    <p class="update-summary">{{ current.summary }}</p>
+                    {% if current.version or current.platforms %}
+                    <dl class="update-facts">
+                        {% if current.version %}<div><dt>Version</dt><dd>{{ current.version }}</dd></div>{% endif %}
+                        {% if current.platforms %}<div><dt>Platforms</dt><dd>{{ current.platforms | join: " · " }}</dd></div>{% endif %}
+                    </dl>
+                    {% endif %}
+                </header>
+
+                {% if current.thumbnail %}
+                <figure class="update-hero-media">
+                    <img src="{{ current.thumbnail | relative_url }}" alt="{{ current.thumbnail_alt | default: '' | escape }}" width="1280" height="720">
+                </figure>
+                {% endif %}
+
+                <div class="update-prose">
+                    {% if include.body %}
+                    {{ include.body }}
+                    {% else %}
+                    {{ current.content | markdownify }}
+                    {% endif %}
+                </div>
+
+                {% if current.gallery %}
+                <div class="update-gallery" aria-label="Update gallery">
+                    {% for image in current.gallery %}
+                    <figure><img src="{{ image.src | relative_url }}" alt="{{ image.alt | default: '' | escape }}" loading="lazy"></figure>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if current.cta_url and current.cta_label %}
+                <a class="button button-primary update-cta" href="{{ current.cta_url }}">{{ current.cta_label }}</a>
+                {% endif %}
+
+                {% if current.preview %}<p class="update-preview-note">Concept content for layout review — not a published product announcement.</p>{% endif %}
+            </article>
+        </div>
+        {% else %}
+        <section class="updates-empty">
+            <p class="product-section-label">NOTHING HERE YET</p>
+            <h2>The next update will land here.</h2>
+            <p>Product news, release notes and new videos will appear on this page.</p>
+        </section>
+        {% endif %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="brand brand-footer">
+            <span class="brand-logo" aria-hidden="true"></span>
+            <span class="brand-lockup" aria-label="byBartonek">
+                <span class="brand-name" aria-hidden="true"><span class="brand-prefix">by</span><span class="brand-major">B</span><span class="brand-minor">artonek</span></span>
+                <span class="brand-tagline" aria-hidden="true"><span>Built</span><span>from</span><span>practice</span></span>
+            </span>
+        </div>
+        <p>Sports technology &amp; functional design by Jiří Bartoněk.</p>
+        <div class="footer-links">
+            <a href="{{ '/jb-drill/' | relative_url }}">Overview</a>
+            <a href="{{ '/jb-drill/#features' | relative_url }}">Features</a>
+            <a href="{{ '/jb-drill/download/' | relative_url }}">Download</a>
+            <a href="{{ '/support/' | relative_url }}">Support</a>
+            <a href="{{ '/privacy/' | relative_url }}">Privacy</a>
+            <span>© <span id="year">2026</span></span>
+        </div>
+    </footer>
+    <script src="{{ '/script.js?v=20260930-1' | relative_url }}"></script>
+</body>
+</html>

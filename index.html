@@ -1,3 +1,5 @@
+---
+---
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,7 +9,7 @@
   <meta name="theme-color" content="#1d1d1c">
   <title>byBartonek — Sports Technology &amp; 3D Design</title>
   <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20260930-1">
+  <link rel="stylesheet" href="styles.css?v=20261001-1">
 </head>
 <body>
   <header class="site-header">
@@ -48,6 +50,48 @@
           <span>IDEA</span><strong>→</strong><span>TOOL</span>
         </div>
       </div>
+
+      {% assign published_updates = site.updates | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+      {% assign latest_updates = published_updates | slice: 0, 5 %}
+      {% assign update_count = latest_updates.size %}
+      {% if update_count > 0 %}
+      <section class="home-updates{% if update_count > 3 %} is-carousel{% else %} is-static{% endif %}" aria-labelledby="latest-updates-title" data-updates-carousel data-update-count="{{ update_count }}" style="--update-count: {{ update_count }}">
+        <div class="home-updates-heading">
+          <div>
+            <p class="eyebrow">WHAT'S NEW</p>
+            <h2 id="latest-updates-title">Latest from byBartonek</h2>
+          </div>
+          {% if update_count > 3 %}
+          <div class="home-updates-controls">
+            <button type="button" data-updates-previous aria-label="Previous update">&#8592;</button>
+            <div class="home-updates-dots" aria-label="Select update">
+              {% for item in latest_updates %}
+              <button type="button" data-updates-dot="{{ forloop.index0 }}" aria-label="Show update {{ forloop.index }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+              {% endfor %}
+            </div>
+            <button type="button" data-updates-next aria-label="Next update">&#8594;</button>
+          </div>
+          {% endif %}
+        </div>
+        <div class="home-updates-viewport">
+          <div class="home-updates-track">
+            {% for item in latest_updates %}
+            <a class="home-update-card{% unless item.thumbnail %} home-update-card--text{% endunless %}" href="{{ item.url | relative_url }}">
+              <div class="home-update-copy">
+                <span class="home-update-meta"><b>{{ item.product_label }}</b><span>{{ item.category }}</span><time datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: "%b %-d" }}</time></span>
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.summary }}</p>
+                <span class="home-update-link">Read update <span aria-hidden="true">&#8594;</span></span>
+              </div>
+              {% if item.thumbnail %}
+              <img src="{{ item.thumbnail | relative_url }}" alt="" width="640" height="360" loading="lazy" decoding="async">
+              {% endif %}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      {% endif %}
     </section>
 
     <section class="work" id="work" aria-labelledby="work-title">
@@ -185,6 +229,7 @@
   </footer>
 
   <script type="module" src="hero-atom.js"></script>
+  <script src="updates-carousel.js?v=20261001-1"></script>
   <script src="script.js?v=20260930-1"></script>
 </body>
 </html>

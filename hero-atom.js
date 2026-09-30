@@ -12,17 +12,19 @@ if(stage) {
     ]);
     if(!response.ok) throw new Error(`Hero configuration returned ${response.status}.`);
     const config=importConfig(await response.json());
-    const hero=stage.closest('.hero'),copy=hero.querySelector('.hero-copy');
+    const hero=stage.closest('.hero'),copy=hero.querySelector('.hero-copy'),updates=hero.querySelector('.home-updates');
     const heroColor=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#1d1d1c';
     const layout=({width,height})=>{
       if(matchMedia('(max-width: 760px)').matches)
         return {focusWidth:width,focusHeight:380,centerX:width/2,centerY:height-190};
+      const updatesHeight=updates && getComputedStyle(updates).display!=='none' ? updates.getBoundingClientRect().height : 0;
+      const contentHeight=Math.max(1,height-updatesHeight);
       const copyWidth=copy.getBoundingClientRect().width;
       const columnWidth=Math.max(1,width-copyWidth);
       // Keep the atom at its 1440px desktop size when the right column narrows.
       // Its center remains in that column, so the full-size scene can pass under the copy.
       const focusWidth=Math.max(DESKTOP_ATOM_REFERENCE_WIDTH,columnWidth);
-      return {focusWidth,focusHeight:height,centerX:copyWidth+columnWidth/2,centerY:height/2};
+      return {focusWidth,focusHeight:contentHeight,centerX:copyWidth+columnWidth/2,centerY:contentHeight/2};
     };
     const atom=new AtomScene(stage,config,state=>stage.dataset.state=state,{
       backgroundColor:'#0b1011',edgeBackgroundColor:heroColor,backgroundFade:[0.08,0.68],layout,
