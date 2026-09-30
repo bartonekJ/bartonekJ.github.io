@@ -125,7 +125,7 @@ Zachovej viditelný `:focus-visible`; hover nemá být jediným vodítkem intera
 
 ### Produkt a dokumentace
 
-- `.docs-hero`: úvodní blok produktové stránky nebo příručky. Používej krátký `page-context`, `eyebrow`, titulek, stručný odstavec a CTA.
+- `.docs-hero`: úvodní blok produktové stránky nebo příručky. Používej krátký `page-context`, titulek, stručný odstavec a CTA. Volitelný `eyebrow` ponech jen tam, kde přidává skutečnou orientační informaci a neopakuje další marketingové sdělení.
 - `.docs-hero--jb-drill`: značkový vizuál JB_Drill. Na produktové stránce je jméno JB_Drill v horním `page-context` větší než drobný text „Product Overview“, aniž by konkurovalo hlavnímu sloganu; specifické pravidlo `.product-body` nemění štítek v Help. `.docs-hero--video` zapínej jen pro produktovou stránku s carousel videí; ovládání patří do `.jb-hero-slide-ui` a musí zůstat přístupné klávesnicí.
 - `.product-view-switcher`: pouze dvojice kompaktních odkazových záložek Overview a Features bezprostředně pod produktovým Hero; při scrollování zůstávají připnuté pod sdílenou hlavičkou. Každá záložka vyplňuje svou polovinu šířky obrazovky: aktivní má světlé pozadí a oranžový horní proužek přes celou polovinu, neaktivní tmavé pozadí. Boční rámečky nejsou; barevný předěl ploch je jen uprostřed. Nápis Overview je zarovnaný se začátkem obsahového sloupce, jeho malé číslo je na desktopu v levém odsazení; na mobilu se čísla skrývají. `product-view.js` přepíná panely Overview/Features podle URL hashe; výchozí Overview zachovává stávající obsah. Download je samostatná stránka dostupná z tlačítka v Hero, ne třetí poloha přepínače. Tento vzor patří zatím jen na `/jb-drill/`.
 - `.overview-core-grid` / `.overview-core-card`: stručné hlavní schopnosti v Overview hned po úvodu „THE IDEA“. Na desktopu dvě karty vedle sebe; pátá karta Library zabírá celou šířku mezi dvěma dvojicemi nad ní a poslední dvojicí pod ní. Na mobilu je jeden sloupec. Textové karty mají kompaktní svislé odsazení a těsnější mezery mezi štítkem, názvem a popisem. Každá je celý přístupný odkaz na odpovídající Overview podsekci a hover/focus proto jemně zvedne kartu a zvýrazní její obrys. Library i PDF/MP4 vedou do společné podsekce Library, Sessions & Exports. Sekci oddělují stejné tenké linky jako úvod. Features je vyhrazené pro pozdější detailnější ukázky dílčích funkcí a QOL, ne pro opakování těchto karet.
@@ -483,6 +483,10 @@ Pokud uživatel neurčí jinak, poster pro nové Features video se vytváří z 
 Kapitola `Action intelligence` používá stejný vzor pro Automatic Saucer Pass, Automatic stick jump, Automatic Finesse a Generated Punch Turn. Po zmenšení rozbalené karty už pomalý lineární pohyb není potřeba: geometrie karty se mění za 210 ms s výraznou ease-out křivkou `cubic-bezier(0.16, 1, 0.3, 1)` a náhled se prolíná za 140 ms. Zrychlení nesmí měnit ochrannou hover oblast ani způsobit návrat problikávání na hraně karty.
 
 Kapitola `Techniques on the route` používá vlastní demonstrace pro Technique drag & drop, Pivot & Transition, Toe Drag Release a Finesse editing. Stejně jako předchozí kapitoly bere výchozí poster z posledního použitelného snímku a používá společný 16:9 náhled, rozbalení i video modal; nevytváří vlastní variantu karty.
+
+### 2026-09-30 — Klidnější JB_Drill Hero bez vedlejšího sloganu
+
+Z produktového Hero byl odstraněn oranžový řádek „Built on the ice, not around a menu“. Hero nadále obsahuje značku s kontextem Product Overview, hlavní slogan, stručný popis a akce. Důvod potvrzený uživatelem: stránka už používá dostatek krátkých marketingových sloganů a další věta pod logem začala vizuálně i významově přebývat. Změna se týká pouze `/jb-drill/`; obecná komponenta `eyebrow` zůstává dostupná tam, kde skutečně pomáhá orientaci.
 
 ## Text pro nové vlákno
 
