@@ -82,6 +82,20 @@
     anchors[0].classList.add('button', 'button-primary', 'update-inline-cta');
   }
 
+  function enhanceTables() {
+    [...prose.querySelectorAll('table')].forEach((table) => {
+      if (table.parentElement?.classList.contains('update-table-scroll')) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'update-table-scroll';
+      wrapper.tabIndex = 0;
+      wrapper.setAttribute('role', 'region');
+      wrapper.setAttribute('aria-label', 'Scrollable data table');
+      table.before(wrapper);
+      wrapper.append(table);
+    });
+  }
+
   function makeVideoCard(video) {
     const figure = document.createElement('figure');
     figure.className = 'update-youtube-card';
@@ -132,4 +146,6 @@
     }
     promoteStandaloneNamedLink(element);
   });
+
+  enhanceTables();
 })();
