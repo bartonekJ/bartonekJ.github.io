@@ -11,11 +11,23 @@ preview: false
 ---
 # This is my test News
 
+
+
+---
+
+
+
 ## Chaprer 01
 
 Here i can write what I want.  
 Here i can write what I want.  
 Here i can write what I want.  
+
+
+
+---
+
+
 
 ### Bullet
 
@@ -25,6 +37,5 @@ Here i can write what I want.
 
 ![](/assets/updates/hc-lev-benesov-banner.png)
 
-> There is our new logo
+> Here is our new logo
 
-/
