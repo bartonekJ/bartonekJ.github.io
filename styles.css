@@ -527,7 +527,7 @@ a {
 
 .home-updates.is-static .home-updates-track {
   display: grid;
-  grid-template-columns: repeat(var(--update-count), minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--updates-gap);
 }
 
