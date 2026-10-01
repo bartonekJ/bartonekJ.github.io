@@ -15,8 +15,12 @@ const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/
     await page.goto(url);await page.waitForFunction(()=>window.heroAtom);
     const layout=await page.evaluate(()=>{
       const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};
+      const cards=[...document.querySelectorAll('.home-updates-track > .home-update-card')].slice(0,2).map(card=>card.getBoundingClientRect());
       return {hero:box('.hero'),copy:box('.hero-copy'),visual:box('#hero-atom'),canvas:box('#atom-canvas'),updates:box('.home-updates'),
         updatesHeading:box('.home-updates-heading'),updatesRail:box('.home-updates-rail'),updatesControls:box('.home-updates-controls'),
+        heroTitle:box('#hero-title'),updatesHeadingText:box('.home-updates-heading h2'),cardGap:cards[1].left-cards[0].right,
+        heroBackground:getComputedStyle(document.querySelector('.hero')).backgroundColor,
+        railBackground:getComputedStyle(document.querySelector('.home-updates-rail')).backgroundColor,
         titleFont:parseFloat(getComputedStyle(document.querySelector('#hero-title')).fontSize),
         summaryFont:parseFloat(getComputedStyle(document.querySelector('.home-update-card p')).fontSize),overflow:document.documentElement.scrollWidth-innerWidth};
     });
@@ -44,7 +48,12 @@ const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/
     assert.equal(layout.summaryFont,15,'update summaries use the approved readable card-text size');
     assert.ok(layout.updatesHeading.y+layout.updatesHeading.height<=layout.updatesControls.y,
       'the heading and separator remain above the carousel controls');
-    assert.ok(layout.updatesControls.y>=layout.updatesRail.y,'the carousel controls sit inside the black updates rail');
+    assert.ok(layout.updatesControls.y>=layout.updatesRail.y,'the carousel controls sit inside the updates rail');
+    assert.ok(Math.abs(layout.updatesHeadingText.x-layout.heroTitle.x)<0.01,'the updates heading shares the Hero copy left edge');
+    assert.equal(layout.updatesHeading.x,layout.hero.x,'the horizontal separator begins at the Hero edge');
+    assert.ok(Math.abs(layout.updatesHeading.width-layout.hero.width)<0.1,'the horizontal separator spans the full Hero width');
+    assert.ok(layout.cardGap>=36,'vertical separators have breathing room on both sides');
+    assert.equal(layout.railBackground,layout.heroBackground,'the updates feed uses the Hero background color');
     assert.equal(await page.evaluate(()=>{
       const copy=getComputedStyle(document.querySelector('.hero-copy'));
       const visual=getComputedStyle(document.querySelector('#hero-atom'));
