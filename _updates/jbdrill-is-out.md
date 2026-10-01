@@ -57,4 +57,4 @@ The first release is not the end of the project. New drills, feature improvement
 
 For now, JB_Drill is ready to leave the workshop and become part of real coaching workflows.
 
-[DOWNLOAD JB_DRILL](https://bybartonek.com/jb-drill/download/)
+Waste no time and try for free on Android or PC. | [DOWNLOAD JB_DRILL](https://bybartonek.com/jb-drill/download/)
