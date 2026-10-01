@@ -460,7 +460,11 @@ Download používá kolem všech dělicích linek výrazný symetrický svislý 
 
 ### 2026-09-29 — Veřejný Windows download
 
-Windows karta na Download stránce je po publikaci aplikace aktivní odkaz na veřejný Microsoft Store listing `9NFF5QHLBM3B`; celá karta je klikací a stav popisuje jako dostupný. Google Play zůstává neaktivní s textem „Coming soon“. Dělicí linky mají kolem sebe velký a symetrický svislý prostor, aby jednotlivé bloky nepůsobily stlačeně.
+Windows karta na Download stránce je po publikaci aplikace aktivní odkaz na veřejný Microsoft Store listing `9NFF5QHLBM3B`; celá karta je klikací a stav popisuje jako dostupný. Dělicí linky mají kolem sebe velký a symetrický svislý prostor, aby jednotlivé bloky nepůsobily stlačeně.
+
+### 2026-10-01 — Veřejný Android download
+
+Po produkčním vydání JB_Drill na Google Play je také Android karta na Download stránce aktivní odkaz na veřejný listing balíčku `cz.jbdrill.app`. Obě platformy používají stejnou klikací komponentu a stav „Available now“, protože uživatel si má vybrat obchod podle zařízení v ruce; dřívější neaktivní stav „Coming soon“ se už nepoužívá.
 
 ### 2026-09-29 — Navigační karty a střídavý Overview příběh
 
