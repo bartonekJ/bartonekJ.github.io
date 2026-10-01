@@ -18,6 +18,8 @@ gallery:
     alt: JB_Drill Icon
   - src: /assets/updates/jbdrillheroart1024x500.png
     alt: Hero Art
+cta_label: YouTube video
+cta_url: https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu
 ---
 # This is my test News
 
