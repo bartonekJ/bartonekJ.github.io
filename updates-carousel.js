@@ -55,6 +55,11 @@
     });
   }
 
+  function updateVisibleEnd() {
+    [...track.children].forEach((card) => card.classList.remove('is-visible-end'));
+    track.children[position + 2]?.classList.add('is-visible-end');
+  }
+
   function move(animate = true) {
     const target = track.children[position];
     if (!target) return;
@@ -62,6 +67,7 @@
     track.style.transform = `translate3d(${-target.offsetLeft}px, 0, 0)`;
     updateDots();
     updateCardAccess();
+    updateVisibleEnd();
   }
 
   function stopTimer() {
