@@ -13,6 +13,11 @@ platforms:
   - Windows
   - Android
   - Web
+gallery:
+  - src: /assets/updates/app-icon-512.png
+    alt: JB_Drill Icon
+  - src: /assets/updates/jbdrillheroart1024x500.png
+    alt: Hero Art
 ---
 # This is my test News
 
