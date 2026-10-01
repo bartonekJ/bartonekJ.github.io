@@ -4,12 +4,6 @@ const assert=require('node:assert/strict');
 
 const url='http://127.0.0.1:4173/';
 const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
-const projectedExtent=state=>{
-  const points=state.layers.flatMap(layer=>layer.positions);
-  const xs=points.map(point=>point.x),ys=points.map(point=>point.y);
-  return {minX:Math.min(...xs),width:Math.max(...xs)-Math.min(...xs),height:Math.max(...ys)-Math.min(...ys)};
-};
-
 (async()=>{
   const browser=await chromium.launch({executablePath,headless:true,args:['--enable-unsafe-swiftshader']});
   const errors=[];
@@ -21,7 +15,10 @@ const projectedExtent=state=>{
     await page.goto(url);await page.waitForFunction(()=>window.heroAtom);
     const layout=await page.evaluate(()=>{
       const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};
-      return {hero:box('.hero'),copy:box('.hero-copy'),visual:box('#hero-atom'),canvas:box('#atom-canvas'),overflow:document.documentElement.scrollWidth-innerWidth};
+      return {hero:box('.hero'),copy:box('.hero-copy'),visual:box('#hero-atom'),canvas:box('#atom-canvas'),updates:box('.home-updates'),
+        updatesHeading:box('.home-updates-heading'),updatesRail:box('.home-updates-rail'),updatesControls:box('.home-updates-controls'),
+        titleFont:parseFloat(getComputedStyle(document.querySelector('#hero-title')).fontSize),
+        summaryFont:parseFloat(getComputedStyle(document.querySelector('.home-update-card p')).fontSize),overflow:document.documentElement.scrollWidth-innerWidth};
     });
     assert.equal(layout.hero.height,780,'existing desktop hero height');
     assert.deepEqual(layout.canvas,layout.hero,'canvas expands across the full hero');
@@ -39,7 +36,15 @@ const projectedExtent=state=>{
     }),true,'production uses the approved v9 ShakyCam preset');
     assert.equal(state.drawCalls,9);assert.equal(state.cards.length,0);
     assert.ok(Math.abs(state.center.x-(layout.copy.width+(layout.hero.width-layout.copy.width)/2))<0.01,'atom stays centered in the former right column');
-    assert.ok(Math.abs(state.center.y-layout.hero.height/2)<0.01);
+    const desktopContentHeight=layout.hero.height-layout.updates.height;
+    assert.ok(Math.abs(state.center.y-desktopContentHeight/2)<0.01,'atom is centered in the Hero above the updates rail');
+    assert.ok(Math.max(...state.layers.flatMap(layer=>layer.positions.map(point=>point.y)))<desktopContentHeight,
+      'the resized atom ends above the updates heading instead of being clipped by the rail');
+    assert.ok(layout.titleFont<114,'the Hero title uses a genuinely smaller desktop size when updates are present');
+    assert.equal(layout.summaryFont,15,'update summaries use the approved readable card-text size');
+    assert.ok(layout.updatesHeading.y+layout.updatesHeading.height<=layout.updatesControls.y,
+      'the heading and separator remain above the carousel controls');
+    assert.ok(layout.updatesControls.y>=layout.updatesRail.y,'the carousel controls sit inside the black updates rail');
     assert.equal(await page.evaluate(()=>{
       const copy=getComputedStyle(document.querySelector('.hero-copy'));
       const visual=getComputedStyle(document.querySelector('#hero-atom'));
@@ -61,9 +66,10 @@ const projectedExtent=state=>{
     const card=await page.locator('.atom-card:visible').first().boundingBox();
     assert.ok(card.x>=stage.x && card.x+card.width<=stage.x+stage.width && card.y>=stage.y && card.y+card.height<=stage.y+stage.height);
     const orientation=state.orientation;
-    const core=await page.evaluate(()=>{const s=heroAtom.snapshot();return{x:s.center.x+s.shake.x,y:s.center.y+s.shake.y};});
-    await page.mouse.move(stage.x+core.x,stage.y+core.y);await page.mouse.down();
-    await page.mouse.move(stage.x+core.x+80,stage.y+core.y+40,{steps:4});await page.mouse.up();
+    await page.evaluate(()=>heroAtom.pause(true));
+    const core=await page.locator('.atom-core-hit').boundingBox();
+    await page.mouse.move(core.x+core.width/2,core.y+core.height/2);await page.mouse.down();
+    await page.mouse.move(core.x+core.width/2+80,core.y+core.height/2+40,{steps:4});await page.mouse.up();
     assert.notDeepEqual((await page.evaluate(()=>heroAtom.snapshot())).orientation,orientation,'core drag works in production');
     assert.deepEqual(errors,[]);await page.close();
 
@@ -126,18 +132,21 @@ const projectedExtent=state=>{
 
     const narrow=await browser.newPage({viewport:{width:800,height:760},reducedMotion:'reduce'});
     await narrow.goto(url);await narrow.waitForFunction(()=>window.heroAtom);
-    const narrowResult=await narrow.evaluate(()=>({
-      state:heroAtom.snapshot(),copyWidth:document.querySelector('.hero-copy').getBoundingClientRect().width,
-    }));
-    const wideExtent=projectedExtent(frozen),narrowExtent=projectedExtent(narrowResult.state);
-    assert.ok(Math.abs(narrowExtent.width/wideExtent.width-1)<0.04 && Math.abs(narrowExtent.height/wideExtent.height-1)<0.04,'desktop atom keeps its visual size as the browser narrows');
-    assert.ok(narrowExtent.minX<narrowResult.copyWidth,'full-size desktop atom can extend beneath the hero copy');
+    const narrowResult=await narrow.evaluate(()=>{
+      const hero=document.querySelector('.hero').getBoundingClientRect(),updates=document.querySelector('.home-updates').getBoundingClientRect();
+      return {state:heroAtom.snapshot(),updatesTop:updates.top-hero.top,
+        titleFont:parseFloat(getComputedStyle(document.querySelector('#hero-title')).fontSize),overflow:document.documentElement.scrollWidth-innerWidth};
+    });
+    const narrowMaxY=Math.max(...narrowResult.state.layers.flatMap(layer=>layer.positions.map(point=>point.y)));
+    assert.ok(narrowMaxY<narrowResult.updatesTop,'the resized narrow-desktop atom remains above the updates rail');
+    assert.ok(narrowResult.titleFont<114,'the compact Hero title remains active on narrow desktop');
+    assert.equal(narrowResult.overflow,0,'narrow desktop has no horizontal overflow');
     await narrow.close();
 
     const fallback=await browser.newPage();
     await fallback.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith('webgl') ? null : original.call(this,type,...args);};});
     await fallback.goto(url);await fallback.locator('#atom-fallback').waitFor({state:'visible'});
     assert.equal(await fallback.locator('#atom-canvas').isHidden(),true);await fallback.close();
-    console.log('PASS: full-width scene, fixed desktop atom size and right alignment, preserved mobile layout and hero dimensions, optimized procedural background, touch tap/core drag, approved v9 ShakyCam preset, local assets, interaction, reduced motion and fallback.');
+    console.log('PASS: full-width scene, compact desktop title and atom above the updates rail, preserved mobile layout and Hero dimensions, readable update summaries, touch interaction, reduced motion and fallback.');
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

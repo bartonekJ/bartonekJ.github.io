@@ -21,9 +21,12 @@ if(stage) {
       const contentHeight=Math.max(1,height-updatesHeight);
       const copyWidth=copy.getBoundingClientRect().width;
       const columnWidth=Math.max(1,width-copyWidth);
-      // Keep the atom at its 1440px desktop size when the right column narrows.
-      // Its center remains in that column, so the full-size scene can pass under the copy.
-      const focusWidth=Math.max(DESKTOP_ATOM_REFERENCE_WIDTH,columnWidth);
+      // The updates rail keeps the Hero's original outer height. Give the atom a
+      // genuinely smaller projection in the remaining upper area instead of
+      // preserving its old scale and merely clipping it behind the rail.
+      const focusWidth=updatesHeight
+        ? Math.min(columnWidth,contentHeight*0.9)
+        : Math.max(DESKTOP_ATOM_REFERENCE_WIDTH,columnWidth);
       return {focusWidth,focusHeight:contentHeight,centerX:copyWidth+columnWidth/2,centerY:contentHeight/2};
     };
     const atom=new AtomScene(stage,config,state=>stage.dataset.state=state,{

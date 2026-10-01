@@ -253,6 +253,11 @@ a {
   padding: 32px 7vw 42px;
 }
 
+.hero--with-updates .hero-copy {
+  max-width: 860px;
+  padding: 22px 3vw 22px 7vw;
+}
+
 .eyebrow {
   margin: 0 0 18px;
   color: var(--orange);
@@ -278,6 +283,10 @@ a {
   max-width: 800px;
   font-size: clamp(54px, 7.2vw, 114px);
   font-weight: 200;
+}
+
+.hero--with-updates h1 {
+  font-size: clamp(48px, 5.4vw, 88px);
 }
 
 .hero h1 .heading-accent {
@@ -320,6 +329,15 @@ a {
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 38px;
+}
+
+.hero--with-updates .hero-lead {
+  margin-top: 24px;
+  font-size: clamp(15px, 1.15vw, 18px);
+}
+
+.hero--with-updates .hero-actions {
+  margin-top: 26px;
 }
 
 .button {
@@ -471,16 +489,12 @@ a {
   grid-column: 1 / -1;
   grid-row: 2;
   min-width: 0;
-  padding: 10px clamp(24px, 5vw, 84px) 14px;
-  background: #141414;
+  background: transparent;
 }
 
 .home-updates-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 24px;
-  padding-bottom: 8px;
+  margin: 0 clamp(24px, 5vw, 84px);
+  padding: 7px 0 8px;
   border-bottom: 1px solid rgba(255, 147, 9, 0.72);
 }
 
@@ -496,9 +510,14 @@ a {
   letter-spacing: 0.035em;
 }
 
+.home-updates-rail {
+  min-width: 0;
+  padding: 7px clamp(24px, 5vw, 84px) 14px;
+  background: #141414;
+}
+
 .home-updates-viewport {
   min-width: 0;
-  padding-top: 8px;
   overflow: hidden;
 }
 
@@ -528,7 +547,7 @@ a {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(104px, 34%);
   min-width: 0;
-  min-height: 108px;
+  min-height: 112px;
   overflow: hidden;
   background: #141414;
   color: #d8d4cc;
@@ -614,9 +633,9 @@ a {
   margin: 5px 0 0;
   overflow: hidden;
   color: #bcb8af;
-  font: 450 13px/1.25 var(--font-ui);
+  font: 500 15px/1.28 var(--font-ui);
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
 }
 
 .home-update-link {
@@ -630,7 +649,7 @@ a {
 .home-update-card img {
   width: 100%;
   height: 100%;
-  min-height: 108px;
+  min-height: 112px;
   object-fit: cover;
   filter: saturate(0.82) contrast(1.04);
 }
@@ -642,7 +661,10 @@ a {
 }
 
 .home-updates-controls {
+  justify-content: flex-end;
   gap: 10px;
+  min-height: 28px;
+  margin-bottom: 7px;
 }
 
 .home-updates-controls > button {
@@ -1229,8 +1251,26 @@ a {
     padding: 80px 24px 25px;
   }
 
+  .hero--with-updates .hero-copy {
+    max-width: 770px;
+    padding: 80px 24px 25px;
+  }
+
   .hero h1 {
     font-size: clamp(44px, 12.7vw, 64px);
+  }
+
+  .hero--with-updates h1 {
+    font-size: clamp(44px, 12.7vw, 64px);
+  }
+
+  .hero--with-updates .hero-lead {
+    margin-top: 34px;
+    font-size: clamp(16px, 1.35vw, 21px);
+  }
+
+  .hero--with-updates .hero-actions {
+    margin-top: 38px;
   }
 
   .hero-visual {
