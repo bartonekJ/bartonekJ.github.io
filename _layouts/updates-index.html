@@ -1,5 +1,9 @@
 ---
 ---
-{% assign product_updates = site.updates | where: "product", page.product | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+{% if jekyll.environment == "preview" %}
+  {% assign product_updates = site.updates | where: "product", page.product | sort: "date" | reverse %}
+{% else %}
+  {% assign product_updates = site.updates | where: "product", page.product | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+{% endif %}
 {% assign current_update = product_updates | first %}
 {% include updates-document.html current=current_update product=page.product is_archive=true %}

@@ -29,7 +29,11 @@
   </header>
 
   <main id="top">
-    {% assign published_updates = site.updates | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+    {% if jekyll.environment == "preview" %}
+      {% assign published_updates = site.updates | sort: "date" | reverse %}
+    {% else %}
+      {% assign published_updates = site.updates | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+    {% endif %}
     {% assign latest_updates = published_updates | slice: 0, 5 %}
     {% assign update_count = latest_updates.size %}
     <section class="hero{% if update_count > 0 %} hero--with-updates{% endif %}" aria-labelledby="hero-title">

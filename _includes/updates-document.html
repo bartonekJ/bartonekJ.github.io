@@ -1,6 +1,10 @@
 {% assign current = include.current %}
 {% assign product = include.product | default: current.product %}
-{% assign product_updates = site.updates | where: "product", product | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+{% if jekyll.environment == "preview" %}
+    {% assign product_updates = site.updates | where: "product", product | sort: "date" | reverse %}
+{% else %}
+    {% assign product_updates = site.updates | where: "product", product | where_exp: "item", "item.published != false" | sort: "date" | reverse %}
+{% endif %}
 {% if include.is_archive %}
     {% assign meta_title = page.title %}
     {% assign meta_description = page.description %}
