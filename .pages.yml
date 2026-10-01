@@ -14,7 +14,7 @@ content:
     format: yaml-frontmatter
     filename:
       template: "{primary}.md"
-      field: create
+      field: false
     view:
       fields: [title, product, category, published, date]
       primary: title
