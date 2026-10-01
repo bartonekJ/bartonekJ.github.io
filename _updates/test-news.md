@@ -8,10 +8,13 @@ product_label: JB_Drill
 category: Field note
 thumbnail: /assets/updates/hc-lev-benesov-banner.png
 preview: false
+version: JB_Drill v02.132.1586
+platforms:
+  - Windows
+  - Android
+  - Web
 ---
 # This is my test News
-
-
 
 ---
 
