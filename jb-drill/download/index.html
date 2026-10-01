@@ -7,7 +7,34 @@
   <meta name="theme-color" content="#1d1d1c">
   <title>Download JB_Drill — Android &amp; Windows</title>
   <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="../../docs.css?v=20260930-6">
+  <link rel="stylesheet" href="../../docs.css?v=20261001-1">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'wait_for_update': 500
+    });
+    try {
+      if (localStorage.getItem('bybartonek-google-ads-consent') === 'granted') {
+        gtag('consent', 'update', {
+          'ad_storage': 'granted',
+          'analytics_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted'
+        });
+      }
+    } catch (error) {
+      // Storage can be unavailable in private browsing; denied remains the default.
+    }
+    gtag('set', 'ads_data_redaction', true);
+    gtag('js', new Date());
+    gtag('config', 'AW-18439118692');
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18439118692"></script>
 </head>
 <body class="docs-body download-body">
   <header class="site-header docs-header">
@@ -38,12 +65,12 @@
       <h2 id="store-title">Choose a platform.</h2>
       <p>Download JB_Drill from Google Play or Microsoft Store.</p>
       <div class="download-store-grid">
-        <a class="download-store-card download-store-card--link" href="https://play.google.com/store/apps/details?id=cz.jbdrill.app" target="_blank" rel="noopener noreferrer" aria-label="Download JB_Drill from Google Play">
+        <a class="download-store-card download-store-card--link" href="https://play.google.com/store/apps/details?id=cz.jbdrill.app" target="_blank" rel="noopener noreferrer" aria-label="Download JB_Drill from Google Play" data-google-ads-conversion="store-outbound">
           <span>ANDROID</span>
           <h3>Google Play</h3>
           <p>Available now · Open Store &#8599;</p>
         </a>
-        <a class="download-store-card download-store-card--link" href="https://apps.microsoft.com/detail/9NFF5QHLBM3B?cid=bybartonek" target="_blank" rel="noopener noreferrer" aria-label="Download JB_Drill from Microsoft Store">
+        <a class="download-store-card download-store-card--link" href="https://apps.microsoft.com/detail/9NFF5QHLBM3B?cid=bybartonek" target="_blank" rel="noopener noreferrer" aria-label="Download JB_Drill from Microsoft Store" data-google-ads-conversion="store-outbound">
           <span>WINDOWS</span>
           <h3>Microsoft Store</h3>
           <p>Available now · Open Store &#8599;</p>
@@ -75,11 +102,23 @@
     </section>
   </main>
 
+  <aside class="measurement-consent" hidden aria-labelledby="measurement-consent-title">
+    <div>
+      <strong id="measurement-consent-title">Optional advertising measurement</strong>
+      <p>Allow Google Ads measurement so a store visit can be attributed to this campaign. The store links work either way. <a href="../../privacy/#advertising-measurement">Learn more</a></p>
+    </div>
+    <div class="measurement-consent-actions">
+      <button class="button button-quiet" type="button" data-google-ads-consent="denied">Decline</button>
+      <button class="button button-primary" type="button" data-google-ads-consent="granted">Allow measurement</button>
+    </div>
+  </aside>
+
   <footer class="site-footer">
     <div class="brand brand-footer"><span class="brand-logo" aria-hidden="true"></span><span class="brand-lockup" aria-label="byBartonek"><span class="brand-name" aria-hidden="true"><span class="brand-prefix">by</span><span class="brand-major">B</span><span class="brand-minor">artonek</span></span><span class="brand-tagline" aria-hidden="true"><span>Built</span><span>from</span><span>practice</span></span></span></div>
     <p>JB_Drill by Jiří Bartoněk.</p>
-    <div class="footer-links"><a href="../">Overview</a><a href="../#features">Features</a><a href="../../support/">Support</a><a href="../privacy/">Privacy</a><span>© <span id="year">2026</span></span></div>
+    <div class="footer-links"><a href="../">Overview</a><a href="../#features">Features</a><a href="../../support/">Support</a><a href="../privacy/">Privacy</a><a href="../../privacy/#advertising-measurement" data-google-ads-consent-settings>Privacy choices</a><span>© <span id="year">2026</span></span></div>
   </footer>
   <script src="../../script.js?v=20260930-1"></script>
+  <script src="../../google-ads.js?v=20261001-1"></script>
 </body>
 </html>

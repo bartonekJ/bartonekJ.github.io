@@ -516,6 +516,14 @@ Po schválení vzhledu přibyla kořenová konfigurace `.pages.yml`. Pages CMS u
 
 Samostatný YouTube odkaz vložený do těla aktuality se na webu převádí na responzivní nativní YouTube player v poměru 16:9 a privacy-enhanced režimu `youtube-nocookie`. Video se přehrává přímo v článku a standardní ovládání i odkaz na YouTube zajišťuje samotný YouTube player; web kolem něj nevytváří vlastní thumbnail, play tlačítko ani další externí odkaz. Důvod potvrzený uživatelem: přehrávání má odpovídat přirozenému vloženému videu známému z Google Play a nemá návštěvníka odvést z článku hned prvním kliknutím. Bez JavaScriptu zůstává původní textový YouTube odkaz funkční.
 
+### 2026-10-01 — Měření odchodů z Download stránky do obchodů
+
+Google Ads tag je načtený pouze na `/jb-drill/download/`, která je cílem první kampaně. Konverze `Outbound click` vznikne až aktivací Google Play nebo Microsoft Store karty; samotná návštěva Download stránky se za ni nevydává. Obě platformy používají jeden společný konverzní cíl, protože kampaň propaguje stejný produkt na Androidu i Windows.
+
+Reklamní, analytické a personalizační úložiště i uživatelská data jsou před volbou návštěvníka ve výchozím stavu `denied`. Kompaktní tmavý panel na Download stránce nabízí `Decline` a `Allow measurement`, přičemž odkazy do obchodů fungují v obou případech. Volbu lze znovu otevřít přes `Privacy choices` v patičce. Důvod: Google při instalaci tagu výslovně upozornil na Consent Mode pro návštěvníky z EHP a dosavadní Website Privacy zároveň tvrdila, že web reklamní měření nepoužívá; nasazení měření proto musí být transparentní a text zásad byl aktualizován společně s implementací.
+
+Rozsah: `jb-drill/download/index.html`, `google-ads.js`, `docs.css`, `privacy/index.html`.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.
