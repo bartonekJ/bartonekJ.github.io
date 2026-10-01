@@ -31,7 +31,7 @@
     <meta name="twitter:image" content="{{ social_image | absolute_url }}">
     <title>{{ meta_title | strip | escape }}</title>
     <link rel="icon" href="{{ '/favicon.svg?v=2' | relative_url }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ '/updates.css?v=20261001-2' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/updates.css?v=20261001-3' | relative_url }}">
 </head>
 <body class="docs-body updates-body">
     <header class="site-header docs-header">
@@ -112,9 +112,27 @@
                 {% if current.gallery %}
                 <div class="update-gallery" aria-label="Update gallery">
                     {% for image in current.gallery %}
-                    <figure><img src="{{ image.src | relative_url }}" alt="{{ image.alt | default: '' | escape }}" loading="lazy"></figure>
+                    <figure class="update-gallery-item">
+                        <button class="update-gallery-trigger" type="button" aria-label="Open full image: {{ image.alt | default: 'Gallery image' | escape }}">
+                            <img src="{{ image.src | relative_url }}" alt="{{ image.alt | default: '' | escape }}" loading="lazy">
+                        </button>
+                        <figcaption>{{ image.alt }}</figcaption>
+                    </figure>
                     {% endfor %}
                 </div>
+
+                <dialog class="update-gallery-dialog" aria-labelledby="update-gallery-caption">
+                    <div class="update-gallery-dialog-header">
+                        <span class="update-gallery-count" aria-live="polite"></span>
+                        <button class="update-gallery-close" type="button" aria-label="Close gallery">&#10005;</button>
+                    </div>
+                    <div class="update-gallery-stage">
+                        <button class="update-gallery-previous" type="button" aria-label="Previous image">&#8592;</button>
+                        <img class="update-gallery-full-image" src="" alt="">
+                        <button class="update-gallery-next" type="button" aria-label="Next image">&#8594;</button>
+                    </div>
+                    <p class="update-gallery-caption" id="update-gallery-caption"></p>
+                </dialog>
                 {% endif %}
 
                 {% if current.cta_url and current.cta_label %}
@@ -152,5 +170,6 @@
         </div>
     </footer>
     <script src="{{ '/script.js?v=20260930-1' | relative_url }}"></script>
+    {% if current.gallery %}<script src="{{ '/updates-gallery.js?v=20261001-1' | relative_url }}"></script>{% endif %}
 </body>
 </html>
