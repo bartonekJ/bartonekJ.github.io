@@ -4,7 +4,7 @@ summary: The first public release of JB_Drill is now available for Android
   tablets and Windows PCs — one drill format built for both touch and desktop
   workflows.
 date: 2026-10-01T05:34
-published: false
+published: true
 product: jb-drill
 product_label: JB_Drill
 category: Release
@@ -40,11 +40,13 @@ JB_Drill keeps that process fluid. Draw the action first, then add timing, tacti
 
 ## One format. Two platforms.
 
+
 | Android tablets | Windows PCs |
-| --- | --- |
+| -------------------------------------- | --------------------------------------------- |
 | Touch-first drawing and editing | Comfortable mouse-and-keyboard workflow |
 | Designed for work directly at the rink | Designed for detailed preparation at the desk |
 | Available through Google Play | Available through Microsoft Store |
+
 
 The same drill format works on both platforms, so you can start on one device and continue on the other.
 
