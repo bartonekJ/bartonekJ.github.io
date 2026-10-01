@@ -16,6 +16,8 @@ const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/
     const layout=await page.evaluate(()=>{
       const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};
       const cards=[...document.querySelectorAll('.home-updates-track > .home-update-card')].slice(0,2).map(card=>card.getBoundingClientRect());
+      const thumbnail=document.querySelector('.home-update-card img'),thumbnailCard=thumbnail.closest('.home-update-card');
+      const thumbnailStyle=getComputedStyle(thumbnail),thumbnailRect=thumbnail.getBoundingClientRect(),thumbnailCardRect=thumbnailCard.getBoundingClientRect();
       return {hero:box('.hero'),copy:box('.hero-copy'),visual:box('#hero-atom'),canvas:box('#atom-canvas'),updates:box('.home-updates'),
         updatesHeading:box('.home-updates-heading'),updatesRail:box('.home-updates-rail'),updatesControls:box('.home-updates-controls'),
         heroTitle:box('#hero-title'),updatesHeadingText:box('.home-updates-heading h2'),
@@ -23,6 +25,8 @@ const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/
         railBackground:getComputedStyle(document.querySelector('.home-updates-rail')).backgroundColor,
         cardBackground:getComputedStyle(document.querySelector('.home-update-card')).backgroundColor,
         headingBorder:getComputedStyle(document.querySelector('.home-updates-heading')).borderBottomWidth,
+        thumbnailPosition:thumbnailStyle.position,thumbnailMask:thumbnailStyle.maskImage || thumbnailStyle.webkitMaskImage,
+        thumbnailWidthRatio:thumbnailRect.width/thumbnailCardRect.width,
         titleFont:parseFloat(getComputedStyle(document.querySelector('#hero-title')).fontSize),
         summaryFont:parseFloat(getComputedStyle(document.querySelector('.home-update-card p')).fontSize),overflow:document.documentElement.scrollWidth-innerWidth};
     });
@@ -60,6 +64,9 @@ const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/
     assert.equal(layout.headingBorder,'0px','the horizontal separator is removed');
     assert.equal(layout.railBackground,'rgba(0, 0, 0, 0)','the updates rail is transparent over the Hero');
     assert.equal(layout.cardBackground,'rgba(0, 0, 0, 0)','update cards do not add their own background');
+    assert.equal(layout.thumbnailPosition,'absolute','thumbnails overlap the copy instead of consuming a separate column');
+    assert.ok(layout.thumbnailWidthRatio>0.55 && layout.thumbnailWidthRatio<0.57,'thumbnails use the approved wider aspect');
+    assert.ok(layout.thumbnailMask.includes('linear-gradient'),'thumbnail edges blend into the Hero through a gradient mask');
     assert.equal(await page.evaluate(()=>{
       const copy=getComputedStyle(document.querySelector('.hero-copy'));
       const visual=getComputedStyle(document.querySelector('#hero-atom'));
