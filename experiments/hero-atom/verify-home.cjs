@@ -18,7 +18,8 @@ const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/
       const cards=[...document.querySelectorAll('.home-updates-track > .home-update-card')].slice(0,2).map(card=>card.getBoundingClientRect());
       return {hero:box('.hero'),copy:box('.hero-copy'),visual:box('#hero-atom'),canvas:box('#atom-canvas'),updates:box('.home-updates'),
         updatesHeading:box('.home-updates-heading'),updatesRail:box('.home-updates-rail'),updatesControls:box('.home-updates-controls'),
-        heroTitle:box('#hero-title'),updatesHeadingText:box('.home-updates-heading h2'),cardGap:cards[1].left-cards[0].right,
+        heroTitle:box('#hero-title'),updatesHeadingText:box('.home-updates-heading h2'),
+        firstUpdateTitle:box('.home-update-card:not([aria-hidden="true"]) h3'),cardGap:cards[1].left-cards[0].right,
         railBackground:getComputedStyle(document.querySelector('.home-updates-rail')).backgroundColor,
         cardBackground:getComputedStyle(document.querySelector('.home-update-card')).backgroundColor,
         headingBorder:getComputedStyle(document.querySelector('.home-updates-heading')).borderBottomWidth,
@@ -47,10 +48,14 @@ const executablePath=process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/
       'the resized atom ends above the updates heading instead of being clipped by the rail');
     assert.ok(layout.titleFont<114,'the Hero title uses a genuinely smaller desktop size when updates are present');
     assert.equal(layout.summaryFont,15,'update summaries use the approved readable card-text size');
-    assert.ok(layout.updatesHeading.y+layout.updatesHeading.height<=layout.updatesControls.y,
-      'the heading remains above the carousel controls');
-    assert.ok(layout.updatesControls.y>=layout.updatesRail.y,'the carousel controls sit inside the updates rail');
+    assert.ok(layout.updatesHeadingText.y+layout.updatesHeadingText.height<=layout.updatesControls.y,
+      'the carousel controls sit below the updates heading');
+    assert.ok(layout.updatesControls.y+layout.updatesControls.height<=layout.updatesHeading.y+layout.updatesHeading.height,
+      'the carousel controls remain inside the heading block');
+    assert.ok(layout.updatesRail.y>=layout.updatesHeading.y+layout.updatesHeading.height,'the updates rail follows the heading controls');
     assert.ok(Math.abs(layout.updatesHeadingText.x-layout.heroTitle.x)<0.01,'the updates heading shares the Hero copy left edge');
+    assert.ok(Math.abs(layout.updatesControls.x-layout.heroTitle.x)<0.01,'the carousel controls share the Hero copy left edge');
+    assert.ok(Math.abs(layout.firstUpdateTitle.x-layout.heroTitle.x)<0.5,'the first update text shares the Hero copy left edge');
     assert.ok(layout.cardGap>=36,'vertical separators have breathing room on both sides');
     assert.equal(layout.headingBorder,'0px','the horizontal separator is removed');
     assert.equal(layout.railBackground,'rgba(0, 0, 0, 0)','the updates rail is transparent over the Hero');

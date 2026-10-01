@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#1d1d1c">
   <title>byBartonek — Sports Technology &amp; 3D Design</title>
   <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261001-5">
+  <link rel="stylesheet" href="styles.css?v=20261001-6">
 </head>
 <body>
   <header class="site-header">
@@ -59,8 +59,6 @@
         <div class="home-updates-heading">
           <p class="eyebrow">WHAT'S NEW</p>
           <h2 id="latest-updates-title">Latest from byBartonek</h2>
-        </div>
-        <div class="home-updates-rail">
           {% if update_count > 3 %}
           <div class="home-updates-controls">
             <button type="button" data-updates-previous aria-label="Previous update">&#8592;</button>
@@ -72,6 +70,8 @@
             <button type="button" data-updates-next aria-label="Next update">&#8594;</button>
           </div>
           {% endif %}
+        </div>
+        <div class="home-updates-rail">
           <div class="home-updates-viewport">
             <div class="home-updates-track">
               {% for item in latest_updates %}
