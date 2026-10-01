@@ -96,43 +96,20 @@
     });
   }
 
-  function makeVideoCard(video) {
+  function makeVideoEmbed(video) {
     const figure = document.createElement('figure');
     figure.className = 'update-youtube-card';
 
-    const link = document.createElement('a');
-    link.className = 'update-youtube-link';
-    link.href = video.url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.setAttribute('aria-label', `${video.label} (opens YouTube)`);
+    const iframe = document.createElement('iframe');
+    iframe.className = 'update-youtube-frame';
+    iframe.src = `https://www.youtube-nocookie.com/embed/${video.id}?rel=0`;
+    iframe.title = `${video.label} — YouTube video`;
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
 
-    const thumbnail = document.createElement('img');
-    thumbnail.className = 'update-youtube-thumbnail';
-    thumbnail.src = `https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`;
-    thumbnail.alt = '';
-    thumbnail.loading = 'lazy';
-    const useFallbackThumbnail = () => {
-      if (thumbnail.dataset.fallback) return;
-      thumbnail.dataset.fallback = 'true';
-      thumbnail.src = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
-    };
-    thumbnail.addEventListener('error', useFallbackThumbnail);
-    thumbnail.addEventListener('load', () => {
-      if (thumbnail.naturalWidth < 640) useFallbackThumbnail();
-    });
-
-    const play = document.createElement('span');
-    play.className = 'update-youtube-play';
-    play.setAttribute('aria-hidden', 'true');
-    play.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>';
-
-    const label = document.createElement('span');
-    label.className = 'update-youtube-label';
-    label.textContent = video.label;
-
-    link.append(thumbnail, play, label);
-    figure.append(link);
+    figure.append(iframe);
     return figure;
   }
 
@@ -141,7 +118,7 @@
     repairEditorWrappedMarkdownLink(element);
     const video = getStandaloneYouTubeLink(element);
     if (video) {
-      element.replaceWith(makeVideoCard(video));
+      element.replaceWith(makeVideoEmbed(video));
       return;
     }
     promoteStandaloneNamedLink(element);

@@ -99,7 +99,7 @@ content:
         description: >-
           Images fit the article width automatically. For a smaller image, use Source mode and add
           `{: .image-medium }` or `{: .image-small }` on the next line. Put a YouTube URL on its own
-          line to create a video thumbnail. Put a named link such as
+          line to create an embedded YouTube player. Put a named link such as
           `[Download JB_Drill](https://bybartonek.com/jb-drill/download/)` on its own line in Source
           mode to create a button at that exact position.
         options:
