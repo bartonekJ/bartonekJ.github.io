@@ -344,6 +344,15 @@
   margin-left: 0.16em;
 }
 
+.update-prose p.update-inline-cta-row {
+  margin: 26px 0;
+}
+
+.update-prose a.update-inline-cta {
+  color: #251505;
+  text-decoration: none;
+}
+
 .update-youtube-card {
   margin: 32px 0;
 }
@@ -594,10 +603,6 @@
   color: #d3d0c9;
   font: 400 13px/1.5 var(--font-reading);
   text-align: center;
-}
-
-.update-cta {
-  margin-top: 26px;
 }
 
 .update-preview-note {

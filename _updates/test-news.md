@@ -18,8 +18,6 @@ gallery:
     alt: JB_Drill Icon
   - src: /assets/updates/jbdrillheroart1024x500.png
     alt: Hero Art
-cta_label: Download
-cta_url: https://bybartonek.com/jb-drill/download/
 ---
 # This is my test News
 

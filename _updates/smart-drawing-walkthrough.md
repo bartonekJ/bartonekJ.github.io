@@ -12,8 +12,6 @@ platforms:
   - Android
 published: true
 preview: true
-cta_label: Watch the feature overview
-cta_url: /jb-drill/#smart-drawing
 ---
 
 Smart Drawing is designed to keep tool selection out of the way. Draw the action and JB_Drill derives the route type from context, keeps passes and player movement connected, and understands when a player takes possession from a loose puck or puck pile.

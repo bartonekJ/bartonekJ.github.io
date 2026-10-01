@@ -64,6 +64,24 @@
     paragraph.replaceChildren(link);
   }
 
+  function promoteStandaloneNamedLink(paragraph) {
+    const anchors = [...paragraph.querySelectorAll('a')];
+    if (anchors.length !== 1) return;
+
+    const label = paragraph.textContent.trim();
+    if (label !== anchors[0].textContent.trim() || getYouTubeId(anchors[0].href)) return;
+
+    try {
+      const labelUrl = new URL(label);
+      if (labelUrl.protocol === 'http:' || labelUrl.protocol === 'https:') return;
+    } catch {
+      // A non-URL label is exactly what turns a standalone link into a button.
+    }
+
+    paragraph.classList.add('update-inline-cta-row');
+    anchors[0].classList.add('button', 'button-primary', 'update-inline-cta');
+  }
+
   function makeVideoCard(video) {
     const figure = document.createElement('figure');
     figure.className = 'update-youtube-card';
@@ -108,6 +126,10 @@
     if (element.tagName !== 'P') return;
     repairEditorWrappedMarkdownLink(element);
     const video = getStandaloneYouTubeLink(element);
-    if (video) element.replaceWith(makeVideoCard(video));
+    if (video) {
+      element.replaceWith(makeVideoCard(video));
+      return;
+    }
+    promoteStandaloneNamedLink(element);
   });
 })();

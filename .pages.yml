@@ -96,7 +96,7 @@ content:
         label: Article
         type: rich-text
         required: true
-        description: Images fit the article width automatically. For a smaller image, use Source mode and add `{: .image-medium }` or `{: .image-small }` on the next line. Put a YouTube URL on its own line to turn it into a clickable video thumbnail at that exact position. Create Markdown links in Source mode, for example `[Download JB_Drill](https://bybartonek.com/jb-drill/download/)`.
+        description: Images fit the article width automatically. For a smaller image, use Source mode and add `{: .image-medium }` or `{: .image-small }` on the next line. Put a YouTube URL on its own line to create a video thumbnail. Put a named link such as `[Download JB_Drill](https://bybartonek.com/jb-drill/download/)` on its own line in Source mode to create a button at that exact position.
         options:
           format: markdown
           switcher: true
@@ -125,14 +125,6 @@ content:
             label: Image description
             type: string
             required: true
-      - name: cta_label
-        label: CTA label
-        type: string
-        description: Optional button text, for example Watch the video.
-      - name: cta_url
-        label: CTA URL
-        type: string
-        description: Optional destination for the CTA button.
       - name: preview
         label: Show concept-content notice
         type: boolean
