@@ -1,6 +1,38 @@
 (() => {
   const storageKey = 'bybartonek-google-ads-consent';
-  const banner = document.querySelector('.measurement-consent');
+
+  function addConsentControls() {
+    const footerLinks = document.querySelector('.site-footer .footer-links');
+    if (footerLinks && !footerLinks.querySelector('[data-google-ads-consent-settings]')) {
+      const settingsLink = document.createElement('a');
+      settingsLink.href = '/privacy/#advertising-measurement';
+      settingsLink.dataset.googleAdsConsentSettings = '';
+      settingsLink.textContent = 'Privacy choices';
+      footerLinks.insertBefore(settingsLink, footerLinks.querySelector('span'));
+    }
+
+    let banner = document.querySelector('.measurement-consent');
+    if (!banner) {
+      banner = document.createElement('aside');
+      banner.className = 'measurement-consent';
+      banner.hidden = true;
+      banner.setAttribute('aria-labelledby', 'measurement-consent-title');
+      banner.innerHTML = `
+        <div>
+          <strong id="measurement-consent-title">Optional advertising measurement</strong>
+          <p>Allow Google Ads measurement so this visit and a later store click can be attributed to the campaign. The site works either way. <a href="/privacy/#advertising-measurement">Learn more</a></p>
+        </div>
+        <div class="measurement-consent-actions">
+          <button class="button button-quiet" type="button" data-google-ads-consent="denied">Decline</button>
+          <button class="button button-primary" type="button" data-google-ads-consent="granted">Allow measurement</button>
+        </div>`;
+      const footer = document.querySelector('.site-footer');
+      document.body.insertBefore(banner, footer || null);
+    }
+    return banner;
+  }
+
+  const banner = addConsentControls();
 
   window.gtag_report_conversion = function gtagReportConversion(url) {
     const callback = function conversionCallback() {

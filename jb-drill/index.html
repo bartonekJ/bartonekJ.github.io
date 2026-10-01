@@ -8,6 +8,33 @@
         <title>JB_Drill — Hockey Drill Design &amp; Animation</title>
         <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml">
         <link rel="stylesheet" href="../docs.css?v=20260930-6">
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'wait_for_update': 500
+            });
+            try {
+                if (localStorage.getItem('bybartonek-google-ads-consent') === 'granted') {
+                    gtag('consent', 'update', {
+                        'ad_storage': 'granted',
+                        'analytics_storage': 'granted',
+                        'ad_user_data': 'granted',
+                        'ad_personalization': 'granted'
+                    });
+                }
+            } catch (error) {
+                // Storage can be unavailable in private browsing; denied remains the default.
+            }
+            gtag('set', 'ads_data_redaction', true);
+            gtag('js', new Date());
+            gtag('config', 'AW-18439118692');
+        </script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18439118692"></script>
     </head>
     <body class="docs-body guide-body product-body">
         <header class="site-header docs-header">
@@ -883,6 +910,7 @@
             </div>
         </footer>
         <script src="../script.js?v=20260930-1"></script>
+        <script src="../google-ads.js?v=20261001-2"></script>
         <script src="hero.js"></script>
         <script src="product-view.js"></script>
         <script src="overview-video.js?v=20260930-6"></script>

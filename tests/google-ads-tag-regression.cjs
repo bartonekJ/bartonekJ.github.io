@@ -92,6 +92,19 @@ async function startServer() {
     await assert.doesNotReject(() => banner.waitFor({ state: 'visible' }));
     await page.screenshot({ path: path.join(previewDir, 'google-ads-consent-desktop.png'), fullPage: true });
 
+    await page.evaluate(() => localStorage.clear());
+    await page.goto(`${baseUrl}/jb-drill/`);
+    const overviewBanner = page.locator('.measurement-consent');
+    await assert.doesNotReject(() => overviewBanner.waitFor({ state: 'visible' }));
+    assert.equal(await page.locator('[data-google-ads-consent-settings]').count(), 1);
+    assert.equal(await page.locator('[data-google-ads-conversion="store-outbound"]').count(), 0);
+    const overviewCommands = await page.evaluate(() => window.dataLayer.map((entry) => Array.from(entry)));
+    assert(overviewCommands.some((entry) => entry[0] === 'config' && entry[1] === 'AW-18439118692'));
+
+    const updatesTemplate = await fs.readFile(path.join(siteRoot, '_includes', 'updates-document.html'), 'utf8');
+    assert(updatesTemplate.includes("gtag('config', 'AW-18439118692')"));
+    assert(updatesTemplate.includes("'/google-ads.js?v=20261001-2'"));
+
     const mobile = await context.newPage();
     await mobile.setViewportSize({ width: 390, height: 844 });
     await mobile.goto(`${baseUrl}/jb-drill/download/`);
@@ -102,7 +115,7 @@ async function startServer() {
     await page.goto(`${baseUrl}/privacy/#advertising-measurement`);
     assert.equal(await page.locator('#advertising-measurement').count(), 1);
     assert.deepEqual(consoleErrors, []);
-    console.log('PASS Google Ads tag: denied default, explicit consent, outbound conversion and responsive banner');
+    console.log('PASS Google Ads tag: campaign landing pages, denied default, explicit consent, outbound conversion and responsive banner');
   } finally {
     await browser.close();
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));

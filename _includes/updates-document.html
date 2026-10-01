@@ -36,6 +36,33 @@
     <title>{{ meta_title | strip | escape }}</title>
     <link rel="icon" href="{{ '/favicon.svg?v=2' | relative_url }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ '/updates.css?v=20261001-7' | relative_url }}">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'wait_for_update': 500
+        });
+        try {
+            if (localStorage.getItem('bybartonek-google-ads-consent') === 'granted') {
+                gtag('consent', 'update', {
+                    'ad_storage': 'granted',
+                    'analytics_storage': 'granted',
+                    'ad_user_data': 'granted',
+                    'ad_personalization': 'granted'
+                });
+            }
+        } catch (error) {
+            // Storage can be unavailable in private browsing; denied remains the default.
+        }
+        gtag('set', 'ads_data_redaction', true);
+        gtag('js', new Date());
+        gtag('config', 'AW-18439118692');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18439118692"></script>
 </head>
 <body class="docs-body updates-body">
     <header class="site-header docs-header">
@@ -170,6 +197,7 @@
         </div>
     </footer>
     <script src="{{ '/script.js?v=20260930-1' | relative_url }}"></script>
+    <script src="{{ '/google-ads.js?v=20261001-2' | relative_url }}"></script>
     <script src="{{ '/updates-content.js?v=20261001-5' | relative_url }}"></script>
     {% if current.gallery %}<script src="{{ '/updates-gallery.js?v=20261001-1' | relative_url }}"></script>{% endif %}
 </body>
