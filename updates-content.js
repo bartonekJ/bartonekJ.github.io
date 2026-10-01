@@ -51,6 +51,19 @@
     return null;
   }
 
+  function repairEditorWrappedMarkdownLink(paragraph) {
+    const anchors = [...paragraph.querySelectorAll('a')];
+    if (anchors.length !== 1) return;
+
+    const match = paragraph.textContent.trim().match(/^\[([^\]]+)\]\((https?:\/\/.+)\)$/);
+    if (!match) return;
+
+    const link = document.createElement('a');
+    link.href = anchors[0].href;
+    link.textContent = match[1];
+    paragraph.replaceChildren(link);
+  }
+
   function makeVideoCard(video) {
     const figure = document.createElement('figure');
     figure.className = 'update-youtube-card';
@@ -93,6 +106,7 @@
 
   [...prose.children].forEach((element) => {
     if (element.tagName !== 'P') return;
+    repairEditorWrappedMarkdownLink(element);
     const video = getStandaloneYouTubeLink(element);
     if (video) element.replaceWith(makeVideoCard(video));
   });

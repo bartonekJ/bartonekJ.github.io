@@ -96,7 +96,7 @@ content:
         label: Article
         type: rich-text
         required: true
-        description: Images fit the article width automatically. For a smaller image, use Source mode and add `{: .image-medium }` or `{: .image-small }` on the next line. Put a YouTube URL on its own line to turn it into a clickable video thumbnail at that exact position.
+        description: Images fit the article width automatically. For a smaller image, use Source mode and add `{: .image-medium }` or `{: .image-small }` on the next line. Put a YouTube URL on its own line to turn it into a clickable video thumbnail at that exact position. Create Markdown links in Source mode, for example `[Download JB_Drill](https://bybartonek.com/jb-drill/download/)`.
         options:
           format: markdown
           switcher: true
