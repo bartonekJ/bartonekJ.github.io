@@ -31,7 +31,7 @@ gallery:
 
 
 
-[DOWNLOAD JB_DRILL]([https://bybartonek.com/jb-drill/download/](https://bybartonek.com/jb-drill/download/))
+[DOWNLOAD JB_DRILL](https://bybartonek.com/jb-drill/download/)
 
 ## Chaprer 01
 
