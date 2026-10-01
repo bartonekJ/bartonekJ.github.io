@@ -25,7 +25,15 @@ cta_url: https://bybartonek.com/jb-drill/download/
 
 ---
 
-[https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu](https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu)
+[https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu](https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu) 
+
+
+
+---
+
+
+
+[DOWNLOAD JB_DRILL]([https://bybartonek.com/jb-drill/download/](https://bybartonek.com/jb-drill/download/))
 
 ## Chaprer 01
 
