@@ -10,6 +10,7 @@
   const originals = [...track.children];
   const itemCount = originals.length;
   const cloneCount = Math.min(3, itemCount);
+  const mobileLayout = window.matchMedia('(max-width: 760px)');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let position = cloneCount;
   let timer = 0;
@@ -33,6 +34,10 @@
     return ((position - cloneCount) % itemCount + itemCount) % itemCount;
   }
 
+  function visibleCount() {
+    return Math.min(mobileLayout.matches ? 1 : 3, itemCount);
+  }
+
   function updateDots() {
     const active = logicalIndex();
     dots.forEach((dot, index) => {
@@ -43,7 +48,9 @@
 
   function updateCardAccess() {
     const active = logicalIndex();
-    const visible = new Set([active, (active + 1) % itemCount, (active + 2) % itemCount]);
+    const visible = new Set(
+      Array.from({ length: visibleCount() }, (_, offset) => (active + offset) % itemCount)
+    );
     originals.forEach((card, index) => {
       if (visible.has(index)) {
         card.removeAttribute('aria-hidden');
@@ -57,7 +64,7 @@
 
   function updateVisibleEnd() {
     [...track.children].forEach((card) => card.classList.remove('is-visible-end'));
-    track.children[position + 2]?.classList.add('is-visible-end');
+    track.children[position + visibleCount() - 1]?.classList.add('is-visible-end');
   }
 
   function move(animate = true) {
@@ -136,6 +143,7 @@
   });
 
   reducedMotion.addEventListener('change', startTimer);
+  mobileLayout.addEventListener('change', () => move(false));
   document.addEventListener('visibilitychange', startTimer);
   window.addEventListener('resize', () => move(false));
 

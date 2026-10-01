@@ -90,7 +90,7 @@
       wrapper.className = 'update-table-scroll';
       wrapper.tabIndex = 0;
       wrapper.setAttribute('role', 'region');
-      wrapper.setAttribute('aria-label', 'Scrollable data table');
+      wrapper.setAttribute('aria-label', 'Data table');
       table.before(wrapper);
       wrapper.append(table);
     });

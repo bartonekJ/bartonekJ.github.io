@@ -659,6 +659,43 @@
     padding: 28px 20px;
   }
 
+  .update-table-scroll {
+    overflow-x: visible;
+  }
+
+  .update-prose .update-table-scroll table {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    table-layout: auto;
+  }
+
+  .update-prose .update-table-scroll th,
+  .update-prose .update-table-scroll td {
+    min-width: 0;
+    padding: 9px 7px;
+    vertical-align: top;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: auto;
+  }
+
+  .update-prose .update-table-scroll thead th {
+    font-size: 10px;
+    line-height: 1.25;
+    letter-spacing: 0.025em;
+  }
+
+  .update-prose .update-table-scroll tbody td {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .update-prose .update-table-scroll a {
+    overflow-wrap: anywhere;
+  }
+
   .update-gallery {
     grid-template-columns: 1fr;
   }

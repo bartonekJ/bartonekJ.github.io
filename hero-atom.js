@@ -15,9 +15,9 @@ if(stage) {
     const hero=stage.closest('.hero'),copy=hero.querySelector('.hero-copy'),updates=hero.querySelector('.home-updates');
     const heroColor=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#1d1d1c';
     const layout=({width,height})=>{
-      if(matchMedia('(max-width: 760px)').matches)
-        return {focusWidth:width,focusHeight:380,centerX:width/2,centerY:height-190};
       const updatesHeight=updates && getComputedStyle(updates).display!=='none' ? updates.getBoundingClientRect().height : 0;
+      if(matchMedia('(max-width: 760px)').matches)
+        return {focusWidth:width,focusHeight:380,centerX:width/2,centerY:Math.max(190,height-updatesHeight-190)};
       const contentHeight=Math.max(1,height-updatesHeight);
       const copyWidth=copy.getBoundingClientRect().width;
       const columnWidth=Math.max(1,width-copyWidth);

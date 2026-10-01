@@ -1255,8 +1255,100 @@ a {
     padding-bottom: 380px;
   }
 
+  .hero--with-updates {
+    padding-bottom: 0;
+  }
+
   .home-updates {
+    --updates-divider-gutter: 0px;
+    --updates-gap: 0px;
+    display: block;
+    margin-top: 380px;
+    padding-bottom: 12px;
+  }
+
+  .home-updates-heading {
+    padding: 12px 24px 7px;
+  }
+
+  .home-updates-heading .eyebrow {
+    margin-bottom: 4px;
+  }
+
+  .home-updates-heading h2 {
+    font-size: 20px;
+  }
+
+  .home-updates-rail {
+    padding: 6px 6px 14px;
+  }
+
+  .home-updates.is-carousel .home-updates-track {
+    gap: 0;
+  }
+
+  .home-updates.is-carousel .home-update-card {
+    flex-basis: 100%;
+  }
+
+  .home-updates.is-static .home-updates-track {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .home-update-card {
+    min-height: 172px;
+  }
+
+  .home-update-card::after {
     display: none;
+  }
+
+  .home-update-copy {
+    padding: 12px 18px;
+  }
+
+  .home-update-card:not(.home-update-card--text) .home-update-copy {
+    width: 72%;
+  }
+
+  .home-update-card h3 {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .home-update-card p {
+    margin-top: 7px;
+    line-height: 1.32;
+    -webkit-line-clamp: 3;
+  }
+
+  .home-update-card img {
+    width: 64%;
+  }
+
+  .home-updates-controls {
+    gap: 9px;
+    margin-top: 9px;
+  }
+
+  .home-updates-controls > button {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+
+  .home-updates-dots {
+    gap: 4px;
+  }
+
+  .home-updates-dots button {
+    width: 18px;
+    height: 4px;
+  }
+
+  .home-updates-dots button[aria-current="true"] {
+    width: 28px;
   }
 
   .hero-copy {
