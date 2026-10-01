@@ -18,14 +18,14 @@ gallery:
     alt: JB_Drill Icon
   - src: /assets/updates/jbdrillheroart1024x500.png
     alt: Hero Art
-cta_label: YouTube video
-cta_url: https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu
+cta_label: Download
+cta_url: https://bybartonek.com/jb-drill/download/
 ---
 # This is my test News
 
 ---
 
-
+[https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu](https://youtu.be/7rdUVfWZegA?si=kw8NAFkDHmj0s1Gu)
 
 ## Chaprer 01
 
