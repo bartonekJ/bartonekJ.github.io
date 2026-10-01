@@ -506,7 +506,9 @@ Jedna až tři položky vyplní dostupnou šířku v jednom řádku. Čtyři neb
 
 Archiv používá dvousloupcový master-detail layout: vlevo je sticky seznam od nejnovější položky, vpravo plný článek. Přechod mezi položkami používá běžné statické odkazy, takže se URL a metadata skutečně mění, přesto stránka vizuálně zůstává ve stejném systému. Obsah vzniká v kolekci `_updates` jako Markdown a GitHub Pages jej generuje nativním Jekyllem; existující HTML stránky se kvůli tomu nepřepisují do frameworku a nepřidává se vlastní deployment workflow.
 
-První fáze je pouze desktopový koncept na lokální větvi `codex/updates-desktop`. Pět položek je výslovně fiktivních a označených jako náhledový obsah. Mobilní podoba pásu je v této fázi skrytá a mobilní layout archivu je pouze bezpečný jednosloupcový fallback; finální mobilní návrh vznikne až po schválení desktopu. Pages CMS a skutečné publikování obsahu jsou záměrně odložené do následující fáze, aby se nejdřív neměnil publikační proces kolem neschválené šablony.
+Desktopový vzhled byl uživatelem schválen 1. října 2026 na lokální větvi `codex/updates-desktop`. Pět položek zůstává výslovně fiktivním obsahem označeným jako náhled a před publikací větve se musí nahradit nebo odstranit. Mobilní podoba homepage pásu je zatím skrytá a mobilní layout archivu je pouze bezpečný jednosloupcový fallback; finální mobilní návrh vznikne samostatně.
+
+Po schválení vzhledu přibyla kořenová konfigurace `.pages.yml`. Pages CMS upravuje přímo Markdown soubory v `_updates`, ukládá obrázky do `assets/updates/` a nabízí všechna pole používaná šablonou včetně galerie a CTA. Nová položka má `published: false`; koncept tedy existuje jako běžný Git commit, ale Jekyll ho nevystaví. Přepnutí `Published` a uložení vytvoří publikační commit a standardní GitHub Pages build bez vlastní databáze, účtového serveru nebo dalšího deployment workflow. Velká videa zůstávají mimo CMS.
 
 ## Text pro nové vlákno
 

@@ -1,0 +1,149 @@
+media:
+  - name: update_images
+    label: Update images
+    input: assets/updates
+    output: /assets/updates
+    rename: safe
+    extensions: [webp, jpg, jpeg, png, avif]
+
+content:
+  - name: updates
+    label: Updates
+    type: collection
+    path: _updates
+    format: yaml-frontmatter
+    filename:
+      template: "{primary}.md"
+      field: create
+    view:
+      fields: [title, product, category, published, date]
+      primary: title
+      sort: [date, title, category]
+      search: [title, summary, category, version]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+        description: The public headline and the source for the URL slug.
+      - name: summary
+        label: Short summary
+        type: text
+        required: true
+        options:
+          minlength: 20
+          maxlength: 220
+        description: Used in the homepage carousel, update list and social metadata.
+      - name: date
+        label: Publication date
+        type: date
+        required: true
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm"
+      - name: published
+        label: Published
+        type: boolean
+        default: false
+        description: Leave off for a private draft. Turn on and save to publish it on the website.
+      - name: product
+        label: Product
+        type: select
+        required: true
+        default: jb-drill
+        options:
+          values:
+            - name: jb-drill
+              label: JB_Drill
+      - name: product_label
+        label: Product label
+        type: string
+        default: JB_Drill
+        hidden: true
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values: [Release, Feature, Fix, Library, Video, Drills, Field note]
+      - name: version
+        label: Version
+        type: string
+        description: Optional app or content version shown in the article facts.
+      - name: platforms
+        label: Platforms
+        type: select
+        options:
+          multiple: true
+          values: [Windows, Android, Web]
+      - name: thumbnail
+        label: Thumbnail / social image
+        type: image
+        options:
+          media: update_images
+          path: assets/updates
+          extensions: [webp, jpg, jpeg, png, avif]
+          rename: safe
+      - name: thumbnail_alt
+        label: Thumbnail description
+        type: string
+        description: Describe the image for people who cannot see it. Leave empty only for a decorative image.
+      - name: body
+        label: Article
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          switcher: true
+          media: update_images
+          path: assets/updates
+          extensions: [webp, jpg, jpeg, png, avif]
+          rename: safe
+      - name: gallery
+        label: Gallery
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{alt}"
+        fields:
+          - name: src
+            label: Image
+            type: image
+            required: true
+            options:
+              media: update_images
+              path: assets/updates
+              extensions: [webp, jpg, jpeg, png, avif]
+              rename: safe
+          - name: alt
+            label: Image description
+            type: string
+            required: true
+      - name: cta_label
+        label: CTA label
+        type: string
+        description: Optional button text, for example Watch the video.
+      - name: cta_url
+        label: CTA URL
+        type: string
+        description: Optional destination for the CTA button.
+      - name: preview
+        label: Show concept-content notice
+        type: boolean
+        default: false
+        description: Only for temporary layout examples; keep off for real updates.
+
+settings:
+  content:
+    merge: true
+  commit:
+    identity: user
+    templates:
+      create: "content(updates): create {filename}"
+      update: "content(updates): update {filename}"
+      delete: "content(updates): delete {filename}"
+      rename: "content(updates): rename {oldFilename} to {newFilename}"
