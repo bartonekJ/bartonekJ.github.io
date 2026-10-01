@@ -48,7 +48,7 @@ content:
         label: Published
         type: boolean
         default: false
-        description: Leave off for a private draft. Turn on and save to publish it on the website.
+        description: Leave off to hide the draft from the live website. It remains visible in the public GitHub repository and on the Cloudflare preview. Turn on and save to publish it.
       - name: product
         label: Product
         type: select
