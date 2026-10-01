@@ -82,6 +82,7 @@ content:
       - name: thumbnail
         label: Thumbnail / social image
         type: image
+        description: Used in update cards and social previews. It is not inserted into the article automatically.
         options:
           media: update_images
           path: assets/updates
@@ -95,6 +96,7 @@ content:
         label: Article
         type: rich-text
         required: true
+        description: Images fit the article width automatically. For a smaller image, use Source mode and add `{: .image-medium }` or `{: .image-small }` on the next line.
         options:
           format: markdown
           switcher: true
