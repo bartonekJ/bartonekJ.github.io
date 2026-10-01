@@ -71,11 +71,13 @@ async function startServer() {
       link.addEventListener('click', (event) => event.preventDefault(), { once: true });
       link.click();
     });
-    const conversion = await page.evaluate(() => {
-      return window.dataLayer.map((entry) => Array.from(entry)).find((entry) => entry[0] === 'event' && entry[1] === 'conversion');
+    const { conversion, callbackType } = await page.evaluate(() => {
+      const entry = window.dataLayer.map((item) => Array.from(item)).find((item) => item[0] === 'event' && item[1] === 'conversion');
+      return { conversion: entry, callbackType: typeof entry[2].event_callback };
     });
     assert.equal(conversion[2].send_to, 'AW-18439118692/Uw6hCNDh5YwdEOS-uthE');
     assert.equal(conversion[2].currency, 'CZK');
+    assert.equal(callbackType, 'function');
 
     await page.locator('[data-google-ads-consent="granted"]').click();
     assert.equal(await banner.isHidden(), true);

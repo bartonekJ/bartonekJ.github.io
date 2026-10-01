@@ -2,6 +2,21 @@
   const storageKey = 'bybartonek-google-ads-consent';
   const banner = document.querySelector('.measurement-consent');
 
+  window.gtag_report_conversion = function gtagReportConversion(url) {
+    const callback = function conversionCallback() {
+      if (typeof url !== 'undefined') window.location = url;
+    };
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-18439118692/Uw6hCNDh5YwdEOS-uthE',
+        value: 1.0,
+        currency: 'CZK',
+        event_callback: callback
+      });
+    }
+    return false;
+  };
+
   function readChoice() {
     try {
       return localStorage.getItem(storageKey);
@@ -55,12 +70,7 @@
 
   document.querySelectorAll('[data-google-ads-conversion="store-outbound"]').forEach((link) => {
     link.addEventListener('click', () => {
-      if (typeof window.gtag !== 'function') return;
-      window.gtag('event', 'conversion', {
-        send_to: 'AW-18439118692/Uw6hCNDh5YwdEOS-uthE',
-        value: 1.0,
-        currency: 'CZK'
-      });
+      window.gtag_report_conversion();
     });
   });
 })();
