@@ -16,6 +16,8 @@ preview: false
 ---
 JB_Drill is now available for Android tablets and Windows PCs.
 
+[DOWNLOAD JB_DRILL](https://bybartonek.com/jb-drill/download/)
+
 This is the first public release of a tool built around a simple idea: creating a hockey drill should feel as natural as drawing it on a coaching board — while still giving you the advantages of animation, reusable content and clean digital sharing.
 
 > Session planning is finally a joy.
