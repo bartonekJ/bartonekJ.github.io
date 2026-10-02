@@ -526,6 +526,10 @@ Reklamní, analytické a personalizační úložiště i uživatelská data jsou
 
 Rozsah: `jb-drill/index.html`, `jb-drill/download/index.html`, `_includes/updates-document.html`, `google-ads.js`, `docs.css`, `privacy/index.html`.
 
+### 2026-10-03 — Google tag i na homepage
+
+Uživatel požádal o doplnění stejného Google Ads tagu na kořenovou stránku `bybartonek.com`, i když není cílovou URL kampaně. Homepage proto používá stejný tmavý consent panel, obě volby a odkaz Privacy choices jako produktové stránky. Volba souhlasu zůstává společná v localStorage a před první volbou platí denied. Existující styly panelu byly přesunuty z `docs.css` do sdíleného `styles.css`, aby homepage nepřebírala produktové rozložení a obě části měly jedinou definici panelu. Návštěva homepage ani odkaz na produkt nejsou konverzí Outbound click. Změna pokrytí sama nedokládá odstranění diagnostiky Misconfigured v Google Ads.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.

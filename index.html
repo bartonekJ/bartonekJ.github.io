@@ -9,7 +9,34 @@
   <meta name="theme-color" content="#1d1d1c">
   <title>byBartonek — Sports Technology &amp; 3D Design</title>
   <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261001-9">
+  <link rel="stylesheet" href="styles.css?v=20261003-1">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'wait_for_update': 500
+    });
+    try {
+      if (localStorage.getItem('bybartonek-google-ads-consent') === 'granted') {
+        gtag('consent', 'update', {
+          'ad_storage': 'granted',
+          'analytics_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted'
+        });
+      }
+    } catch (error) {
+      // Storage can be unavailable in private browsing; denied remains the default.
+    }
+    gtag('set', 'ads_data_redaction', true);
+    gtag('js', new Date());
+    gtag('config', 'AW-18439118692');
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18439118692"></script>
 </head>
 <body>
   <header class="site-header">
@@ -235,5 +262,6 @@
   <script type="module" src="hero-atom.js?v=20261001-2"></script>
   <script src="updates-carousel.js?v=20261001-2"></script>
   <script src="script.js?v=20260930-1"></script>
+  <script src="google-ads.js?v=20261001-2"></script>
 </body>
 </html>

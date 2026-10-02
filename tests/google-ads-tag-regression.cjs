@@ -23,7 +23,15 @@ async function startServer() {
       const relativePath = pathname.endsWith('/') ? `${pathname}index.html` : pathname;
       const filePath = path.resolve(siteRoot, `.${relativePath}`);
       if (!filePath.startsWith(`${siteRoot}${path.sep}`)) throw new Error('Invalid path');
-      const body = await fs.readFile(filePath);
+      let body = await fs.readFile(filePath);
+      if (pathname === '/') {
+        // This static fixture tests the actual homepage tag/consent code, not Jekyll news rendering.
+        body = body.toString('utf8')
+          .replace(/^---\r?\n---\r?\n/, '')
+          .replace(/<section class="home-updates[\s\S]*?<\/section>/, '')
+          .replace(/hero\{% if update_count > 0 %\} hero--with-updates\{% endif %\}/, 'hero')
+          .replace(/\{%[\s\S]*?%\}/g, '');
+      }
       response.writeHead(200, { 'content-type': contentType(filePath) });
       response.end(body);
     } catch (error) {
@@ -132,6 +140,9 @@ async function startServer() {
     assert(updatesTemplate.includes("'/google-ads.js?v=20261001-2'"));
 
     const mobile = await context.newPage();
+    await mobile.route('https://www.googletagmanager.com/**', (route) => {
+      route.fulfill({ status: 200, contentType: 'application/javascript', body: '' });
+    });
     await mobile.setViewportSize({ width: 390, height: 844 });
     await mobile.goto(`${baseUrl}/jb-drill/download/`);
     await mobile.screenshot({ path: path.join(previewDir, 'store-links-windows-mobile.png'), fullPage: false });
@@ -141,6 +152,47 @@ async function startServer() {
 
     await page.goto(`${baseUrl}/privacy/#advertising-measurement`);
     assert.equal(await page.locator('#advertising-measurement').count(), 1);
+
+    // The homepage shares consent with the product pages and never sends a store conversion.
+    await page.evaluate(() => localStorage.clear());
+    await page.goto(`${baseUrl}/`);
+    const homeBanner = page.locator('.measurement-consent');
+    await homeBanner.waitFor({ state: 'visible' });
+    const homeCommands = await page.evaluate(() => window.dataLayer.map((entry) => Array.from(entry)));
+    assert.equal(homeCommands[0][0], 'consent');
+    assert.equal(homeCommands[0][1], 'default');
+    for (const key of ['ad_storage', 'analytics_storage', 'ad_user_data', 'ad_personalization']) {
+      assert.equal(homeCommands[0][2][key], 'denied');
+    }
+    assert.equal(homeCommands.filter((entry) => entry[0] === 'config' && entry[1] === 'AW-18439118692').length, 1);
+    assert.equal(homeCommands.some((entry) => entry[0] === 'event' && entry[1] === 'conversion'), false);
+    assert.equal(await page.locator('script[src*="googletagmanager.com/gtag/js"]').count(), 1);
+    assert.equal(await homeBanner.evaluate((element) => getComputedStyle(element).position), 'fixed');
+    await page.screenshot({ path: path.join(previewDir, 'google-ads-home-desktop.png'), fullPage: false });
+
+    await page.locator('[data-google-ads-consent="granted"]').click();
+    await page.goto(`${baseUrl}/jb-drill/`);
+    assert.equal(await overviewBanner.isHidden(), true);
+    assert.equal(await page.evaluate(() => window.dataLayer.some((entry) =>
+      entry[0] === 'consent' && entry[1] === 'update' && entry[2].ad_storage === 'granted')), true);
+    await page.goto(`${baseUrl}/`);
+    assert.equal(await homeBanner.isHidden(), true);
+    await page.locator('[data-google-ads-consent-settings]').click();
+    await page.locator('[data-google-ads-consent="denied"]').click();
+    await page.reload();
+    assert.equal(await homeBanner.isHidden(), true);
+    assert.equal(await page.evaluate(() => localStorage.getItem('bybartonek-google-ads-consent')), 'denied');
+    assert.equal(await page.evaluate(() => window.dataLayer.some((entry) =>
+      entry[0] === 'consent' && entry[1] === 'update' && entry[2].ad_storage === 'granted')), false);
+    assert.equal(await page.evaluate(() => window.dataLayer.some((entry) =>
+      entry[0] === 'event' && entry[1] === 'conversion')), false);
+
+    await mobile.goto(`${baseUrl}/`);
+    await mobile.locator('[data-google-ads-consent-settings]').click();
+    const homeMobileBounds = await mobile.locator('.measurement-consent').boundingBox();
+    assert(homeMobileBounds.x >= 0 && homeMobileBounds.x + homeMobileBounds.width <= 390);
+    assert(homeMobileBounds.y >= 0 && homeMobileBounds.y + homeMobileBounds.height <= 844);
+    await mobile.screenshot({ path: path.join(previewDir, 'google-ads-home-mobile.png'), fullPage: false });
 
     const nonWindowsContext = await browser.newContext({
       viewport: { width: 390, height: 844 },
@@ -164,7 +216,7 @@ async function startServer() {
     await nonWindowsContext.close();
 
     assert.deepEqual(consoleErrors, []);
-    console.log('PASS Google Ads tag and store links: campaign pages, consent, outbound conversion, Windows Store app launch, web fallback and responsive banner');
+    console.log('PASS Google Ads tag and store links: homepage and campaign pages, shared consent, no homepage conversion, outbound conversion, Windows Store app launch, web fallback and responsive banner');
   } finally {
     await browser.close();
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
