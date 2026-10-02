@@ -1038,6 +1038,15 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.download-store-option {
+  min-width: 0;
+}
+
+.download-store-option > .download-store-card {
+  box-sizing: border-box;
+  width: 100%;
+}
+
 .download-plan-grid {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
   padding: 0;
@@ -1072,6 +1081,27 @@
 .download-store-card--link:focus-visible {
   outline: 2px solid var(--orange-deep);
   outline-offset: 2px;
+}
+
+.download-store-web-fallback {
+  display: inline-block;
+  margin: 7px 4px 0;
+  color: var(--orange-deep);
+  font: 650 13px/1.35 var(--font-ui);
+  text-underline-offset: 3px;
+}
+
+.download-store-web-fallback:hover {
+  color: var(--ink);
+}
+
+.download-store-web-fallback:focus-visible {
+  outline: 2px solid var(--orange-deep);
+  outline-offset: 3px;
+}
+
+.download-store-web-fallback[hidden] {
+  display: none;
 }
 
 .download-store-card > span {

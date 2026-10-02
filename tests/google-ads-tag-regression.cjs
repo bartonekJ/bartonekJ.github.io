@@ -66,6 +66,13 @@ async function startServer() {
     assert.equal(initialCommands[0][2].ad_storage, 'denied');
     assert(initialCommands.some((entry) => entry[0] === 'config' && entry[1] === 'AW-18439118692'));
 
+    const microsoftStoreLink = page.locator('[data-ms-store-link]');
+    const microsoftWebFallback = page.locator('[data-ms-store-web-fallback]');
+    assert.equal(await microsoftStoreLink.getAttribute('href'), 'ms-windows-store://pdp/?ProductId=9NFF5QHLBM3B');
+    assert.equal(await microsoftStoreLink.getAttribute('target'), null);
+    assert.equal(await microsoftWebFallback.isVisible(), true);
+    assert.equal(await microsoftWebFallback.getAttribute('href'), 'https://apps.microsoft.com/detail/9NFF5QHLBM3B?cid=bybartonek');
+
     await page.evaluate(() => {
       const link = document.querySelector('[data-google-ads-conversion="store-outbound"]');
       link.addEventListener('click', (event) => event.preventDefault(), { once: true });
@@ -78,6 +85,25 @@ async function startServer() {
     assert.equal(conversion[2].send_to, 'AW-18439118692/Uw6hCNDh5YwdEOS-uthE');
     assert.equal(conversion[2].currency, 'CZK');
     assert.equal(callbackType, 'function');
+
+    const conversionCountBeforeStoreChecks = await page.evaluate(() => window.dataLayer
+      .map((item) => Array.from(item))
+      .filter((item) => item[0] === 'event' && item[1] === 'conversion').length);
+    await page.evaluate(() => {
+      const links = [
+        document.querySelector('[data-ms-store-link]'),
+        document.querySelector('[data-ms-store-web-fallback]')
+      ];
+      for (const link of links) {
+        link.addEventListener('click', (event) => event.preventDefault(), { once: true });
+        link.click();
+      }
+    });
+    const storeConversions = await page.evaluate(() => window.dataLayer
+      .map((item) => Array.from(item))
+      .filter((item) => item[0] === 'event' && item[1] === 'conversion'));
+    assert.equal(storeConversions.length, conversionCountBeforeStoreChecks + 2);
+    assert(storeConversions.slice(-2).every((entry) => entry[2].send_to === 'AW-18439118692/Uw6hCNDh5YwdEOS-uthE'));
 
     await page.locator('[data-google-ads-consent="granted"]').click();
     assert.equal(await banner.isHidden(), true);
@@ -108,14 +134,37 @@ async function startServer() {
     const mobile = await context.newPage();
     await mobile.setViewportSize({ width: 390, height: 844 });
     await mobile.goto(`${baseUrl}/jb-drill/download/`);
+    await mobile.screenshot({ path: path.join(previewDir, 'store-links-windows-mobile.png'), fullPage: false });
     await mobile.locator('[data-google-ads-consent-settings]').click();
     assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
     await mobile.screenshot({ path: path.join(previewDir, 'google-ads-consent-mobile.png'), fullPage: false });
 
     await page.goto(`${baseUrl}/privacy/#advertising-measurement`);
     assert.equal(await page.locator('#advertising-measurement').count(), 1);
+
+    const nonWindowsContext = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      userAgent: 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/126.0 Mobile Safari/537.36'
+    });
+    await nonWindowsContext.addInitScript(() => {
+      Object.defineProperty(navigator, 'userAgentData', {
+        configurable: true,
+        value: { platform: 'Android' }
+      });
+    });
+    const nonWindowsPage = await nonWindowsContext.newPage();
+    await nonWindowsPage.route('https://www.googletagmanager.com/**', (route) => {
+      route.fulfill({ status: 200, contentType: 'application/javascript', body: '' });
+    });
+    await nonWindowsPage.goto(`${baseUrl}/jb-drill/download/`);
+    assert.equal(await nonWindowsPage.locator('[data-ms-store-link]').getAttribute('href'), 'https://apps.microsoft.com/detail/9NFF5QHLBM3B?cid=bybartonek');
+    assert.equal(await nonWindowsPage.locator('[data-ms-store-link]').getAttribute('target'), '_blank');
+    assert.equal(await nonWindowsPage.locator('[data-ms-store-web-fallback]').isHidden(), true);
+    await nonWindowsPage.screenshot({ path: path.join(previewDir, 'store-links-android-mobile.png'), fullPage: false });
+    await nonWindowsContext.close();
+
     assert.deepEqual(consoleErrors, []);
-    console.log('PASS Google Ads tag: campaign landing pages, denied default, explicit consent, outbound conversion and responsive banner');
+    console.log('PASS Google Ads tag and store links: campaign pages, consent, outbound conversion, Windows Store app launch, web fallback and responsive banner');
   } finally {
     await browser.close();
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
