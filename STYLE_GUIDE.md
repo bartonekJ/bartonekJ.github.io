@@ -318,6 +318,12 @@ Související soubory:
 - Důvod potvrzený uživatelem: nový Hero Art má být první obraz, který návštěvník po načtení produktové stránky uvidí; deset sekund mu dává klidný prostor bez zbytečně dlouhého zastavení carouselu. Použití bezejmenné fotografie a originálního SVG v kontextovém štítku zabraňuje souběhu dvou log a zachovává skutečný tvar značky místo fontové aproximace.
 - Rozsah: pouze Hero carousel a kontextový štítek na `/jb-drill/` (`jb-drill/index.html`, `docs.css`, `assets/JB_Drill_Logo_white.svg`, `assets/jb-drill-hero/shot-00.webm`, `assets/jb-drill-hero/shot-00.mp4`).
 
+### 2026-10-03 — Dvousekundový úvodní Hero Art
+
+- Rozhodnutí: první statický Hero Art zůstává úvodním slidem, ale jeho AV1 WebM a H.264 MP4 klip trvá pouze dvě sekundy. Po jeho skončení carousel automaticky pokračuje první funkční ukázkou; přechod, progress bar i ruční navigace používají dál společnou logiku všech slidů.
+- Důvod potvrzený uživatelem: produktový obraz má návštěvníka krátce uvést, ale nemá zdržovat přechod k ukázkám aplikace.
+- Rozsah: pouze první slide Hero carouselu na `/jb-drill/` (`assets/jb-drill-hero/shot-00.webm`, `assets/jb-drill-hero/shot-00.mp4`).
+
 ### 2026-09-16 — Záměr interaktivního atomu v hlavním hero
 
 Stav: původní záměr, následně implementovaný a upřesněný v dalších záznamech této části. Aktuální produkční rozhodnutí popisuje záznam „Integrace procedurálního atomu do homepage“.
