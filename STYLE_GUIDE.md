@@ -554,6 +554,10 @@ Karta má textový sloupec a samostatný sloupec pro symbol, aby se nepřekrýva
 
 Uživatel upřesnil, že schválený náhled měl tři černé siluety. Barevný Google Play v první publikaci byl chybnou odchylkou od zadání; nahrazuje jej přesně černý SVG symbol z původního náhledu. Všechny tři ikony se na výslovné přání zmenšují o 15 % v obou rozměrech: široký desktop 64 → 54,4 px, tablet 48 → 40,8 px, mobil 54 → 45,9 px. Zůstávají uprostřed původního prostoru, takže se nemění velikost karet ani poloha textu. Rozsah: Download EN a lokální CS, docs.css a Google Play SVG. Publikace se týká pouze EN; český návrh zůstává lokální. Cache verze Download CSS je 20261024-3.
 
+### 2026-10-25 — Černé jablko místo symbolu App Storu
+
+Na výslovné přání uživatele používá první Download karta černou siluetu Apple namísto původního symbolu App Store A. Důvodem je uživatelova vizuální preference. Zůstává současná velikost po zmenšení o 15 % (54,4 / 40,8 / 45,9 px), zarovnání v kartě, nápis App Store a neinteraktivní Coming soon. Jde o dekorativní lokální SVG, ostatní dvě ikony se nemění. Rozsah: Download EN a lokální CS, assets/store-marks/apple.svg a záznam původu. Publikace zahrnuje EN; rozpracovaný český web zůstává lokální.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.
