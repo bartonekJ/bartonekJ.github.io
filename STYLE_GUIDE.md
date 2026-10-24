@@ -536,6 +536,14 @@ Rozsah: `jb-drill/index.html`, `jb-drill/download/index.html`, `_includes/update
 
 Uživatel požádal o doplnění stejného Google Ads tagu na kořenovou stránku `bybartonek.com`, i když není cílovou URL kampaně. Homepage proto používá stejný tmavý consent panel, obě volby a odkaz Privacy choices jako produktové stránky. Volba souhlasu zůstává společná v localStorage a před první volbou platí denied. Existující styly panelu byly přesunuty z `docs.css` do sdíleného `styles.css`, aby homepage nepřebírala produktové rozložení a obě části měly jedinou definici panelu. Návštěva homepage ani odkaz na produkt nejsou konverzí Outbound click. Změna pokrytí sama nedokládá odstranění diagnostiky Misconfigured v Google Ads.
 
+### 2026-10-24 — App Store jako první, zatím Coming soon
+
+Na přání uživatele je na Download stránce pořadí App Store, Google Play, Microsoft Store. Důvodem je očekávaná širší cílová skupina na Apple platformách; jde o obchodní prioritu uživatele, nikoli změřený podíl návštěvníků. App Store karta uvádí iPadOS a Mac; úvod upřesňuje Macy s Apple silicon. Nejde o samostatnou nativní macOS aplikaci ani podporu iPhonu.
+
+Do veřejného vydání zůstává App Store běžnou neklikací kartou s textem Coming soon (v českém návrhu Již brzy). Nemá href, falešné tlačítko, focus ani značku konverze. Budoucí stabilní cíl https://apps.apple.com/app/id6826026010 je připraven v datovém atributu; aktivuje se ručně až po skutečném veřejném vydání a ověření listingu. Samotné schválení App Review tuto změnu ani vydání nespouští. Google Play, Windows Store protokol a jeho webová záloha se nemění.
+
+Stávající karty a tokeny zůstávají; desktopový grid má tři sloupce, mobilní jeden. Text licence počítá se všemi podporovanými platformami a limity Personal 3 / Pro 30; Analysis je placené, Tactics video reference zůstává ve Free. Rozsah: jb-drill/download/index.html, docs.css; v rozpracované lokalizaci také cs/jb-drill/download/index.html. Český web nadále podléhá dřívějšímu požadavku na samostatnou kontrolu před publikací.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.

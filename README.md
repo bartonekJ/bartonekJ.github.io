@@ -22,3 +22,7 @@ Uploaded update images are stored in `assets/updates/`. Large videos stay outsid
 
 - [Visual style guide](STYLE_GUIDE.md) — current colors, typography, page structure, components and responsive rules.
 - [Interactive hero and editor](experiments/hero-atom/README.md) — the homepage uses the procedural 3D atom; the isolated editor keeps its live controls and exportable presets. Three.js is vendored locally.
+
+## App Store availability on Download
+
+The Download page lists App Store first, marked **Coming soon** for iPadOS and compatible Apple silicon Macs. Its future URL is https://apps.apple.com/app/id6826026010. The card is not a link or an advertising conversion while the app is unavailable. After the actual public release, verify the listing and explicitly replace it with an active store link. App Review approval does not publish the app or activate the card automatically. Google Play and Microsoft Store remain available.
