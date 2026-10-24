@@ -544,6 +544,12 @@ Do veřejného vydání zůstává App Store běžnou neklikací kartou s textem
 
 Stávající karty a tokeny zůstávají; desktopový grid má tři sloupce, mobilní jeden. Text licence počítá se všemi podporovanými platformami a limity Personal 3 / Pro 30; Analysis je placené, Tactics video reference zůstává ve Free. Rozsah: jb-drill/download/index.html, docs.css; v rozpracované lokalizaci také cs/jb-drill/download/index.html. Český web nadále podléhá dřívějšímu požadavku na samostatnou kontrolu před publikací.
 
+### 2026-10-24 — Symboly obchodů v pravé části karet
+
+Po místním náhledu uživatel výslovně požádal o zveřejnění. Prázdná pravá část karet nyní slouží rozpoznatelným symbolům obchodů: App Store A a Microsoft Store taška jsou černé podle návrhu; Google Play používá původní barevný soubor přímo od Googlu, protože monochromní provedení není obecná výchozí marketingová varianta. Není vložen nový download badge ani samostatné CTA. Značky jsou dekorativní vedle existujícího názvu, mají prázdný alt a aria-hidden; dostupnost i klikací plocha obchodů se nemění a Apple zůstává neaktivní Coming soon.
+
+Karta má textový sloupec a samostatný sloupec pro symbol, aby se nepřekrývaly při zalamování. Symbol je 64 px na širokém desktopu, 48 px mezi 761–1040 px a 54 px na mobilu. Zůstávají stejné tokeny, fonty, tři desktopové a jeden mobilní sloupec. Soubory jsou místní v assets/store-marks/, s uvedením původu a zachovanou MIT licencí Microsoftu; nezavádí se externí ikonový runtime. Rozsah: Download EN a lokální CS, docs.css a malé sdílené assety. Publikace nadále zahrnuje pouze EN, nikoli rozpracovanou lokalizaci.
+
 ## Text pro nové vlákno
 
 Před úpravou bybartonek.com si přečti `bybartonek-site/AGENTS.md` a `bybartonek-site/STYLE_GUIDE.md` (v samotném repozitáři webu jsou to `AGENTS.md` a `STYLE_GUIDE.md`) a ověř aktuální `styles.css` / `docs.css`. Manuál popisuje současný kód; historické důvody považuj za neznámé, pokud nejsou zaznamenané v části „Rozhodnutí a jejich důvody“. Zachovej stávající tokeny a vzory; nepřidávej další font nebo barvu bez důvodu. Po změně ověř dotčené stránky na desktopu i mobilu a zapiš nové potvrzené důvody do manuálu. Pracuj pouze v samostatném repozitáři `bybartonek-site`.
