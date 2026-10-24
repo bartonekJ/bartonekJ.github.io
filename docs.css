@@ -1077,8 +1077,9 @@
 
 .download-store-symbol {
   display: block;
-  width: 64px;
-  height: 64px;
+  width: 54.4px;
+  height: 54.4px;
+  justify-self: center;
   object-fit: contain;
 }
 
@@ -1089,8 +1090,8 @@
   }
 
   .download-store-symbol {
-    width: 48px;
-    height: 48px;
+    width: 40.8px;
+    height: 40.8px;
   }
 }
 
@@ -2255,8 +2256,8 @@
   }
 
   .download-store-symbol {
-    width: 54px;
-    height: 54px;
+    width: 45.9px;
+    height: 45.9px;
   }
 
   .download-page-intro {
