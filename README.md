@@ -26,3 +26,5 @@ Uploaded update images are stored in `assets/updates/`. Large videos stay outsid
 ## App Store availability on Download
 
 The Download page lists App Store first, marked **Coming soon** for iPadOS and compatible Apple silicon Macs. Its future URL is https://apps.apple.com/app/id6826026010. The card is not a link or an advertising conversion while the app is unavailable. After the actual public release, verify the listing and explicitly replace it with an active store link. App Review approval does not publish the app or activate the card automatically. Google Play and Microsoft Store remain available.
+
+Current product, Download, Support and Privacy copy lists platforms in the order **iPad, compatible Apple silicon Macs, Android, Windows**, with Apple availability still marked Coming soon. This ordering reflects the owner's marketing priority. Historical Updates articles remain unchanged; the Apple release will have its own new article. Only the English pages are published; the Czech localization remains a local draft pending review.
